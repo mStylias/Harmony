@@ -1,0 +1,6 @@
+@Harmony.Test_HostAddress = http://localhost:5128
+
+GET {{Harmony.Test_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
