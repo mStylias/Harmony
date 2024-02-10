@@ -1,8 +1,9 @@
 ﻿namespace Harmony.Results;
 
-public record InnerError(
+public record InnerError
+(
     string Code,
-    string? PropertyName,
-    string Description);
+    string Description
+);
     
    

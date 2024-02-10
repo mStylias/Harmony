@@ -2,8 +2,7 @@
 
 public interface IError
 {
-    ErrorType Type { get; }
     int HttpStatusCode { get; }
-    List<InnerError>? InnerErrors { get; }
+    List<InnerError> InnerErrors { get; }
     void Log();
 }

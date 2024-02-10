@@ -1,12 +1,13 @@
 ﻿using Harmony.Core;
 using Harmony.Results;
+using Harmony.Test.Common;
+using Harmony.Test.Contracts;
+using Harmony.Test.Domain.Errors;
 
 namespace Harmony.Test;
 
-public class GetNameQuery : Query
+public class GetNameQuery : Query<GetNameRequest, Result<GetNameResponse>, HarmonyConfiguration>
 {
-    public int NumToReturn { get; set; }
-    
     private readonly ILogger<GetNameQuery> _logger;
 
     public GetNameQuery(ILogger<GetNameQuery> logger)
@@ -14,9 +15,11 @@ public class GetNameQuery : Query
         _logger = logger;
     }
 
-    public override async Task<Result<int>> ExecuteAsync(CancellationToken cancellationToken = default)
+    public override Task<Result<GetNameResponse>> ExecuteAsync(GetNameRequest input, 
+        CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("I was executed!!!");
-        return NumToReturn;
+        var error = Errors.BarberIdNotFound;
+        error.Log();
+        return Task.FromResult(Result.Fail<GetNameResponse>(error));
     }
 }

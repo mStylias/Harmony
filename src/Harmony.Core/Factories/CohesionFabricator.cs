@@ -1,6 +1,36 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Diagnostics;
+using Harmony.Core.Abstractions;
+using Harmony.Core.Abstractions.Factories;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Harmony.Core.Factories;
+
+public class CohesionFabricator<TConfiguration> : ICohesionFabricator<TConfiguration>
+    where TConfiguration : new()
+{
+    private readonly IServiceProvider _serviceProvider;
+
+    public CohesionFabricator(IServiceProvider serviceProvider)
+    {
+        _serviceProvider = serviceProvider;
+    }
+
+    public TOperation CreateOperation<TOperation>(Action<TConfiguration> setupConfigAction)
+        where TOperation : IHarmonyOperation<TConfiguration>
+
+    {
+        Debug.Assert(typeof(TOperation).IsAssignableTo(typeof(IHarmonyOperation<TConfiguration>)));
+        
+        var operation = _serviceProvider.GetRequiredService<TOperation>();
+
+        var config = new TConfiguration();
+
+        setupConfigAction.Invoke(config);
+        operation.Configuration = config;
+
+        return operation;
+    }
+}
 
 public class CohesionFabricator : ICohesionFabricator
 {
@@ -10,14 +40,13 @@ public class CohesionFabricator : ICohesionFabricator
     {
         _serviceProvider = serviceProvider;
     }
-    
-    public T CreateCommand<T>() where T : Command
+
+    public TOperation CreateOperation<TOperation>() where TOperation : IHarmonyOperation
     {
-        return _serviceProvider.GetRequiredService<T>();
-    }
-    
-    public T CreateQuery<T>() where T : Query
-    {
-        return _serviceProvider.GetRequiredService<T>();
+        Debug.Assert(typeof(TOperation).IsAssignableTo(typeof(IHarmonyOperation)));
+        
+        var operation = _serviceProvider.GetRequiredService<TOperation>();
+        
+        return operation;
     }
 }

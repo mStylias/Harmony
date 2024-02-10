@@ -1,7 +1,6 @@
 ﻿using Harmony.Core;
-using Harmony.Core.Factories;
-using Harmony.Test;
-using Microsoft.AspNetCore.Mvc;
+using Harmony.MinimalApis;
+using Harmony.Results.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddHarmony(typeof(Program).Assembly);
+builder.Services.AddLogging();
+
+var assembly = typeof(Program).Assembly;
+builder.Services
+    .AddHarmony(assembly)
+    .AddApiEndpoints(assembly);
 
 var app = builder.Build();
 
@@ -22,26 +26,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.UseErrorFactory();
 
-app.MapGet("/weatherforecast", async ([FromServices] ICohesionFabricator fabricator) =>
-    {
-        var query = fabricator.CreateQuery<GetNameQuery>();
-        query.NumToReturn = 32;
-
-        var result = await query.ExecuteAsync();
-
-        return result.Value;
-    })
-    .WithName("GetWeatherForecast")
-    .WithOpenApi();
+app.MapApiEndpoints();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

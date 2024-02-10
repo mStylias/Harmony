@@ -18,12 +18,16 @@ namespace Harmony.Results
         {
             Error = error;
             IsError = true;
+            Value = default;
+            Success = null;
         }
         
         private Result(TValue? value)
         {
             Value = value;
             IsError = false;
+            Error = null;
+            Success = null;
         }
 
         private Result(TValue? value, ISuccess? success)
@@ -31,6 +35,7 @@ namespace Harmony.Results
             Value = value;
             Success = success;
             IsError = false;
+            Error = null;
         }
 
         // Implicit operators
@@ -48,7 +53,7 @@ namespace Harmony.Results
         {
             return resultWithoutType.IsError 
                 ? new Result<TValue>(resultWithoutType.Error!) 
-                : new Result<TValue>(default(TValue), resultWithoutType.Success);
+                : new Result<TValue>(default, resultWithoutType.Success);
         }
         
         // Creator methods

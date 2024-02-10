@@ -14,6 +14,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Harmony.Core\Harmony.Core.csproj" />
+      <ProjectReference Include="..\Harmony.MinimalApis\Harmony.MinimalApis.csproj" />
       <ProjectReference Include="..\Harmony.Results\Harmony.Results.csproj" />
     </ItemGroup>
 

@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Harmony.Results", "src\Harm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Harmony.Test", "src\Harmony.Test\Harmony.Test.csproj", "{4BAE9E8A-6AB7-44DF-AE6E-3EE8A769AF40}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Harmony.MinimalApis", "src\Harmony.MinimalApis\Harmony.MinimalApis.csproj", "{7712569A-3A86-41B0-AEA4-FE62B6A65E59}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,10 +28,15 @@ Global
 		{4BAE9E8A-6AB7-44DF-AE6E-3EE8A769AF40}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BAE9E8A-6AB7-44DF-AE6E-3EE8A769AF40}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BAE9E8A-6AB7-44DF-AE6E-3EE8A769AF40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7712569A-3A86-41B0-AEA4-FE62B6A65E59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7712569A-3A86-41B0-AEA4-FE62B6A65E59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7712569A-3A86-41B0-AEA4-FE62B6A65E59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7712569A-3A86-41B0-AEA4-FE62B6A65E59}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D85E59F5-81F2-4D80-A1A6-BEC63AF5E269} = {B9F143CF-8F1B-4ADC-931A-06272DBB403E}
 		{3D6F4420-8203-4325-966C-91CC809826A4} = {B9F143CF-8F1B-4ADC-931A-06272DBB403E}
 		{4BAE9E8A-6AB7-44DF-AE6E-3EE8A769AF40} = {B9F143CF-8F1B-4ADC-931A-06272DBB403E}
+		{7712569A-3A86-41B0-AEA4-FE62B6A65E59} = {B9F143CF-8F1B-4ADC-931A-06272DBB403E}
 	EndGlobalSection
 EndGlobal

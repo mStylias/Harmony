@@ -16,12 +16,14 @@ namespace Harmony.Results
         {
             Error = error;
             IsError = true;
+            Success = null;
         }
         
         private Result(ISuccess? success)
         {
             Success = success;
             IsError = false;
+            Error = null;
         }
 
         // Implicit operators
@@ -39,6 +41,11 @@ namespace Harmony.Results
         public static Result Fail(IError error)
         {
             return new Result(error);
+        }
+
+        public static Result<TValue> Fail<TValue>(IError error)
+        {
+            return Result<TValue>.Fail(error);
         }
         
         public static Result Ok()
