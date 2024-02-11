@@ -5,8 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Harmony.Core.Factories;
 
-public class CohesionFabricator<TConfiguration> : ICohesionFabricator<TConfiguration>
-    where TConfiguration : new()
+public class CohesionFabricator : ICohesionFabricator
+    
 {
     private readonly IServiceProvider _serviceProvider;
 
@@ -15,9 +15,9 @@ public class CohesionFabricator<TConfiguration> : ICohesionFabricator<TConfigura
         _serviceProvider = serviceProvider;
     }
 
-    public TOperation CreateOperation<TOperation>(Action<TConfiguration> setupConfigAction)
+    public TOperation CreateOperation<TOperation, TConfiguration>(Action<TConfiguration> setupConfigAction)
         where TOperation : IHarmonyOperation<TConfiguration>
-
+        where TConfiguration : new()
     {
         Debug.Assert(typeof(TOperation).IsAssignableTo(typeof(IHarmonyOperation<TConfiguration>)));
         
@@ -30,17 +30,7 @@ public class CohesionFabricator<TConfiguration> : ICohesionFabricator<TConfigura
 
         return operation;
     }
-}
-
-public class CohesionFabricator : ICohesionFabricator
-{
-    private readonly IServiceProvider _serviceProvider;
-
-    public CohesionFabricator(IServiceProvider serviceProvider)
-    {
-        _serviceProvider = serviceProvider;
-    }
-
+    
     public TOperation CreateOperation<TOperation>() where TOperation : IHarmonyOperation
     {
         Debug.Assert(typeof(TOperation).IsAssignableTo(typeof(IHarmonyOperation)));

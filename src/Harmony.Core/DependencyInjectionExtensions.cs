@@ -28,8 +28,7 @@ public static class DependencyInjectionExtensions
         {
             services.AddTransient(type);
         }
-
-        services.AddSingleton(typeof(ICohesionFabricator<>), typeof(CohesionFabricator<>));
+        
         services.AddSingleton<ICohesionFabricator, CohesionFabricator>();
         
         return services;

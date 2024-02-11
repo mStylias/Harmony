@@ -54,6 +54,11 @@ namespace Harmony.Results
             return new Result(success);
         }
 
+        public static Result Ok(ISuccess success)
+        {
+            return new Result(success);
+        }
+        
         public static Result<TValue> Ok<TValue>(TValue value, ISuccess success)
         {
             return Result<TValue>.Ok(value, success);
@@ -62,11 +67,6 @@ namespace Harmony.Results
         public static Result<TValue> Ok<TValue>(TValue value)
         {
             return Result<TValue>.Ok(value);
-        }
-        
-        public static Result Ok(ISuccess success)
-        {
-            return new Result(success);
         }
     }
 }

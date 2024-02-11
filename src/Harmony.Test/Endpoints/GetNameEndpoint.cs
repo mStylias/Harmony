@@ -14,9 +14,9 @@ public class GetNameEndpoint : IEndpoint
         return app.MapGet("/weatherforecast", async (
                 ILogger<GetNameEndpoint> logger,
                 [FromQuery] int id,
-                [FromServices] ICohesionFabricator<HarmonyConfiguration> fabricator) =>
+                [FromServices] ICohesionFabricator fabricator) =>
             {
-                var query = fabricator.CreateOperation<GetNameQuery>(config =>
+                var query = fabricator.CreateOperation<GetNameQuery, HarmonyConfiguration>(config =>
                 {
                     config.UseTransaction = true;
                 });

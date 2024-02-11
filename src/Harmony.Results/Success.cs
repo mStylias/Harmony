@@ -2,8 +2,13 @@
 
 namespace Harmony.Results;
 
-public readonly record struct Success : ISuccess
+public class Success : ISuccess
 {
+    public Success(string message)
+    {
+        Message = message;
+    }
+    
     public string Message { get; init; }
 }
 
