@@ -5,6 +5,7 @@ namespace Harmony.Results;
 
 public class Error : IError
 {
+    public string MainErrorCode { get; internal set; }
     public int HttpStatusCode { get; private set; }
     public List<InnerError> InnerErrors { get; private set; } = null!;
     
@@ -24,6 +25,7 @@ public class Error : IError
     // Single error construction
     internal Error Populate(string code, string description)
     {
+        MainErrorCode = code;
         InnerErrors = new()
         {
             new InnerError(code, description)
@@ -33,6 +35,7 @@ public class Error : IError
     
     internal Error Populate(string code, string description, int httpStatusCode)
     {
+        MainErrorCode = code;
         InnerErrors = new()
         {
             new InnerError(code, description)
@@ -44,6 +47,7 @@ public class Error : IError
     // Single error construction with logging
     internal Error Populate(string code, string description, Action<ILogger> addLogging)
     {
+        MainErrorCode = code;
         InnerErrors = new()
         {
             new InnerError(code, description)
@@ -54,6 +58,7 @@ public class Error : IError
     
     internal Error Populate(string code, string description, int httpStatusCode, Action<ILogger> addLogging)
     {
+        MainErrorCode = code;
         InnerErrors = new()
         {
             new InnerError(code, description)
@@ -64,29 +69,33 @@ public class Error : IError
     }
     
     // Multiple errors construction
-    internal Error Populate(List<InnerError> innerErrors)
+    internal Error Populate(string code, List<InnerError> innerErrors)
     {
+        MainErrorCode = code;
         InnerErrors = innerErrors;
         return this;
     }
     
-    internal Error Populate(List<InnerError> innerErrors, int httpStatusCode)
+    internal Error Populate(string code, List<InnerError> innerErrors, int httpStatusCode)
     {
+        MainErrorCode = code;
         InnerErrors = innerErrors;
         HttpStatusCode = httpStatusCode;
         return this;
     }
     
     // Multiple errors construction with logging
-    internal Error Populate(List<InnerError> innerErrors, Action<ILogger> addLogging)
+    internal Error Populate(string code, List<InnerError> innerErrors, Action<ILogger> addLogging)
     {
+        MainErrorCode = code;
         InnerErrors = innerErrors;
         _logAction = addLogging;
         return this;
     }
     
-    internal Error Populate(List<InnerError> innerErrors, int httpStatusCode, Action<ILogger> addLogging)
+    internal Error Populate(string code, List<InnerError> innerErrors, int httpStatusCode, Action<ILogger> addLogging)
     {
+        MainErrorCode = code;
         InnerErrors = innerErrors;
         HttpStatusCode = httpStatusCode;
         _logAction = addLogging;

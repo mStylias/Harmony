@@ -7,67 +7,68 @@ public static class ErrorFactory
 {
     internal static ILogger Logger { get; set; } = null!;
     
-    public static Error CreateError(string code, string description)
+    public static Error CreateError(string mainErrorCode, string description)
     {
         Debug.Assert(Logger is not null);
         var error = new Error(Logger);
-        error.Populate(code, description);
+        error.Populate(mainErrorCode, description);
         return error;
     }
 
-    public static Error CreateError(string code, string description, int httpStatusCode)
+    public static Error CreateError(string mainErrorCode, string description, int httpStatusCode)
     {
         Debug.Assert(Logger is not null);
         var error = new Error(Logger);
-        error.Populate(code, description, httpStatusCode);
+        error.Populate(mainErrorCode, description, httpStatusCode);
         return error;
     }
 
-    public static Error CreateError(string code, string description, Action<ILogger> addLogging)
+    public static Error CreateError(string mainErrorCode, string description, Action<ILogger> addLogging)
     {
         Debug.Assert(Logger is not null);
         var error = new Error(Logger);
-        error.Populate(code, description, addLogging);
+        error.Populate(mainErrorCode, description, addLogging);
         return error;
     }
 
-    public static Error CreateError(string code, string description, int httpStatusCode, Action<ILogger> addLogging)
+    public static Error CreateError(string mainErrorCode, string description, int httpStatusCode, Action<ILogger> addLogging)
     {
         Debug.Assert(Logger is not null);
         var error = new Error(Logger);
-        error.Populate(code, description, httpStatusCode, addLogging);
+        error.Populate(mainErrorCode, description, httpStatusCode, addLogging);
         return error;
     }
 
-    public static Error CreateError(List<InnerError> innerErrors)
+    public static Error CreateError(string mainErrorCode, List<InnerError> innerErrors)
     {
         Debug.Assert(Logger is not null);
         var error = new Error(Logger);
-        error.Populate(innerErrors);
+        error.Populate(mainErrorCode, innerErrors);
         return error;
     }
 
-    public static Error CreateError(List<InnerError> innerErrors, int httpStatusCode)
+    public static Error CreateError(string mainErrorCode, List<InnerError> innerErrors, int httpStatusCode)
     {
         Debug.Assert(Logger is not null);
         var error = new Error(Logger);
-        error.Populate(innerErrors, httpStatusCode);
+        error.Populate(mainErrorCode, innerErrors, httpStatusCode);
         return error;
     }
 
-    public static Error CreateError(List<InnerError> innerErrors, Action<ILogger> addLogging)
+    public static Error CreateError(string mainErrorCode, List<InnerError> innerErrors, Action<ILogger> addLogging)
     {
         Debug.Assert(Logger is not null);
         var error = new Error(Logger);
-        error.Populate(innerErrors, addLogging);
+        error.Populate(mainErrorCode, innerErrors, addLogging);
         return error;
     }
 
-    public static Error CreateError(List<InnerError> innerErrors, int httpStatusCode, Action<ILogger> addLogging)
+    public static Error CreateError(string mainErrorCode, List<InnerError> innerErrors, int httpStatusCode, 
+        Action<ILogger> addLogging)
     {
         Debug.Assert(Logger is not null);
         var error = new Error(Logger);
-        error.Populate(innerErrors, httpStatusCode, addLogging);
+        error.Populate(mainErrorCode, innerErrors, httpStatusCode, addLogging);
         return error;
     }
 }
