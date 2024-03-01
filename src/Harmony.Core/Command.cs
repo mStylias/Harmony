@@ -29,3 +29,30 @@ public abstract class Command<TInput, TOutput> : IOperationWithInputOutput<TInpu
     }
 }
 
+public abstract class Command<TConfiguration> : IHarmonyOperation<TConfiguration>
+{
+    public TConfiguration? Configuration { get; set; }
+    
+    public virtual void Execute(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public virtual Task ExecuteAsync(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public abstract class Command : IHarmonyOperation
+{
+    public virtual void Execute(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public virtual Task ExecuteAsync(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+}

@@ -29,3 +29,30 @@ public abstract class Query<TInput, TOutput> : IOperationWithInputOutput<TInput,
     }
 }
 
+public abstract class Query<TConfiguration> : IHarmonyOperation<TConfiguration>
+{
+    public TConfiguration? Configuration { get; set; }
+    
+    public virtual void Execute(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public virtual Task ExecuteAsync(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public abstract class Query : IHarmonyOperation
+{
+    public virtual void Execute(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public virtual Task ExecuteAsync(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+}
