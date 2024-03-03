@@ -4,7 +4,7 @@ namespace Harmony.Test.Validators;
 
 public class GetNameQueryValidator : IHarmonyOperationValidator<GetNameQuery, bool>
 {
-    public Task<bool> Validate(GetNameQuery operation)
+    public Task<bool> ValidateAsync(GetNameQuery operation)
     {
         if (operation.Configuration.UseTransaction)
         {

@@ -4,5 +4,5 @@ namespace Harmony.Core.Validators;
 
 public interface IHarmonyOperationValidator<in TOperation, TOutput> where TOperation : IHarmonyOperation
 {
-    public Task<TOutput> Validate(TOperation operation);
+    public Task<TOutput> ValidateAsync(TOperation operation);
 }
