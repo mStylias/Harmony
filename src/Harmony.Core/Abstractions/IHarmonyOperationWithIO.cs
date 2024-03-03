@@ -1,13 +1,7 @@
 namespace Harmony.Core.Abstractions;
 
-public interface IOperationWithInputOutput<in TInput, TOutput, TConfiguration> : IHarmonyOperation<TConfiguration>
+public interface IOperationWithIO<TInput, TOutput> : IOperationWithInput<TInput>
 {
-    TOutput Execute(TInput input, CancellationToken cancellationToken = default);
-    Task<TOutput> ExecuteAsync(TInput input, CancellationToken cancellationToken = default);
-}
-
-public interface IOperationWithInputOutput<in TInput, TOutput> : IHarmonyOperation
-{
-    TOutput Execute(TInput input, CancellationToken cancellationToken = default);
-    Task<TOutput> ExecuteAsync(TInput input, CancellationToken cancellationToken = default);
+    TOutput Execute(CancellationToken cancellationToken = default);
+    Task<TOutput> ExecuteAsync(CancellationToken cancellationToken = default);
 }

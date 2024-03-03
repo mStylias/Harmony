@@ -1,25 +1,27 @@
 ﻿using Harmony.Core;
+using Harmony.Core.Abstractions;
 using Harmony.Results;
 using Harmony.Test.Common;
 using Harmony.Test.Contracts;
-using Harmony.Test.Domain.Errors;
 
 namespace Harmony.Test;
 
-public class GetNameQuery : Query<GetNameRequest, Result<GetNameResponse>, HarmonyConfiguration>
+public class GetNameQuery : Query<GetNameRequest, Result<GetNameResponse>>, IConfigurable<HarmonyConfiguration>
 {
+    public HarmonyConfiguration Configuration { get; set; }
+    public override GetNameRequest? Input { get; set; }
+    
     private readonly ILogger<GetNameQuery> _logger;
 
     public GetNameQuery(ILogger<GetNameQuery> logger)
     {
         _logger = logger;
     }
-
-    public override Task<Result<GetNameResponse>> ExecuteAsync(GetNameRequest input, 
-        CancellationToken cancellationToken = default)
+    
+    public override async Task<Result<GetNameResponse>> ExecuteAsync(CancellationToken cancellationToken = default)
     {
-        var error = Errors.BarberIdNotFound;
-        error.Log();
-        return Task.FromResult(Result.Fail<GetNameResponse>(error));
+        _logger.LogInformation("Use transaction value: {ConfigValue}", Configuration.UseTransaction);
+        _logger.LogInformation("Input id: {InputId}", Input!.Id);
+        return new GetNameResponse("Jack");
     }
 }

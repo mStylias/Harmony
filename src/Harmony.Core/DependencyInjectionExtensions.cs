@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
-using Harmony.Core.Abstractions.Factories;
-using Harmony.Core.Factories;
+using Harmony.Core.Abstractions;
 using Harmony.Core.Validators;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,7 +13,7 @@ public static class DependencyInjectionExtensions
             .AddHarmonyOperations(assembly)
             .AddHarmonyOperationValidators(assembly);
 
-        services.AddSingleton<ICohesionFabricator, CohesionFabricator>();
+        services.AddSingleton<IHarmonicon, Harmonicon>();
         return services;
     }
 
@@ -24,7 +23,6 @@ public static class DependencyInjectionExtensions
         
         var queryTypes = assemblyTypes
             .Where(t => t.BaseType is { IsGenericType: true } && (
-                        t.BaseType.GetGenericTypeDefinition() == typeof(Query<,,>) ||
                         t.BaseType.GetGenericTypeDefinition() == typeof(Query<,>) ||
                         t.BaseType.GetGenericTypeDefinition() == typeof(Query<>) ||
                         t.BaseType.GetGenericTypeDefinition() == typeof(Query)));
@@ -36,7 +34,6 @@ public static class DependencyInjectionExtensions
         
         var commandTypes = assemblyTypes
             .Where(t => t.BaseType is { IsGenericType: true } && (
-                        t.BaseType.GetGenericTypeDefinition() == typeof(Command<,,>) ||
                         t.BaseType.GetGenericTypeDefinition() == typeof(Command<,>) ||
                         t.BaseType.GetGenericTypeDefinition() == typeof(Command<>) ||
                         t.BaseType.GetGenericTypeDefinition() == typeof(Command)));
@@ -70,6 +67,6 @@ public static class DependencyInjectionExtensions
             return false;
 
         var typeDefinition = type.GetGenericTypeDefinition();
-        return typeDefinition == typeof(IHarmonyOperationValidator<>);
+        return typeDefinition == typeof(IHarmonyOperationValidator<,>);
     }
 }

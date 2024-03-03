@@ -2,43 +2,28 @@
 
 namespace Harmony.Core;
 
-public abstract class Command<TInput, TOutput, TConfiguration> : IOperationWithInputOutput<TInput, TOutput, TConfiguration>
+public abstract class Command<TInput, TOutput> : IOperationWithIO<TInput, TOutput>
 {
-    public TConfiguration? Configuration { get; set;  }
-    public virtual TOutput Execute(TInput input, CancellationToken cancellationToken = default)
+    public abstract TInput? Input { get; set; }
+    public virtual TOutput Execute(CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
 
-    public virtual Task<TOutput> ExecuteAsync(TInput input, CancellationToken cancellationToken = default)
+    public virtual Task<TOutput> ExecuteAsync(CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
 }
 
-public abstract class Command<TInput, TOutput> : IOperationWithInputOutput<TInput, TOutput>
+public abstract class Command<TOutput> : IHarmonyOperation
 {
-    public virtual TOutput Execute(TInput input, CancellationToken cancellationToken = default)
+    public virtual TOutput Execute(CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
 
-    public virtual Task<TOutput> ExecuteAsync(TInput input, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-}
-
-public abstract class Command<TConfiguration> : IHarmonyOperation<TConfiguration>
-{
-    public TConfiguration? Configuration { get; set; }
-    
-    public virtual void Execute(CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public virtual Task ExecuteAsync(CancellationToken cancellationToken = default)
+    public virtual Task<TOutput> ExecuteAsync(CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }

@@ -10,8 +10,4 @@
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
     </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Harmony.Results\Harmony.Results.csproj" />
-    </ItemGroup>
-
 </Project>
