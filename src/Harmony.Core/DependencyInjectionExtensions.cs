@@ -7,13 +7,24 @@ namespace Harmony.Core;
 
 public static class DependencyInjectionExtensions
 {
-    public static IServiceCollection AddHarmony(this IServiceCollection services, Assembly assembly)
+    /// <summary>
+    /// Adds all the required harmony services including all the commands, queries and validators
+    /// in the specified assembly. If you want to use scoped services for the operations, set the useScope to true
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="assembly"></param>
+    /// <param name="useScope"></param>
+    /// <returns></returns>
+    public static IServiceCollection AddHarmony(this IServiceCollection services, Assembly assembly, 
+        bool useScope = false)
     {
         services
             .AddHarmonyOperations(assembly)
             .AddHarmonyOperationValidators(assembly);
 
+        Harmonicon.UseScope = useScope;
         services.AddSingleton<IHarmonicon, Harmonicon>();
+        
         return services;
     }
 
@@ -22,28 +33,54 @@ public static class DependencyInjectionExtensions
         var assemblyTypes = assembly.GetTypes();
         
         var queryTypes = assemblyTypes
-            .Where(t => t.BaseType is { IsGenericType: true } && (
-                        t.BaseType.GetGenericTypeDefinition() == typeof(Query<,>) ||
-                        t.BaseType.GetGenericTypeDefinition() == typeof(Query<>) ||
-                        t.BaseType.GetGenericTypeDefinition() == typeof(Query)));
+            .Where(t => IsSubclassOfRawGeneric(typeof(Query), t) ||
+                        IsSubclassOfRawGeneric(typeof(Query<>), t) ||
+                        IsSubclassOfRawGeneric(typeof(Query<,>), t));
         
         foreach (var type in queryTypes)
         {
-            services.AddTransient(type);
+            if (Harmonicon.UseScope)
+            {
+                services.AddScoped(type);
+            }
+            else
+            {
+                services.AddTransient(type);
+            }
         }
         
         var commandTypes = assemblyTypes
-            .Where(t => t.BaseType is { IsGenericType: true } && (
-                        t.BaseType.GetGenericTypeDefinition() == typeof(Command<,>) ||
-                        t.BaseType.GetGenericTypeDefinition() == typeof(Command<>) ||
-                        t.BaseType.GetGenericTypeDefinition() == typeof(Command)));
-        
+            .Where(t => IsSubclassOfRawGeneric(typeof(Command), t) ||
+                        IsSubclassOfRawGeneric(typeof(Command<>), t) ||
+                        IsSubclassOfRawGeneric(typeof(Command<,>), t));
+
         foreach (var type in commandTypes)
         {
-            services.AddTransient(type);
+            if (Harmonicon.UseScope)
+            {
+                services.AddScoped(type);
+            }
+            else
+            {
+                services.AddTransient(type);
+            }
         }
         
         return services;
+    }
+    
+    private static bool IsSubclassOfRawGeneric(Type generic, Type? toCheck)
+    {
+        while (toCheck != null && toCheck != typeof(object))
+        {
+            var cur = toCheck.IsGenericType ? toCheck.GetGenericTypeDefinition() : toCheck;
+            if (generic == cur)
+            {
+                return true;
+            }
+            toCheck = toCheck.BaseType;
+        }
+        return false;
     }
     
     private static IServiceCollection AddHarmonyOperationValidators(this IServiceCollection services, Assembly assembly)

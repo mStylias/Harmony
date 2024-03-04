@@ -1,6 +1,8 @@
-﻿namespace Harmony.Core.Abstractions;
+﻿using Microsoft.Extensions.DependencyInjection;
 
-public interface IHarmonyOperation
+namespace Harmony.Core.Abstractions;
+
+public interface IHarmonyOperation : IDisposable
 {
-    
+    public IServiceScope? Scope { get; set; }
 }

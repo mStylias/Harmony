@@ -6,11 +6,17 @@ namespace Harmony.Core;
 
 public class Harmonicon : IHarmonicon
 {
+    internal static bool UseScope { get; set; }
     private readonly IServiceProvider _serviceProvider;
-
+    private readonly IServiceScopeFactory? _serviceScopeFactory;
+    
     public Harmonicon(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
+        if (UseScope)
+        {
+            _serviceScopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
+        }
     }
     
     /// <inheritdoc/>
@@ -26,7 +32,7 @@ public class Harmonicon : IHarmonicon
             "using the harmonicon SynthesizeOperation overload that accepts configuration. " +
             "Consider using that instead.");
         
-        var operation = _serviceProvider.GetRequiredService<TOperation>();
+        var operation = CreateOperation<TOperation>();
         return operation;
     }
     
@@ -38,8 +44,8 @@ public class Harmonicon : IHarmonicon
             "Warning: You are synthesizing an operation that requires configuration without " +
             "using the harmonicon SynthesizeOperation overload that accepts configuration. " +
             "Consider using that instead.");
-        
-        var operation = _serviceProvider.GetRequiredService<TOperation>();
+
+        var operation = CreateOperation<TOperation>();
         
         operation.Input = input;
 
@@ -56,7 +62,7 @@ public class Harmonicon : IHarmonicon
             "using the harmonicon SynthesizeOperation overload that accepts configuration. " +
             "Consider using that instead.");
         
-        var operation = _serviceProvider.GetRequiredService<TOperation>();
+        var operation = CreateOperation<TOperation>();
 
         var config = new TConfiguration();
 
@@ -71,7 +77,7 @@ public class Harmonicon : IHarmonicon
         where TOperation : IOperationWithInput<TInput>, IConfigurable<TConfiguration>
         where TConfiguration : new()
     {
-        var operation = _serviceProvider.GetRequiredService<TOperation>();
+        var operation = CreateOperation<TOperation>();
 
         var config = new TConfiguration();
 
@@ -79,6 +85,25 @@ public class Harmonicon : IHarmonicon
         operation.Configuration = config;
         
         operation.Input = input;
+
+        return operation;
+    }
+
+    private TOperation CreateOperation<TOperation>()
+        where TOperation : IHarmonyOperation
+    {
+        TOperation operation;
+        
+        if (UseScope)
+        {
+            var scope = _serviceScopeFactory!.CreateScope();
+            operation = scope.ServiceProvider.GetRequiredService<TOperation>();
+            operation.Scope = scope;
+        }
+        else
+        {
+            operation = _serviceProvider.GetRequiredService<TOperation>();
+        }
 
         return operation;
     }
