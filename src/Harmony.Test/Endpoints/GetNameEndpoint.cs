@@ -14,12 +14,12 @@ public class GetNameEndpoint : IEndpoint
         return app.MapGet("/weatherforecast", async Task<IResult>(
                 ILogger<GetNameEndpoint> logger,
                 [FromQuery] int id,
-                [FromServices] IHarmonicon harmonicon) =>
+                [FromServices] IOperationFactory operationFactory) =>
             {
-                var testCompilerWarningQuery = harmonicon.SynthesizeOperation<GetNameQuery>();
-                var testCompilerWarningQuery2 = harmonicon.SynthesizeOperation<GetNameQuery, GetNameRequest>(new GetNameRequest(7));
+                var testCompilerWarningQuery = operationFactory.SynthesizeOperation<GetNameQuery>();
+                var testCompilerWarningQuery2 = operationFactory.SynthesizeOperation<GetNameQuery, GetNameRequest>(new GetNameRequest(7));
                 
-                var command = harmonicon.SynthesizeOperation<AddNameCommand>();
+                var command = operationFactory.SynthesizeOperation<AddNameCommand>();
                 var commandResult = await command.ExecuteAsync();
                 
                 if (commandResult.IsError)
@@ -29,7 +29,7 @@ public class GetNameEndpoint : IEndpoint
                 
                 var request = new GetNameRequest(id);
                 
-                var query = harmonicon.SynthesizeOperation<GetNameQuery, GetNameRequest, HarmonyConfiguration>(
+                var query = operationFactory.SynthesizeOperation<GetNameQuery, GetNameRequest, HarmonyConfiguration>(
                      request, config =>
                 {
                     config.UseTransaction = true;
@@ -38,7 +38,7 @@ public class GetNameEndpoint : IEndpoint
                 var nameResponse = await query.ExecuteAsync();
                 return nameResponse.IsSuccess switch
                 {
-                    true => Microsoft.AspNetCore.Http.Results.Ok(nameResponse.Value!),
+                    true => Microsoft.AspNetCore.Http.Results.Ok(nameResponse),
                     false => Microsoft.AspNetCore.Http.Results.BadRequest(nameResponse.Error)
                 };
             })

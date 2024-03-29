@@ -1,6 +1,5 @@
 ﻿using Harmony.Core;
 using Harmony.MinimalApis;
-using Harmony.Results.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,8 +24,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.UseErrorFactory();
 
 app.MapApiEndpoints();
 

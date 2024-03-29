@@ -1,6 +1,6 @@
 ﻿namespace Harmony.Core.Abstractions;
 
-public interface IOperationWithInput<TInput> : IHarmonyOperation
+public interface IHarmonyOperationWithInput<TInput> : IHarmonyOperation
 {
     TInput? Input { get; set; }
 }

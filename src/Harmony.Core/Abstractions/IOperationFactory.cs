@@ -1,6 +1,6 @@
 ﻿namespace Harmony.Core.Abstractions;
 
-public interface IHarmonicon
+public interface IOperationFactory
 {
     /// <summary>
     /// Creates an operation of type <typeparamref name="TOperation"/> with no input or configuration.
@@ -16,7 +16,7 @@ public interface IHarmonicon
     /// <typeparam name="TInput">The input type</typeparam>
     /// <returns></returns>
     TOperation SynthesizeOperation<TOperation, TInput>(TInput input) 
-        where TOperation : IOperationWithInput<TInput>;
+        where TOperation : IHarmonyOperationWithInput<TInput>;
 
     /// <summary>
     /// Creates an operation of type <typeparamref name="TOperation"/> and configures it through the
@@ -39,6 +39,6 @@ public interface IHarmonicon
     /// <typeparam name="TInput">The input data type</typeparam>
     /// <typeparam name="TConfiguration">The configuration type</typeparam>
     TOperation SynthesizeOperation<TOperation, TInput, TConfiguration>(TInput input, Action<TConfiguration> setupConfigAction) 
-        where TOperation : IOperationWithInput<TInput>, IConfigurable<TConfiguration>
+        where TOperation : IHarmonyOperationWithInput<TInput>, IConfigurable<TConfiguration>
         where TConfiguration : new();
 }

@@ -4,13 +4,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Harmony.Core;
 
-public class Harmonicon : IHarmonicon
+public class OperationFactory : IOperationFactory
 {
     internal static bool UseScope { get; set; }
     private readonly IServiceProvider _serviceProvider;
     private readonly IServiceScopeFactory? _serviceScopeFactory;
     
-    public Harmonicon(IServiceProvider serviceProvider)
+    public OperationFactory(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
         if (UseScope)
@@ -22,7 +22,7 @@ public class Harmonicon : IHarmonicon
     /// <inheritdoc/>
     public TOperation SynthesizeOperation<TOperation>() where TOperation : IHarmonyOperation
     {
-        Debug.WriteLineIf(typeof(TOperation).IsAssignableTo(typeof(IOperationWithInput<>)), 
+        Debug.WriteLineIf(typeof(TOperation).IsAssignableTo(typeof(IHarmonyOperationWithInput<>)), 
             "Warning: You are synthesizing an operation that requires input without " +
             "using the harmonicon SynthesizeOperation overload that accepts input. " +
             "Consider using that instead.");
@@ -38,7 +38,7 @@ public class Harmonicon : IHarmonicon
     
     /// <inheritdoc/>
     public TOperation SynthesizeOperation<TOperation, TInput>(TInput input) 
-        where TOperation : IOperationWithInput<TInput>
+        where TOperation : IHarmonyOperationWithInput<TInput>
     {
         Debug.WriteLineIf(typeof(TOperation).IsAssignableTo(typeof(IConfigurable<>)), 
             "Warning: You are synthesizing an operation that requires configuration without " +
@@ -74,7 +74,7 @@ public class Harmonicon : IHarmonicon
     
     /// <inheritdoc/>
     public TOperation SynthesizeOperation<TOperation, TInput, TConfiguration>(TInput input, Action<TConfiguration> setupConfigAction) 
-        where TOperation : IOperationWithInput<TInput>, IConfigurable<TConfiguration>
+        where TOperation : IHarmonyOperationWithInput<TInput>, IConfigurable<TConfiguration>
         where TConfiguration : new()
     {
         var operation = CreateOperation<TOperation>();

@@ -1,11 +1,13 @@
-﻿using Harmony.Results;
+﻿using Harmony.MinimalApis.Errors;
+using Harmony.Results;
 
 namespace Harmony.Test.Domain.Errors;
 
 public static partial class Errors
 {
-    public static Error BarberIdNotFound => ErrorFactory.CreateError(
+    public static HttpError BarberIdNotFound(ILogger logger) => new (
         "BARBER_ID_NOT_FOUND",
         "Barber id not found",
-        404, logger => logger.LogError("Barber id not found"));
+        StatusCodes.Status404NotFound, 
+        () => logger.LogError("Barber id not found"));
 }

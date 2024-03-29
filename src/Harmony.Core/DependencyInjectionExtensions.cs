@@ -22,8 +22,8 @@ public static class DependencyInjectionExtensions
             .AddHarmonyOperations(assembly)
             .AddHarmonyOperationValidators(assembly);
 
-        Harmonicon.UseScope = useScope;
-        services.AddSingleton<IHarmonicon, Harmonicon>();
+        OperationFactory.UseScope = useScope;
+        services.AddSingleton<IOperationFactory, OperationFactory>();
         
         return services;
     }
@@ -39,7 +39,7 @@ public static class DependencyInjectionExtensions
         
         foreach (var type in queryTypes)
         {
-            if (Harmonicon.UseScope)
+            if (OperationFactory.UseScope)
             {
                 services.AddScoped(type);
             }
@@ -56,7 +56,7 @@ public static class DependencyInjectionExtensions
 
         foreach (var type in commandTypes)
         {
-            if (Harmonicon.UseScope)
+            if (OperationFactory.UseScope)
             {
                 services.AddScoped(type);
             }

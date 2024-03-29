@@ -2,17 +2,22 @@
 
 namespace Harmony.Results;
 
-public class Success : ISuccess
+public class Success
 {
+    internal Success()
+    {
+        
+    }
+    
     public Success(string message)
     {
         Message = message;
     }
     
-    public string Message { get; init; }
+    public string? Message { get; init; }
 }
 
-public class Success<TMetadata> : ISuccess
+public class Success<TMetadata>
 {
     public string Message { get; init; }
     public TMetadata Metadata { get; init; }

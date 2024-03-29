@@ -1,9 +1,9 @@
 ﻿namespace Harmony.Results.Abstractions;
 
-public interface IResultBase
+public interface IResultBase<out TError>
 {
-    IError? Error { get; }
-    ISuccess? Success { get; }
+    TError? Error { get; }
+    Success? Success { get; }
     bool IsError { get; }
     bool IsSuccess { get; }
 }

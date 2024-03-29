@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Harmony.Core;
 
-public abstract class Query<TInput, TOutput> : IOperationWithIO<TInput, TOutput>
+public abstract class Query<TInput, TOutput> : IHarmonyOperationWithIO<TInput, TOutput>
 {
     public abstract TInput? Input { get; set; }
     public virtual TOutput Execute(CancellationToken cancellationToken = default)
