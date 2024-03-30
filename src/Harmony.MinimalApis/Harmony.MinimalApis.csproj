@@ -4,6 +4,21 @@
         <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <Title>Harmony.MinimalApis</Title>
+        <Authors>StyleM</Authors>
+        <Description>A lightweight library that aims to improve the structure of .NET Minimal Apis. It supports the following features:
+1. Isolate each endpoint to its own file
+2. An HttpError that integrates with Harmony.Results</Description>
+        <PackageProjectUrl>https://github.com/mStylias/Harmony</PackageProjectUrl>
+        <PackageReadmeFile>readme.md</PackageReadmeFile>
+        <RepositoryUrl>https://github.com/mStylias/Harmony</RepositoryUrl>
+        <PackageIcon>harmony_logo.png</PackageIcon>
+        <PackageTags>minimal-apis;structure;single-responsibility;error-handling</PackageTags>
+        <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <AssemblyVersion>1.0.1</AssemblyVersion>
+        <FileVersion>1.0.1</FileVersion>
+        <Version>1.0.1</Version>
     </PropertyGroup>
 
     <ItemGroup>
@@ -11,11 +26,22 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Harmony.Results\Harmony.Results.csproj" />
+      <None Include="..\..\harmony_logo.png">
+        <Pack>True</Pack>
+        <PackagePath>\</PackagePath>
+      </None>
+      <None Include="..\..\LICENSE">
+        <Pack>True</Pack>
+        <PackagePath>\</PackagePath>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Harmony.Results\Harmony.Results.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="readme.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 
 </Project>
