@@ -13,7 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Harmony.Core\Harmony.Cqrs.csproj" />
+      <ProjectReference Include="..\Harmony.Cqrs\Harmony.Cqrs.csproj" />
       <ProjectReference Include="..\Harmony.MinimalApis\Harmony.MinimalApis.csproj" />
       <ProjectReference Include="..\Harmony.Results\Harmony.Results.csproj" />
     </ItemGroup>
