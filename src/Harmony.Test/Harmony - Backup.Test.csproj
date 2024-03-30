@@ -8,12 +8,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Harmony.Core\Harmony.Cqrs.csproj" />
+      <ProjectReference Include="..\Harmony.Core\Harmony.Core.csproj" />
+      <ProjectReference Include="..\Harmony.Cqrs\Harmony.Cqrs.csproj" />
       <ProjectReference Include="..\Harmony.MinimalApis\Harmony.MinimalApis.csproj" />
       <ProjectReference Include="..\Harmony.Results\Harmony.Results.csproj" />
     </ItemGroup>

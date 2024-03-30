@@ -1,5 +1,5 @@
-﻿using Harmony.Core;
-using Harmony.Core.Abstractions;
+﻿using Harmony.Cqrs;
+using Harmony.Cqrs.Abstractions;
 using Harmony.Results;
 using Harmony.Test.Common;
 using Harmony.Test.Contracts;

@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
-using Harmony.Core.Abstractions;
+using Harmony.Cqrs.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Harmony.Core;
+namespace Harmony.Cqrs;
 
 public class OperationFactory : IOperationFactory
 {

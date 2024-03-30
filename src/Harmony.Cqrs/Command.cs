@@ -1,9 +1,9 @@
-﻿using Harmony.Core.Abstractions;
+﻿using Harmony.Cqrs.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Harmony.Core;
+namespace Harmony.Cqrs;
 
-public abstract class Query<TInput, TOutput> : IHarmonyOperationWithIO<TInput, TOutput>
+public abstract class Command<TInput, TOutput> : IHarmonyOperationWithIO<TInput, TOutput>
 {
     public abstract TInput? Input { get; set; }
     public virtual TOutput Execute(CancellationToken cancellationToken = default)
@@ -26,7 +26,7 @@ public abstract class Query<TInput, TOutput> : IHarmonyOperationWithIO<TInput, T
     }
 }
 
-public abstract class Query<TOutput> : IHarmonyOperation
+public abstract class Command<TOutput> : IHarmonyOperation
 {
     public virtual TOutput Execute(CancellationToken cancellationToken = default)
     {
@@ -48,7 +48,7 @@ public abstract class Query<TOutput> : IHarmonyOperation
     }
 }
 
-public abstract class Query : IHarmonyOperation
+public abstract class Command : IHarmonyOperation
 {
     public virtual void Execute(CancellationToken cancellationToken = default)
     {
@@ -59,7 +59,7 @@ public abstract class Query : IHarmonyOperation
     {
         throw new NotImplementedException();
     }
-    
+
     public IServiceScope? Scope { get; set; }
     public void Dispose()
     {

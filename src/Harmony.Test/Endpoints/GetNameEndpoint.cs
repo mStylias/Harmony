@@ -1,4 +1,4 @@
-﻿using Harmony.Core.Abstractions;
+﻿using Harmony.Cqrs.Abstractions;
 using Harmony.MinimalApis.Structure;
 using Harmony.Test.Common;
 using Harmony.Test.Contracts;

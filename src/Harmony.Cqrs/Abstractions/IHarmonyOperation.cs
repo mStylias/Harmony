@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Harmony.Core.Abstractions;
+namespace Harmony.Cqrs.Abstractions;
 
 public interface IHarmonyOperation : IDisposable
 {

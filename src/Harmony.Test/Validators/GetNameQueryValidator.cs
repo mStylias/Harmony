@@ -1,4 +1,4 @@
-﻿using Harmony.Core.Validators;
+﻿using Harmony.Cqrs.Validators;
 
 namespace Harmony.Test.Validators;
 

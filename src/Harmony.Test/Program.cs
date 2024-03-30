@@ -1,4 +1,4 @@
-﻿using Harmony.Core;
+﻿using Harmony.Cqrs;
 using Harmony.MinimalApis;
 
 var builder = WebApplication.CreateBuilder(args);

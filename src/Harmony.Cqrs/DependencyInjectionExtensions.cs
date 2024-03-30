@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
-using Harmony.Core.Abstractions;
-using Harmony.Core.Validators;
+using Harmony.Cqrs.Abstractions;
+using Harmony.Cqrs.Validators;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Harmony.Core;
+namespace Harmony.Cqrs;
 
 public static class DependencyInjectionExtensions
 {

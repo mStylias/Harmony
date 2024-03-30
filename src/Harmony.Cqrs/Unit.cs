@@ -1,7 +1,4 @@
-﻿namespace Harmony.Core;
-
-using System;
-using System.Threading.Tasks;
+﻿namespace Harmony.Cqrs;
 
 /// <summary>
 /// Represents a void type, since <see cref="System.Void"/> is not a valid return type in C#.

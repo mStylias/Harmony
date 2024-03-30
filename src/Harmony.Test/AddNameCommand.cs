@@ -1,4 +1,4 @@
-﻿using Harmony.Core;
+﻿using Harmony.Cqrs;
 using Harmony.MinimalApis.Errors;
 using Harmony.Results;
 

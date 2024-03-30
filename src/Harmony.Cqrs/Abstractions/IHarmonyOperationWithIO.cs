@@ -1,4 +1,4 @@
-namespace Harmony.Core.Abstractions;
+namespace Harmony.Cqrs.Abstractions;
 
 public interface IHarmonyOperationWithIO<TInput, TOutput> : IHarmonyOperationWithInput<TInput>
 {

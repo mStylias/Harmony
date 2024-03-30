@@ -1,4 +1,4 @@
-﻿namespace Harmony.Core.Abstractions;
+﻿namespace Harmony.Cqrs.Abstractions;
 
 public interface IOperationFactory
 {
