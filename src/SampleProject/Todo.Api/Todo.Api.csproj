@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <InvariantGlobalization>true</InvariantGlobalization>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Contracts\" />
+      <Folder Include="Endpoints\Todos\Get\" />
+      <Folder Include="Endpoints\Todos\Post\" />
+      <Folder Include="Endpoints\Todos\Put\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Library\Harmony.Cqrs\Harmony.Cqrs.csproj" />
+      <ProjectReference Include="..\..\Library\Harmony.MinimalApis\Harmony.MinimalApis.csproj" />
+      <ProjectReference Include="..\..\Library\Harmony.Results\Harmony.Results.csproj" />
+      <ProjectReference Include="..\Todo.Application\Todo.Application.csproj" />
+      <ProjectReference Include="..\Todo.Domain\Todo.Domain.csproj" />
+    </ItemGroup>
+
+</Project>

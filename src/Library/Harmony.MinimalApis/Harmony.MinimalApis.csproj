@@ -26,11 +26,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Include="..\..\harmony_logo.png">
+      <None Include="..\..\..\harmony_logo.png">
         <Pack>True</Pack>
         <PackagePath>\</PackagePath>
       </None>
-      <None Include="..\..\LICENSE">
+      <None Include="..\..\..\LICENSE">
         <Pack>True</Pack>
         <PackagePath>\</PackagePath>
       </None>

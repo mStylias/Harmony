@@ -21,11 +21,11 @@ It integrates with Harmony and constitutes an essential part of some of its stru
     </PropertyGroup>
 
     <ItemGroup>
-      <None Include="..\..\harmony_logo.png">
+      <None Include="..\..\..\harmony_logo.png">
         <Pack>True</Pack>
         <PackagePath>\</PackagePath>
       </None>
-      <None Include="..\..\LICENSE">
+      <None Include="..\..\..\LICENSE">
         <Pack>True</Pack>
         <PackagePath>\</PackagePath>
       </None>
