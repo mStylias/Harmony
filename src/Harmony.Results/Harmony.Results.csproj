@@ -12,12 +12,12 @@ It integrates with Harmony and constitutes an essential part of some of its stru
         <RepositoryUrl>https://github.com/mStylias/Harmony</RepositoryUrl>
         <PackageTags>harmony;railway-programming;design-patterns;.net;result;error-handling;validation</PackageTags>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
-        <PackageReleaseNotes>Fix nuget issue</PackageReleaseNotes>
+        <PackageReleaseNotes>* Add more Result overloads</PackageReleaseNotes>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <Authors>StyleM</Authors>
-        <AssemblyVersion>1.0.1</AssemblyVersion>
-        <FileVersion>1.0.1</FileVersion>
-        <Version>1.0.1</Version>
+        <AssemblyVersion>1.0.2</AssemblyVersion>
+        <FileVersion>1.0.2</FileVersion>
+        <Version>1.0.2</Version>
     </PropertyGroup>
 
     <ItemGroup>

@@ -5,7 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <Title>Harmony.Cqrs</Title>
-        <Version>1.0.1</Version>
+        <Version>1.0.2</Version>
         <Company>StyleM</Company>
         <Authors>StyleM</Authors>
         <Description>A lightweight library that aims to improve the structure of .NET applications by implementing a simple form of the CQRS pattern.</Description>
@@ -14,9 +14,9 @@
         <PackageReadmeFile>readme.md</PackageReadmeFile>
         <RepositoryUrl>https://github.com/mStylias/Harmony</RepositoryUrl>
         <PackageTags>harmony;cqrs;structure;mediator;command;query;</PackageTags>
-        <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
-        <AssemblyVersion>1.0.1</AssemblyVersion>
-        <FileVersion>1.0.1</FileVersion>
+        <PackageReleaseNotes>* Add cancellation token support to IHarmonyOperationValidator</PackageReleaseNotes>
+        <AssemblyVersion>1.0.2</AssemblyVersion>
+        <FileVersion>1.0.2</FileVersion>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
     </PropertyGroup>
 
