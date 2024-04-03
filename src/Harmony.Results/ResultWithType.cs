@@ -6,6 +6,7 @@ namespace Harmony.Results;
 /// The main result class for error handling without the need for exceptions
 /// </summary>
 /// <typeparam name="TValue">The value type that is returned on success</typeparam>
+/// /// <typeparam name="TError">The error type that is returned on failure</typeparam>
 public readonly record struct Result<TValue, TError> : IResult<TValue, TError>
 {
     public TValue? Value { get; }
