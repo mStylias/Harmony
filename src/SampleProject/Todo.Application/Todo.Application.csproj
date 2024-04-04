@@ -17,4 +17,11 @@
       <ProjectReference Include="..\Todo.Infrastructure\Todo.Infrastructure.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Auth\Login\" />
+      <Folder Include="Auth\Logout\" />
+      <Folder Include="Auth\Signup\" />
+      <Folder Include="Todos\Delete\" />
+    </ItemGroup>
+
 </Project>
