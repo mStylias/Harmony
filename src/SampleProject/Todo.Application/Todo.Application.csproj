@@ -12,16 +12,10 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Library\Harmony.Cqrs\Harmony.Cqrs.csproj" />
+      <ProjectReference Include="..\..\Library\Harmony.MinimalApis\Harmony.MinimalApis.csproj" />
       <ProjectReference Include="..\..\Library\Harmony.Results\Harmony.Results.csproj" />
       <ProjectReference Include="..\Todo.Domain\Todo.Domain.csproj" />
       <ProjectReference Include="..\Todo.Infrastructure\Todo.Infrastructure.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Auth\Login\" />
-      <Folder Include="Auth\Logout\" />
-      <Folder Include="Auth\Signup\" />
-      <Folder Include="Todos\Delete\" />
     </ItemGroup>
 
 </Project>

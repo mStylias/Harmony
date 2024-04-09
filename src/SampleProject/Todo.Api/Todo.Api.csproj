@@ -8,15 +8,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0"/>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="Contracts\" />
-      <Folder Include="Endpoints\Todos\Get\" />
-      <Folder Include="Endpoints\Todos\Post\" />
-      <Folder Include="Endpoints\Todos\Put\" />
     </ItemGroup>
 
     <ItemGroup>
