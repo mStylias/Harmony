@@ -3,14 +3,19 @@ using Todo.Api.Common.Constants;
 
 namespace Todo.Api.Endpoints.Todos.Delete;
 
-public class DeleteTodo : IEndpoint
+public class DeleteTodoItem : IEndpoint
 {
     public string Tag => EndpointTagNames.Todos;
     public RouteHandlerBuilder AddEndpoint(IEndpointRouteBuilder app)
     {
-        return app.MapPost($"{EndpointBasePathNames.Todos}", () =>
+        return app.MapDelete($"{EndpointBasePathNames.Todos}/{{todoItemId:int}}", (int todoItemId) =>
         {
             throw new NotImplementedException();
-        });
+        })
+        .WithOpenApi(config =>
+        {
+            config.Summary = "Deletes the todo item with the given id";
+            return config;
+        });;
     }
 }
