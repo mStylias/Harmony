@@ -1,16 +1,31 @@
+using Harmony.MinimalApis;
+using Todo.Api;
+using Todo.Application;
+using Todo.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    builder.Services
+        .AddPresentation(builder.Configuration)
+        .AddApplication()
+        .AddInfrastructure(builder.Configuration, builder.Environment.IsDevelopment());
 }
 
-app.UseHttpsRedirection();
+var app = builder.Build();
+{
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseConfiguredSwagger();
+    }
 
-app.Run();
+    app.UseHttpsRedirection();
+    
+    app.UseExceptionHandler(_ => { });
+    
+    app.UseAuthentication();
+    app.UseAuthorization();
+    
+    app.MapApiEndpoints();
+    
+    app.Run();
+}

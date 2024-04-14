@@ -2,7 +2,6 @@
 using Harmony.MinimalApis.Errors;
 using Harmony.Results;
 using Microsoft.Extensions.Logging;
-using Todo.Application.Todos.Commands.CreateTodoList;
 
 namespace Todo.Application.Todos.Commands.DeleteTodoItem;
 

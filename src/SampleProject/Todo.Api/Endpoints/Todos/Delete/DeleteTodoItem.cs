@@ -9,9 +9,9 @@ public class DeleteTodoItem : IEndpoint
     public RouteHandlerBuilder AddEndpoint(IEndpointRouteBuilder app)
     {
         return app.MapDelete($"{EndpointBasePathNames.Todos}/{{todoItemId:int}}", (int todoItemId) =>
-        {
-            throw new NotImplementedException();
-        })
+            {
+                return Results.Ok();
+            })
         .WithOpenApi(config =>
         {
             config.Summary = "Deletes the todo item with the given id";

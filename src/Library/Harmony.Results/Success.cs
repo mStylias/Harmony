@@ -1,6 +1,4 @@
-﻿using Harmony.Results.Abstractions;
-
-namespace Harmony.Results;
+﻿namespace Harmony.Results;
 
 public class Success
 {

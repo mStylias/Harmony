@@ -1,6 +1,8 @@
-﻿namespace Todo.Application.Auth.Commands.Login;
+﻿using Harmony.Cqrs;
 
-public class LoginCommand
+namespace Todo.Application.Auth.Commands.Login;
+
+public class LoginCommand : Command
 {
     
 }

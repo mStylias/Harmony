@@ -11,6 +11,7 @@ public class Signup : IEndpoint
         return app.MapPost($"{EndpointBasePathNames.Auth}/signup", () =>
         {
             throw new NotImplementedException();
-        });
+        })
+        .AllowAnonymous();
     }
 }

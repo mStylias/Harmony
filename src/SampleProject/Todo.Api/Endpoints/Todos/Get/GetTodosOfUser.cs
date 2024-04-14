@@ -9,9 +9,9 @@ public class GetTodosOfUser : IEndpoint
     public RouteHandlerBuilder AddEndpoint(IEndpointRouteBuilder app)
     {
         return app.MapGet($"{EndpointBasePathNames.Todos}", () =>
-        {
-            throw new NotImplementedException();
-        })
+            {
+                return Results.Ok();
+            })
         .WithOpenApi(config =>
         {
             config.Summary = "Gets all todo lists along with their todos for the authenticated user.";

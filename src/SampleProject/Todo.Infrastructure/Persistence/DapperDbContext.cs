@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using System.Data.SQLite;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using Todo.Infrastructure.Common.Options;
 
 namespace Todo.Infrastructure.Persistence;
 
@@ -8,9 +9,9 @@ public class DapperDbContext
 {
     private readonly string _connectionString;
 
-    public DapperDbContext(IConfiguration configuration)
+    public DapperDbContext(IOptions<ConnectionStringsOptions> connectionStringsOptions)
     {
-        _connectionString = configuration.GetConnectionString("Default");
+        _connectionString = connectionStringsOptions.Value.Default;
     }
 
     public IDbConnection CreateConnection()
