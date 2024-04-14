@@ -10,7 +10,7 @@ public class GetTodosOfList : IEndpoint
     {
         return app.MapGet($"{EndpointBasePathNames.Todos}/lists/{{todoListId}}", (int todoListId) =>
         {
-            throw new NotImplementedException();
+            return Results.Ok();
         })
         .WithOpenApi(config =>
         {

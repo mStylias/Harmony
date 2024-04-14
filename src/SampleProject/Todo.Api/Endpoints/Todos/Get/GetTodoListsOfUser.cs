@@ -10,7 +10,7 @@ public class GetTodoListsOfUser : IEndpoint
     {
         return app.MapGet($"{EndpointBasePathNames.Todos}/lists", () =>
             {
-                throw new NotImplementedException();
+                return Results.Ok();
             })
             .WithOpenApi(config =>
             {

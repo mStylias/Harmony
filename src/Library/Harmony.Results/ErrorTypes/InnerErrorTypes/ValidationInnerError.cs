@@ -3,5 +3,6 @@
 public record ValidationInnerError
 (
     string Code,
-    string PropertyName
+    string Description,
+    string? PropertyName
 );

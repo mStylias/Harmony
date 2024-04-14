@@ -1,4 +1,4 @@
-﻿namespace Todo.Domain.Enums;
+﻿namespace Todo.Domain.Enums.Todos;
 
 public enum TodoStatus
 {

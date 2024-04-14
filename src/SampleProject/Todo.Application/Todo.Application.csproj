@@ -8,14 +8,16 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
+      <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="7.5.1" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.1" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\Library\Harmony.Cqrs\Harmony.Cqrs.csproj" />
       <ProjectReference Include="..\..\Library\Harmony.MinimalApis\Harmony.MinimalApis.csproj" />
       <ProjectReference Include="..\..\Library\Harmony.Results\Harmony.Results.csproj" />
+      <ProjectReference Include="..\Todo.Contracts\Todo.Contracts.csproj" />
       <ProjectReference Include="..\Todo.Domain\Todo.Domain.csproj" />
-      <ProjectReference Include="..\Todo.Infrastructure\Todo.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
