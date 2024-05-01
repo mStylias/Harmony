@@ -14,15 +14,15 @@ public class JwtService : ITokenCreationService
 {
     private DateTime _creationDateTime;
     
-    private readonly IOptions<JwtOptions> _jwtOptions;
-    private readonly IOptions<RefreshTokenOptions> _refreshTokenOptions;
+    private readonly JwtOptions _jwtOptions;
+    private readonly RefreshTokenOptions _refreshTokenOptions;
     private readonly TimeProvider _timeProvider;
 
     public JwtService(IOptions<JwtOptions> jwtOptions, IOptions<RefreshTokenOptions> refreshTokenOptions, 
         TimeProvider timeProvider)
     {
-        _jwtOptions = jwtOptions;
-        _refreshTokenOptions = refreshTokenOptions;
+        _jwtOptions = jwtOptions.Value;
+        _refreshTokenOptions = refreshTokenOptions.Value;
         _timeProvider = timeProvider;
     }
 
@@ -40,7 +40,7 @@ public class JwtService : ITokenCreationService
     /// <param name="userId">The id of the user to store in the access token</param>
     /// <param name="refreshTokenExpiration">(Optional) The refresh token expiration datetime</param>
     /// <returns></returns>
-    public AuthTokensModel GenerateTokens(int userId, DateTime? refreshTokenExpiration = null)
+    public AuthTokensModel GenerateTokens(string userId, DateTime? refreshTokenExpiration = null)
     {
         (string accessToken, DateTime accessTokenExpiration) = CreateAccessToken(userId);
         (string refreshToken, refreshTokenExpiration) = CreateRefreshToken(refreshTokenExpiration);
@@ -48,12 +48,12 @@ public class JwtService : ITokenCreationService
         return new AuthTokensModel(accessToken, refreshToken, accessTokenExpiration, refreshTokenExpiration.Value);
     }
     
-    private (string accessToken, DateTime expiration) CreateAccessToken(int userId)
+    private (string accessToken, DateTime expiration) CreateAccessToken(string userId)
     {
         _creationDateTime = _timeProvider.GetUtcNow().UtcDateTime;
-        var expiration = _creationDateTime.Add(_jwtOptions.Value.ExpirationTime);
+        var expiration = _creationDateTime.Add(_jwtOptions.ExpirationTime);
 
-        var jwtKey = _jwtOptions.Value.Key;
+        var jwtKey = _jwtOptions.Key;
         
         var token = CreateJwtToken(
             CreateAccessTokenClaims(userId),
@@ -68,11 +68,11 @@ public class JwtService : ITokenCreationService
     
     private (string refreshToken, DateTime refreshTokenExpiration) CreateRefreshToken(DateTime? refreshTokenExpiration)
     {
-        var refreshTokenKey = _refreshTokenOptions.Value.Key;
+        var refreshTokenKey = _refreshTokenOptions.Key;
         if (refreshTokenExpiration.HasValue == false)
         {
             refreshTokenExpiration = _creationDateTime
-                .Add(_refreshTokenOptions.Value.ExpirationTime);
+                .Add(_refreshTokenOptions.ExpirationTime);
         }
         
         var refreshToken = CreateJwtToken(null, CreateSigningCredentials(refreshTokenKey), 
@@ -86,8 +86,8 @@ public class JwtService : ITokenCreationService
     private JwtSecurityToken CreateJwtToken(Claim[]? claims, SigningCredentials credentials, DateTime expirationDateTime)
     {
         var securityToken = new JwtSecurityToken(
-            issuer: _jwtOptions.Value.Issuer,
-            audience: _jwtOptions.Value.Audience,
+            issuer: _jwtOptions.Issuer,
+            audience: _jwtOptions.Audience,
             claims: claims,
             notBefore: _creationDateTime,
             expires: expirationDateTime,
@@ -97,15 +97,15 @@ public class JwtService : ITokenCreationService
         return securityToken;
     }
     
-    private Claim[] CreateAccessTokenClaims(int userId)
+    private Claim[] CreateAccessTokenClaims(string userId)
     {
         Claim[] claims = 
         [
-            new Claim(JwtRegisteredClaimNames.Sub, _jwtOptions.Value.Subject),
+            new Claim(JwtRegisteredClaimNames.Sub, _jwtOptions.Subject),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(JwtRegisteredClaimNames.Iss, _jwtOptions.Value.Issuer),
-            new Claim(JwtRegisteredClaimNames.Aud, _jwtOptions.Value.Audience),
-            new Claim(Constants.Auth.UserIdClaimType, userId.ToString()),
+            new Claim(JwtRegisteredClaimNames.Iss, _jwtOptions.Issuer),
+            new Claim(JwtRegisteredClaimNames.Aud, _jwtOptions.Audience),
+            new Claim(Constants.Auth.UserIdClaimType, userId)
         ];
 
         return claims;
