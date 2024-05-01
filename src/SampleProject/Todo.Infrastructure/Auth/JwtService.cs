@@ -26,6 +26,20 @@ public class JwtService : ITokenCreationService
         _timeProvider = timeProvider;
     }
 
+    /// <summary>
+    /// Generates a set of JWT tokens. Specifically, an access token and a refresh token. The refresh token expiration
+    /// can optionally be provided as an argument. The reason is the following: When creating a refresh token for the first time,
+    /// the expiration date is calculated based on the current date and a predefined duration for refresh tokens. After,
+    /// it has been created, it's expiration date should be stored in a persistent storage. Every time the caller wants
+    /// to refresh the access token, then the refresh token used for this purpose should be invalidated and get
+    /// refreshed too. However, when generating a new refresh token this way it's expiration date time must be fetched
+    /// from the previous refresh token . Otherwise, the refresh token would live forever, since it's
+    /// expiration date time would be updated based on the current time every time a pair of access token and
+    /// refresh token are generated.
+    /// </summary>
+    /// <param name="userId">The id of the user to store in the access token</param>
+    /// <param name="refreshTokenExpiration">(Optional) The refresh token expiration datetime</param>
+    /// <returns></returns>
     public AuthTokensModel GenerateTokens(int userId, DateTime? refreshTokenExpiration = null)
     {
         (string accessToken, DateTime accessTokenExpiration) = CreateAccessToken(userId);

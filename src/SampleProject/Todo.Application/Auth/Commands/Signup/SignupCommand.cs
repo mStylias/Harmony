@@ -3,10 +3,10 @@ using Harmony.MinimalApis.Errors;
 using Harmony.Results;
 using Harmony.Results.ErrorTypes.InnerErrorTypes;
 using Microsoft.Extensions.Logging;
+using Todo.Application.Common.Abstractions.Repositories;
 using Todo.Contracts.Auth;
 using Todo.Domain.Entities.Auth;
 using Todo.Domain.Errors;
-using Todo.Infrastructure.Persistence.Repositories;
 
 namespace Todo.Application.Auth.Commands.Signup;
 

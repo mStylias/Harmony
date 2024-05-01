@@ -1,4 +1,4 @@
-﻿namespace Todo.Application.Common.Abstractions.Repositories;
+﻿namespace Todo.Application.Common.Abstractions.Repositories.Base;
 
 public interface IEfCoreRepositoryBase
 {

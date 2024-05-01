@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Todo.Application.Common.Abstractions.Repositories;
 using Todo.Domain.Entities.Auth;
 using Todo.Infrastructure.Persistence.Repositories.Base;
 

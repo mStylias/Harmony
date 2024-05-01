@@ -25,6 +25,9 @@ public class RefreshTokenValidator : IRefreshTokenValidator
         _jwtOptions = jwtOptions;
     }
     
+    /// <summary>
+    /// Checks if the provided refresh token is legit
+    /// </summary>
     public Result<JwtSecurityToken, HttpError> Validate(string refreshToken)
     {
         var validationParameters = GetTokenValidationParameters(_refreshTokenOptions.Value, _jwtOptions.Value);
