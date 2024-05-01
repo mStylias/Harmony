@@ -2,7 +2,10 @@
 using Harmony.MinimalApis.Errors;
 using Harmony.Results;
 using Harmony.Results.ErrorTypes.InnerErrorTypes;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using Todo.Application.Auth.Common;
+using Todo.Application.Common.Abstractions.Auth;
 using Todo.Application.Common.Abstractions.Repositories;
 using Todo.Contracts.Auth;
 using Todo.Domain.Entities.Auth;
@@ -10,19 +13,22 @@ using Todo.Domain.Errors;
 
 namespace Todo.Application.Auth.Commands.Signup;
 
-public class SignupCommand : Command<SignupRequest, Result<HttpError>>
+public class SignupCommand : Command<SignupRequest, Result<AuthTokensModel, HttpError>>
 {
     private readonly ILogger<SignupCommand> _logger;
     private readonly IAuthRepository _authRepository;
-    
-    public SignupCommand(ILogger<SignupCommand> logger, IAuthRepository authRepository)
+    private readonly ITokenCreationService _tokenCreationService;
+
+    public SignupCommand(ILogger<SignupCommand> logger, IAuthRepository authRepository, 
+        ITokenCreationService tokenCreationService)
     {
         _logger = logger;
         _authRepository = authRepository;
+        _tokenCreationService = tokenCreationService;
     }
 
     public override SignupRequest? Input { get; set; }
-    public override async Task<Result<HttpError>> ExecuteAsync(CancellationToken cancellationToken = default)
+    public override async Task<Result<AuthTokensModel, HttpError>> ExecuteAsync(CancellationToken cancellationToken = default)
     {
         var signupRequest = Input;
         if (signupRequest is null)
@@ -35,7 +41,7 @@ public class SignupCommand : Command<SignupRequest, Result<HttpError>>
             Email = signupRequest.Email
         };
         
-        var userCreationResult = await _authRepository.CreateUserAsync(user, signupRequest.Password);
+        IdentityResult userCreationResult = await _authRepository.CreateUserAsync(user, signupRequest.Password);
         if (userCreationResult.Succeeded == false)
         {
             var validationErrors = userCreationResult.Errors
@@ -44,6 +50,8 @@ public class SignupCommand : Command<SignupRequest, Result<HttpError>>
             return Errors.General.ValidationError(_logger, validationErrors);
         }
 
-        return Result.Ok();
+        var tokens = _tokenCreationService.GenerateTokens(user.Id);
+
+        return tokens;
     }
 }

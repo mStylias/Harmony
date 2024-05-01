@@ -1,9 +1,7 @@
 ﻿using System.Text.Json;
-using System.Xml;
 using Harmony.MinimalApis.Errors;
 using Harmony.Results.ErrorTypes.InnerErrorTypes;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Json;
 using Microsoft.Extensions.Logging;
 
 namespace Todo.Domain.Errors;

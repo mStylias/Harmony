@@ -1,5 +1,4 @@
-﻿using Todo.Application.Common.Abstractions.Repositories;
-using Todo.Application.Common.Abstractions.Repositories.Base;
+﻿using Todo.Application.Common.Abstractions.Repositories.Base;
 
 namespace Todo.Infrastructure.Persistence.Repositories.Base;
 
