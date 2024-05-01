@@ -6,14 +6,15 @@ namespace Harmony.Cqrs;
 
 public class OperationFactory : IOperationFactory
 {
-    internal static bool UseScope { get; set; }
+    internal static bool UseScopeFactory { get; set; }
+    internal static ServiceLifetime ServiceLifetime { get; set; }
     private readonly IServiceProvider _serviceProvider;
     private readonly IServiceScopeFactory? _serviceScopeFactory;
     
     public OperationFactory(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
-        if (UseScope)
+        if (UseScopeFactory)
         {
             _serviceScopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
         }
@@ -94,7 +95,7 @@ public class OperationFactory : IOperationFactory
     {
         TOperation operation;
         
-        if (UseScope)
+        if (UseScopeFactory)
         {
             var scope = _serviceScopeFactory!.CreateScope();
             operation = scope.ServiceProvider.GetRequiredService<TOperation>();
