@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Todo.Application.Common.Abstractions.Auth;
+using Todo.Application.Common.Abstractions.Repositories;
 using Todo.Domain.Entities.Auth;
 using Todo.Domain.Errors;
 using Todo.Domain.Rules;
@@ -16,6 +17,7 @@ using Todo.Infrastructure.Auth;
 using Todo.Infrastructure.Common.Constants;
 using Todo.Infrastructure.Common.Options;
 using Todo.Infrastructure.Persistence;
+using Todo.Infrastructure.Persistence.Repositories;
 
 namespace Todo.Infrastructure;
 
@@ -59,6 +61,7 @@ public static class DependencyInjectionExtensions
             
             options.IncludeErrorDetails = true;
             
+            var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
             options.Events = new JwtBearerEvents
             {
                 OnMessageReceived = context =>
@@ -80,7 +83,6 @@ public static class DependencyInjectionExtensions
 
                     // Here you should use whatever logger you have in your project. E.g. if you have Serilog use the 
                     // static logger of Serilog.
-                    var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
                     var response = Errors.Auth.AccessDenied(loggerFactory.CreateLogger("Auth"), 
                         context.Error);
                     
@@ -136,6 +138,8 @@ public static class DependencyInjectionExtensions
             options.UseSqlite(connectionStrings.Default);
             options.EnableSensitiveDataLogging(enableSensitiveDataLogging);
         });
+
+        services.AddScoped<IAuthRepository, AuthRepository>();
         
         return services;
     }
