@@ -7,5 +7,4 @@ public static partial class Constants
         public const string UserIdClaimType = "UserId";
         public const string AccessTokenCookieName = "X-Access-Token";
     }
-    
 }
