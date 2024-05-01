@@ -9,20 +9,22 @@ public static class DependencyInjectionExtensions
 {
     /// <summary>
     /// Adds all the required harmony services including all the commands, queries and validators
-    /// in the specified assembly. If you want to use scoped services for the operations, set the useScope to true
+    /// in the specified assembly. If you want to use scoped services for the operations, set the useScopeFactory to true
     /// </summary>
     /// <param name="services"></param>
     /// <param name="assembly"></param>
-    /// <param name="useScope"></param>
-    /// <returns></returns>
+    /// <param name="useScopeFactory"></param>
+    /// /// <param name="operationsServiceLifetime"></param>
     public static IServiceCollection AddHarmony(this IServiceCollection services, Assembly assembly, 
-        bool useScope = false)
+        bool useScopeFactory = true, ServiceLifetime operationsServiceLifetime = ServiceLifetime.Scoped)
     {
+        OperationFactory.UseScopeFactory = useScopeFactory;
+        OperationFactory.ServiceLifetime = operationsServiceLifetime;
+        
         services
             .AddHarmonyOperations(assembly)
             .AddHarmonyOperationValidators(assembly);
-
-        OperationFactory.UseScope = useScope;
+        
         services.AddSingleton<IOperationFactory, OperationFactory>();
         
         return services;
@@ -39,14 +41,7 @@ public static class DependencyInjectionExtensions
         
         foreach (var type in queryTypes)
         {
-            if (OperationFactory.UseScope)
-            {
-                services.AddScoped(type);
-            }
-            else
-            {
-                services.AddTransient(type);
-            }
+            services.RegisterService(type, OperationFactory.ServiceLifetime);
         }
         
         var commandTypes = assemblyTypes
@@ -56,14 +51,7 @@ public static class DependencyInjectionExtensions
 
         foreach (var type in commandTypes)
         {
-            if (OperationFactory.UseScope)
-            {
-                services.AddScoped(type);
-            }
-            else
-            {
-                services.AddTransient(type);
-            }
+            services.RegisterService(type, OperationFactory.ServiceLifetime);
         }
         
         return services;
@@ -105,5 +93,23 @@ public static class DependencyInjectionExtensions
 
         var typeDefinition = type.GetGenericTypeDefinition();
         return typeDefinition == typeof(IHarmonyOperationValidator<,>);
+    }
+
+    private static void RegisterService(this IServiceCollection services ,Type type, ServiceLifetime lifetime)
+    {
+        switch (lifetime)
+        {
+            case ServiceLifetime.Singleton:
+                services.AddSingleton(type);
+                break;
+            case ServiceLifetime.Scoped:
+                services.AddScoped(type);
+                break;
+            case ServiceLifetime.Transient:
+                services.AddTransient(type);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(lifetime), lifetime, "Invalid service lifetime");
+        }
     }
 }
