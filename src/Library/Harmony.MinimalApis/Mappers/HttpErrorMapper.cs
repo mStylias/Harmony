@@ -17,7 +17,7 @@ public static class HttpErrorMapper
                 statusCode: error.HttpCode,
                 extensions: new Dictionary<string, object?>
                 {
-                    {"ValidationErrors", error.ValidationErrors}
+                    {"validationErrors", error.ValidationErrors}
                 });
         }
         else
