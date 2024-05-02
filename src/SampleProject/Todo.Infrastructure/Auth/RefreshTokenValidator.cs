@@ -7,22 +7,22 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Todo.Application.Common.Abstractions.Auth;
 using Todo.Domain.Errors;
-using Todo.Infrastructure.Common.Options;
+using Todo.Domain.Options;
 
 namespace Todo.Infrastructure.Auth;
 
 public class RefreshTokenValidator : IRefreshTokenValidator
 {
     private readonly ILogger<RefreshTokenValidator> _logger;
-    private readonly IOptions<RefreshTokenOptions> _refreshTokenOptions;
-    private readonly IOptions<JwtOptions> _jwtOptions;
+    private readonly RefreshTokenOptions _refreshTokenOptions;
+    private readonly JwtOptions _jwtOptions;
 
     public RefreshTokenValidator(ILogger<RefreshTokenValidator> logger,
         IOptions<RefreshTokenOptions> refreshTokenOptions, IOptions<JwtOptions> jwtOptions)
     {
         _logger = logger;
-        _refreshTokenOptions = refreshTokenOptions;
-        _jwtOptions = jwtOptions;
+        _refreshTokenOptions = refreshTokenOptions.Value;
+        _jwtOptions = jwtOptions.Value;
     }
     
     /// <summary>
@@ -30,7 +30,7 @@ public class RefreshTokenValidator : IRefreshTokenValidator
     /// </summary>
     public Result<JwtSecurityToken, HttpError> Validate(string refreshToken)
     {
-        var validationParameters = GetTokenValidationParameters(_refreshTokenOptions.Value, _jwtOptions.Value);
+        var validationParameters = GetTokenValidationParameters(_jwtOptions, _refreshTokenOptions.Key);
         
         var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -45,8 +45,7 @@ public class RefreshTokenValidator : IRefreshTokenValidator
         }
     }
     
-    public static TokenValidationParameters GetTokenValidationParameters(RefreshTokenOptions refreshTokenOptions, 
-        JwtOptions jwtOptions)
+    public static TokenValidationParameters GetTokenValidationParameters(JwtOptions jwtOptions, string tokenSecret)
     {
         return new TokenValidationParameters
         {
@@ -57,7 +56,7 @@ public class RefreshTokenValidator : IRefreshTokenValidator
             ValidIssuer = jwtOptions.Issuer,
             ValidAudience = jwtOptions.Audience,
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.ASCII.GetBytes(refreshTokenOptions.Key)
+                Encoding.ASCII.GetBytes(tokenSecret)
             ),
             ClockSkew = TimeSpan.Zero
         };

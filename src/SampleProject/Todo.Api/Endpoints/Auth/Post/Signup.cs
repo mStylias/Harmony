@@ -3,8 +3,10 @@ using Harmony.MinimalApis.Mappers;
 using Harmony.MinimalApis.Structure;
 using Microsoft.AspNetCore.Mvc;
 using Todo.Api.Common.Constants;
+using Todo.Api.Mappers;
 using Todo.Application.Auth.Commands.Signup;
-using Todo.Contracts.Auth;
+using Todo.Application.Common.Abstractions.Auth;
+using Todo.Contracts.Auth.Signup;
 
 namespace Todo.Api.Endpoints.Auth.Post;
 
@@ -15,17 +17,24 @@ public class Signup : IEndpoint
     {
         return app.MapPost($"{EndpointBasePathNames.Auth}/signup", async Task<IResult> (
                 [FromBody] SignupRequest signupRequest, 
-                IOperationFactory operationFactory
+                HttpContext httpContext,
+                IOperationFactory operationFactory,
+                IAuthCookiesService authCookiesService
             ) =>
         {
             using var signupCommand = operationFactory.SynthesizeOperation<SignupCommand, SignupRequest>(signupRequest);
-            var result = await signupCommand.ExecuteAsync();
-            if (result.IsError)
+            var signupResult = await signupCommand.ExecuteAsync();
+            if (signupResult.IsError)
             {
-                return result.Error.MapToHttpResult();
+                return signupResult.Error.MapToHttpResult();
             }
 
-            return Results.Ok(result.Value);
+            var authTokens = signupResult.Value!;
+            
+            authCookiesService.SetAccessTokenCookie(httpContext, authTokens.AccessToken, 
+                authTokens.AccessTokenExpiration);
+
+            return Results.Ok(authTokens.MapToResponse());
         })
         .AllowAnonymous();
     }

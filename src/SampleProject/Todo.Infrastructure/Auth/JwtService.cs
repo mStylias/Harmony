@@ -5,8 +5,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Todo.Application.Auth.Common;
 using Todo.Application.Common.Abstractions.Auth;
+using Todo.Domain.Options;
 using Todo.Infrastructure.Common.Constants;
-using Todo.Infrastructure.Common.Options;
 
 namespace Todo.Infrastructure.Auth;
 

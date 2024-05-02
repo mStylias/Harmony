@@ -1,8 +1,9 @@
 ﻿using Harmony.MinimalApis;
 using Harmony.MinimalApis.Exceptions;
 using Microsoft.OpenApi.Models;
-using Todo.Infrastructure.Common.Options;
-using Todo.Infrastructure.Common.Options.Validators;
+using Todo.Domain.Options;
+using Todo.Domain.Options.Validators;
+
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
 namespace Todo.Api;

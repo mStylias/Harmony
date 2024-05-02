@@ -12,10 +12,10 @@ using Todo.Application.Common.Abstractions.Auth;
 using Todo.Application.Common.Abstractions.Repositories;
 using Todo.Domain.Entities.Auth;
 using Todo.Domain.Errors;
+using Todo.Domain.Options;
 using Todo.Domain.Rules;
 using Todo.Infrastructure.Auth;
 using Todo.Infrastructure.Common.Constants;
-using Todo.Infrastructure.Common.Options;
 using Todo.Infrastructure.Persistence;
 using Todo.Infrastructure.Persistence.Repositories;
 
@@ -57,7 +57,7 @@ public static class DependencyInjectionExtensions
             Debug.Assert(refreshTokenOptions is not null);
 
             options.TokenValidationParameters = RefreshTokenValidator
-                .GetTokenValidationParameters(refreshTokenOptions, jwtOptions);
+                .GetTokenValidationParameters(jwtOptions, jwtOptions.Key);
             
             options.IncludeErrorDetails = true;
             
@@ -120,8 +120,7 @@ public static class DependencyInjectionExtensions
                 options.Password.RequireUppercase = Rules.Auth.RequireUppercase;
                 options.Password.RequireLowercase = Rules.Auth.RequireLowercase;
             })
-            .AddEntityFrameworkStores<AuthDbContext>()
-            .AddDefaultTokenProviders();
+            .AddEntityFrameworkStores<AuthDbContext>();
         
         return services;
     }

@@ -1,4 +1,5 @@
 ﻿using Harmony.Cqrs;
+using Harmony.Cqrs.Validators;
 using Harmony.MinimalApis.Errors;
 using Harmony.Results;
 using Harmony.Results.ErrorTypes.InnerErrorTypes;
@@ -8,8 +9,10 @@ using Todo.Application.Auth.Common;
 using Todo.Application.Common.Abstractions.Auth;
 using Todo.Application.Common.Abstractions.Repositories;
 using Todo.Contracts.Auth;
+using Todo.Contracts.Auth.Signup;
 using Todo.Domain.Entities.Auth;
 using Todo.Domain.Errors;
+using Todo.Domain.Successes;
 
 namespace Todo.Application.Auth.Commands.Signup;
 
@@ -18,26 +21,33 @@ public class SignupCommand : Command<SignupRequest, Result<AuthTokensModel, Http
     private readonly ILogger<SignupCommand> _logger;
     private readonly IAuthRepository _authRepository;
     private readonly ITokenCreationService _tokenCreationService;
+    private readonly IHarmonyOperationValidator<SignupCommand, Result<HttpError>> _validator;
 
     public SignupCommand(ILogger<SignupCommand> logger, IAuthRepository authRepository, 
-        ITokenCreationService tokenCreationService)
+        ITokenCreationService tokenCreationService, 
+        IHarmonyOperationValidator<SignupCommand, Result<HttpError>> validator)
     {
         _logger = logger;
         _authRepository = authRepository;
         _tokenCreationService = tokenCreationService;
+        _validator = validator;
     }
 
     public override SignupRequest? Input { get; set; }
     public override async Task<Result<AuthTokensModel, HttpError>> ExecuteAsync(CancellationToken cancellationToken = default)
     {
-        var signupRequest = Input;
-        if (signupRequest is null)
+        var validationResult = await _validator.ValidateAsync(this, cancellationToken);
+        if (validationResult.IsError)
         {
-            return Errors.General.NullReferenceError(_logger, nameof(signupRequest));
+            return validationResult.Error;
         }
+        
+        // At this point signup request is guaranteed to have a value, because it is checked in the validator
+        var signupRequest = Input!;
         
         var user = new User
         {
+            UserName = signupRequest.Email,
             Email = signupRequest.Email
         };
         
@@ -45,13 +55,30 @@ public class SignupCommand : Command<SignupRequest, Result<AuthTokensModel, Http
         if (userCreationResult.Succeeded == false)
         {
             var validationErrors = userCreationResult.Errors
-                .Select(ie => new ValidationInnerError(ie.Code, ie.Description, null))
+                .Select(ie => new ValidationInnerError(ie.Code, ie.Description, GetErrorPropertyName(ie.Code)))
                 .ToList();
             return Errors.General.ValidationError(_logger, validationErrors);
         }
 
         var tokens = _tokenCreationService.GenerateTokens(user.Id);
+        
+        Successes.Auth.SignupSuccess(_logger, user.Email).Log();
 
         return tokens;
+    }
+
+    private static string? GetErrorPropertyName(string code)
+    {
+        if (code.Contains("Password"))
+        {
+            return "password";
+        }
+        
+        if (code.Contains("Email"))
+        {
+            return "email";
+        }
+
+        return null;
     }
 }
