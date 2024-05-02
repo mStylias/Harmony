@@ -11,7 +11,11 @@ public readonly record struct Result<TError> : IResultBase<TError>
     public Success? Success { get; }
     public bool IsError { get; }
     public bool IsSuccess => !IsError;
-    
+    public void LogSuccess()
+    {
+        Success?.Log();
+    }
+
     internal Result(TError error)
     {
         Error = error;

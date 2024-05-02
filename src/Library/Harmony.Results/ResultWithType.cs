@@ -14,6 +14,10 @@ public readonly record struct Result<TValue, TError> : IResult<TValue, TError>
     public Success? Success { get; }
     public bool IsError { get; }
     public bool IsSuccess => !IsError;
+    public void LogSuccess()
+    {
+        Success?.Log();
+    }
 
     private Result(TError error)
     {
