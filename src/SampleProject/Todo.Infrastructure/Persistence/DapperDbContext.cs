@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using System.Data.SQLite;
 using Microsoft.Extensions.Options;
-using Todo.Infrastructure.Common.Options;
+using Todo.Domain.Options;
 
 namespace Todo.Infrastructure.Persistence;
 

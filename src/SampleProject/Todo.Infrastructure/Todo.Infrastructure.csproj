@@ -26,10 +26,4 @@
       <ProjectReference Include="..\Todo.Domain\Todo.Domain.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <None Update="Persistence\todos.db">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
-
 </Project>

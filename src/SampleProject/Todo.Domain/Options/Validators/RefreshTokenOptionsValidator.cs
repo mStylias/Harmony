@@ -1,4 +1,4 @@
-﻿namespace Todo.Infrastructure.Common.Options.Validators;
+﻿namespace Todo.Domain.Options.Validators;
 
 public static class RefreshTokenOptionsValidator
 {

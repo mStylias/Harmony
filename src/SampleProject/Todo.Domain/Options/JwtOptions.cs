@@ -1,4 +1,4 @@
-﻿namespace Todo.Infrastructure.Common.Options;
+﻿namespace Todo.Domain.Options;
 
 public class JwtOptions
 {

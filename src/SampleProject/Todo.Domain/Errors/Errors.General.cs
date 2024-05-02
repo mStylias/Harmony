@@ -16,18 +16,22 @@ public static partial class Errors
     
     public static class General
     {
+        #region Http Errors
         public static HttpError NullReferenceError(ILogger logger, string entityName) => new(
             nameof(NullReferenceError), 
             "Null reference error",
             StatusCodes.Status400BadRequest,
             () => logger.LogNullReference(entityName));
+        #endregion
 
+        #region Validation Errors
         public static HttpError ValidationError(ILogger logger, List<ValidationInnerError> validationErrors) => new(
             nameof(ValidationError),
             "Input was not valid",
             StatusCodes.Status400BadRequest,
             validationErrors,
-            () => logger.LogValidationFailed(JsonSerializer.Serialize(validationErrors, JsonOptions))
-            );
+            () => logger.LogValidationFailed(JsonSerializer.Serialize(validationErrors, JsonOptions)));
+        #endregion
+
     }
 }
