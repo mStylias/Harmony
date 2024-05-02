@@ -6,4 +6,5 @@ public interface IResultBase<out TError>
     Success? Success { get; }
     bool IsError { get; }
     bool IsSuccess { get; }
+    void LogSuccess();
 }

@@ -7,6 +7,16 @@ public static class Result
         return new Success();
     }
     
+    public static Success Ok(Success success)
+    {
+        return success;
+    }
+    
+    public static Success<TMetadata> Ok<TMetadata>(Success<TMetadata> success)
+    {
+        return success;
+    }
+    
     public static Result<TError> Ok<TError>()
     {
         return Result<TError>.Ok();
