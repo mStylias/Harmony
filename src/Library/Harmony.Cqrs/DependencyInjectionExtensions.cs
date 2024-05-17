@@ -14,18 +14,23 @@ public static class DependencyInjectionExtensions
     /// <param name="services"></param>
     /// <param name="assembly"></param>
     /// <param name="useScopeFactory"></param>
-    /// /// <param name="operationsServiceLifetime"></param>
     public static IServiceCollection AddHarmony(this IServiceCollection services, Assembly assembly, 
-        bool useScopeFactory = true, ServiceLifetime operationsServiceLifetime = ServiceLifetime.Scoped)
+        bool useScopeFactory = false)
     {
         OperationFactory.UseScopeFactory = useScopeFactory;
-        OperationFactory.ServiceLifetime = operationsServiceLifetime;
         
         services
             .AddHarmonyOperations(assembly)
             .AddHarmonyOperationValidators(assembly);
-        
-        services.AddSingleton<IOperationFactory, OperationFactory>();
+
+        if (useScopeFactory)
+        {
+            services.AddSingleton<IOperationFactory, OperationFactory>();
+        }
+        else
+        {
+            services.AddScoped<IOperationFactory, OperationFactory>();
+        }
         
         return services;
     }
@@ -41,7 +46,7 @@ public static class DependencyInjectionExtensions
         
         foreach (var type in queryTypes)
         {
-            services.RegisterService(type, OperationFactory.ServiceLifetime);
+            services.AddScoped(type);
         }
         
         var commandTypes = assemblyTypes
@@ -51,7 +56,7 @@ public static class DependencyInjectionExtensions
 
         foreach (var type in commandTypes)
         {
-            services.RegisterService(type, OperationFactory.ServiceLifetime);
+            services.AddScoped(type);
         }
         
         return services;
@@ -93,23 +98,5 @@ public static class DependencyInjectionExtensions
 
         var typeDefinition = type.GetGenericTypeDefinition();
         return typeDefinition == typeof(IHarmonyOperationValidator<,>);
-    }
-
-    private static void RegisterService(this IServiceCollection services ,Type type, ServiceLifetime lifetime)
-    {
-        switch (lifetime)
-        {
-            case ServiceLifetime.Singleton:
-                services.AddSingleton(type);
-                break;
-            case ServiceLifetime.Scoped:
-                services.AddScoped(type);
-                break;
-            case ServiceLifetime.Transient:
-                services.AddTransient(type);
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(lifetime), lifetime, "Invalid service lifetime");
-        }
     }
 }

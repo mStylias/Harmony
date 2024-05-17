@@ -7,7 +7,6 @@ namespace Harmony.Cqrs;
 public class OperationFactory : IOperationFactory
 {
     internal static bool UseScopeFactory { get; set; }
-    internal static ServiceLifetime ServiceLifetime { get; set; }
     private readonly IServiceProvider _serviceProvider;
     private readonly IServiceScopeFactory? _serviceScopeFactory;
     
