@@ -28,6 +28,7 @@ public class Refresh : IEndpoint
                 var refreshResult = await refreshTokenCommand.ExecuteAsync();
                 if (refreshResult.IsError)
                 {
+                    refreshResult.Error.Log();
                     return refreshResult.Error.MapToHttpResult();
                 }
 

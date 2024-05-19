@@ -142,6 +142,7 @@ public static class DependencyInjectionExtensions
         services.AddScoped<DapperDbContext>();
         
         services.AddScoped<IAuthRepository, AuthRepository>();
+        services.AddScoped<IUsersRepository, UsersRepository>();
         
         return services;
     }

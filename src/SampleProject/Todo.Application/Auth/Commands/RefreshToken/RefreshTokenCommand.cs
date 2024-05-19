@@ -45,7 +45,7 @@ public class RefreshTokenCommand : Command<RefreshRequest, Result<AuthTokensMode
             return validationResult.Error;
         }
                 
-        var userIdResult = await _authRepository.GetUserIdByRefreshToken(refreshRequest.RefreshToken);
+        var userIdResult = await _authRepository.GetUserIdByRefreshToken(refreshRequest.RefreshToken, cancellationToken);
         if (userIdResult.IsError)
         {
             return userIdResult.Error;

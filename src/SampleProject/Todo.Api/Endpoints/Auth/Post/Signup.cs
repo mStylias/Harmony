@@ -26,6 +26,7 @@ public class Signup : IEndpoint
             var signupResult = await signupCommand.ExecuteAsync();
             if (signupResult.IsError)
             {
+                signupResult.Error.Log();
                 return signupResult.Error.MapToHttpResult();
             }
 
