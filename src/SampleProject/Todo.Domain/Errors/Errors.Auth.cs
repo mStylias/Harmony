@@ -12,6 +12,10 @@ public static partial class Errors
     // Specifically look for the section "The .NET 6 [LoggerMessage] source generator"
     
     [LoggerMessage(Level = LogLevel.Error,
+        Message = "User with email: '{Email}' failed to login, because of incorrect credentials. Trace Id: '{TraceId}'")]
+    private static partial void LogInvalidCredentials(this ILogger logger, string email, string traceId);
+    
+    [LoggerMessage(Level = LogLevel.Error,
         Message = "A request to access a resource was denied. Context error: '{ContextError}'. Trace Id: '{TraceId}'")]
     private static partial void LogAccessDenied(this ILogger logger, string? contextError, string traceId);
     
@@ -21,6 +25,12 @@ public static partial class Errors
     
     public static class Auth
     {
+        public static HttpError InvalidCredentials(ILogger logger, string email) => new(
+            nameof(InvalidCredentials),
+            "The combination of email and password is incorrect",
+            StatusCodes.Status401Unauthorized,
+            () => logger.LogInvalidCredentials(email, Activity.Current!.Id!));
+        
         public static HttpError AccessDenied(ILogger logger, string? contextError) => new (
             nameof(AccessDenied), 
             "You don't have access to the specified resource",

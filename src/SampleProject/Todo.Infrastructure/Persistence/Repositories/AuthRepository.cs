@@ -29,6 +29,11 @@ public class AuthRepository : EfCoreRepositoryBase, IAuthRepository
         return _userManager.CreateAsync(user, password);
     }
 
+    public Task<bool> CheckPasswordAsync(User user, string password)
+    {
+        return _userManager.CheckPasswordAsync(user, password);
+    }
+    
     /// <summary>
     /// Gets the refresh token info like user id and username for the given refresh token.
     /// </summary>

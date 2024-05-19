@@ -20,4 +20,8 @@
       <ProjectReference Include="..\Todo.Domain\Todo.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Auth\Queries\" />
+    </ItemGroup>
+
 </Project>
