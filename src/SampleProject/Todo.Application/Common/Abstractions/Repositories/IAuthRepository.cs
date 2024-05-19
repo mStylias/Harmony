@@ -14,4 +14,5 @@ public interface IAuthRepository : IEfCoreRepositoryBase, IDisposable
     Task<bool> CheckPasswordAsync(User user, string password);
     Task AddNewUserRefreshToken(string newUserId, string refreshToken);
     Task UpdateRefreshToken(string newRefreshToken, string userId);
+    Task DeleteRefreshToken(string refreshToken);
 }

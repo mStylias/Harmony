@@ -70,6 +70,20 @@ public class AuthRepository : EfCoreRepositoryBase, IAuthRepository
         const string updateSql = @"UPDATE refresh_tokens SET refresh_token = @RefreshToken WHERE user_id = @UserId";
         await connection.ExecuteAsync(updateSql, new { RefreshToken = newRefreshToken, UserId = userId });
     }
+
+    /// <summary>
+    /// Deletes the given refresh token, but keeps the row in the table and therefore the user id. 
+    /// </summary>
+    public async Task DeleteRefreshToken(string refreshToken)
+    {
+        using var connection = _dapperContext.CreateConnection();
+        
+        const string updateSql = """
+                                 UPDATE refresh_tokens SET refresh_token = @EmptyString 
+                                 WHERE refresh_token = @RefreshToken
+                                 """;
+        await connection.ExecuteAsync(updateSql, new { EmptyString = string.Empty, RefreshToken = refreshToken });
+    }
     
     public void Dispose()
     {
