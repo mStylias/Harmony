@@ -1,13 +1,13 @@
 ﻿using Todo.Application.Auth.Common;
-using Todo.Contracts.Auth.Signup;
+using Todo.Contracts.Auth.Common;
 
-namespace Todo.Api.Mappers;
+namespace Todo.Api.Common.Mappers;
 
 public static class RequestsMapper
 {
-    public static SignupResponse MapToResponse(this AuthTokensModel authTokensModel)
+    public static AuthResponse MapToAuthResponse(this AuthTokensModel authTokensModel)
     {
-        return new SignupResponse(
+        return new AuthResponse(
             authTokensModel.RefreshToken,
             authTokensModel.AccessTokenExpiration,
             authTokensModel.RefreshTokenExpiration);

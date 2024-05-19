@@ -13,11 +13,11 @@ public static partial class Errors
     
     [LoggerMessage(Level = LogLevel.Error,
         Message = "A request to access a resource was denied. Context error: '{ContextError}'. Trace Id: '{TraceId}'")]
-    public static partial void LogAccessDenied(this ILogger logger, string? contextError, string traceId);
+    private static partial void LogAccessDenied(this ILogger logger, string? contextError, string traceId);
     
     [LoggerMessage(Level = LogLevel.Error,
         Message = "An attempt to get a new access token failed with refresh token: {RefreshToken}")]
-    public static partial void LogInvalidRefreshToken(this ILogger logger, string refreshToken, Exception ex);
+    private static partial void LogInvalidRefreshToken(this ILogger logger, string refreshToken, Exception? ex);
     
     public static class Auth
     {
@@ -27,7 +27,7 @@ public static partial class Errors
             StatusCodes.Status401Unauthorized,
             () => logger.LogAccessDenied(contextError, Activity.Current!.Id!));
         
-        public static HttpError InvalidRefreshToken(ILogger logger, string refreshToken, Exception ex) => new (
+        public static HttpError InvalidRefreshToken(ILogger logger, string refreshToken, Exception? ex = null) => new (
             nameof(InvalidRefreshToken), 
             "The refresh token is invalid",
             StatusCodes.Status401Unauthorized,

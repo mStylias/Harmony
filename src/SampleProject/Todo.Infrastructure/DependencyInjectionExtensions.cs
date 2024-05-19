@@ -130,6 +130,7 @@ public static class DependencyInjectionExtensions
     {
         var connectionStrings = config.GetRequiredSection(ConnectionStringsOptions.SectionName)
             .Get<ConnectionStringsOptions>();
+        
         Debug.Assert(connectionStrings is not null);
         
         services.AddDbContext<AuthDbContext> (options =>
@@ -138,6 +139,8 @@ public static class DependencyInjectionExtensions
             options.EnableSensitiveDataLogging(enableSensitiveDataLogging);
         });
 
+        services.AddScoped<DapperDbContext>();
+        
         services.AddScoped<IAuthRepository, AuthRepository>();
         
         return services;
