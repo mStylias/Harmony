@@ -17,6 +17,7 @@ public class SignupValidator : IHarmonyOperationValidator<SignupCommand, Result<
         _logger = logger;
     }
     
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
     public async Task<Result<HttpError>> ValidateAsync(SignupCommand operation, CancellationToken cancellation)
     {
         var validationErrors = new List<ValidationInnerError>();
@@ -40,4 +41,5 @@ public class SignupValidator : IHarmonyOperationValidator<SignupCommand, Result<
 
         return Result.Ok();
     }
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
 }

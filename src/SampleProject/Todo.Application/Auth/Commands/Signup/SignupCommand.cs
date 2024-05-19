@@ -9,7 +9,6 @@ using Todo.Application.Auth.Common;
 using Todo.Application.Common.Abstractions.Auth;
 using Todo.Application.Common.Abstractions.Repositories;
 using Todo.Contracts.Auth;
-using Todo.Contracts.Auth.Signup;
 using Todo.Domain.Entities.Auth;
 using Todo.Domain.Errors;
 using Todo.Domain.Successes;
@@ -34,7 +33,8 @@ public class SignupCommand : Command<SignupRequest, Result<AuthTokensModel, Http
     }
 
     public override SignupRequest? Input { get; set; }
-    public override async Task<Result<AuthTokensModel, HttpError>> ExecuteAsync(CancellationToken cancellationToken = default)
+    public override async Task<Result<AuthTokensModel, HttpError>> ExecuteAsync(
+        CancellationToken cancellationToken = default)
     {
         var validationResult = await _validator.ValidateAsync(this, cancellationToken);
         if (validationResult.IsError)
@@ -61,6 +61,8 @@ public class SignupCommand : Command<SignupRequest, Result<AuthTokensModel, Http
         }
 
         var tokens = _tokenCreationService.GenerateTokens(user.Id);
+
+        await _authRepository.AddNewUserRefreshToken(user.Id, tokens.RefreshToken);
         
         Successes.Auth.SignupSuccess(_logger, user.Email).Log();
 

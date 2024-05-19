@@ -1,4 +1,4 @@
-﻿namespace Todo.Contracts.Auth.Signup;
+﻿namespace Todo.Contracts.Auth;
 
 public record SignupRequest
 (

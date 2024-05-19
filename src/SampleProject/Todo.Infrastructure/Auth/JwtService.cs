@@ -105,7 +105,7 @@ public class JwtService : ITokenCreationService
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(JwtRegisteredClaimNames.Iss, _jwtOptions.Issuer),
             new Claim(JwtRegisteredClaimNames.Aud, _jwtOptions.Audience),
-            new Claim(Constants.Auth.UserIdClaimType, userId)
+            new Claim(Constants.Auth.UserIdClaimName, userId)
         ];
 
         return claims;

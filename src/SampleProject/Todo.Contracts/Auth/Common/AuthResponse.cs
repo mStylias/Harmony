@@ -1,6 +1,6 @@
-﻿namespace Todo.Contracts.Auth.Signup;
+﻿namespace Todo.Contracts.Auth.Common;
 
-public record SignupResponse
+public record AuthResponse
 (
     string RefreshToken,
     DateTime AccessTokenExpiration,
