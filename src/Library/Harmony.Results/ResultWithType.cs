@@ -1,4 +1,5 @@
 ﻿using Harmony.Results.Abstractions;
+using Harmony.Results.Enums;
 
 namespace Harmony.Results;
 
@@ -7,13 +8,15 @@ namespace Harmony.Results;
 /// </summary>
 /// <typeparam name="TValue">The value type that is returned on success</typeparam>
 /// /// <typeparam name="TError">The error type that is returned on failure</typeparam>
-public readonly record struct Result<TValue, TError> : IResult<TValue, TError>
+public readonly record struct Result<TValue, TError> : IResult<TValue, TError> where TError : IHarmonyError
 {
     public TValue? Value { get; }
     public TError? Error { get; }
     public Success? Success { get; }
     public bool IsError { get; }
     public bool IsSuccess => !IsError;
+    public bool IsWarning => Error?.Severity == Severity.Warning;
+
     public void LogSuccess()
     {
         Success?.Log();
@@ -22,9 +25,17 @@ public readonly record struct Result<TValue, TError> : IResult<TValue, TError>
     private Result(TError error)
     {
         Error = error;
-        IsError = true;
         Value = default;
         Success = null;
+        
+        if (error.Severity == Severity.Error)
+        {
+            IsError = true;
+        }
+        else
+        {
+            IsError = false;
+        }
     }
     
     private Result(TValue? value)
@@ -38,9 +49,9 @@ public readonly record struct Result<TValue, TError> : IResult<TValue, TError>
     private Result(TValue? value, Success? success)
     {
         Value = value;
-        Success = success;
         IsError = false;
         Error = default;
+        Success = success;
     }
 
     // Implicit operators
