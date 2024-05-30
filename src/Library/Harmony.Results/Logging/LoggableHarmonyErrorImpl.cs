@@ -29,6 +29,18 @@ public class LoggableHarmonyErrorImpl<TError> : ILoggableHarmonyError<TError>
         return (this as TError)!;
     }
     
+    public TError InitializeLogMessage(ILogger logger, LogLevel logLevel, string message)
+    {
+        _logAggregator = new LogAggregator(logger, logLevel, message);
+        return (this as TError)!;
+    }
+    
+    public TError InitializeLogMessage(ILogger logger, LogLevel logLevel, string message, params object[] args)
+    {
+        _logAggregator = new LogAggregator(logger, logLevel, message, args);
+        return (this as TError)!;
+    }
+    
     public TError InitializeLogMessage(ILogger logger, LogLevel logLevel, EventId eventId)
     {
         _logAggregator = new LogAggregator(logger, logLevel, eventId);

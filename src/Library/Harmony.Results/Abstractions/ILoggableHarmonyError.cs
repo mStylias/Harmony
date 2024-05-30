@@ -7,6 +7,8 @@ public interface ILoggableHarmonyError<out TError> : IHarmonyError
     where TError : class, ILoggableHarmonyError<TError>
 {
     TError InitializeLogMessage(ILogger logger, LogLevel logLevel);
+    public TError InitializeLogMessage(ILogger logger, LogLevel logLevel, string message);
+    public TError InitializeLogMessage(ILogger logger, LogLevel logLevel, string message, params object[] args);
     TError InitializeLogMessage(ILogger logger, LogLevel logLevel, EventId eventId);
     TError SetLogException(Exception exception);
     TError AppendLogMessage([StructuredMessageTemplate] string message);
