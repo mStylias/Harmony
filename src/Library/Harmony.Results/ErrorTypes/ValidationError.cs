@@ -1,11 +1,10 @@
-﻿using Harmony.Results.Abstractions;
-using Harmony.Results.Enums;
+﻿using Harmony.Results.Enums;
 using Harmony.Results.ErrorTypes.InnerErrorTypes;
 using Harmony.Results.Logging;
 
 namespace Harmony.Results.ErrorTypes;
 
-public class ValidationError : LoggableHarmonyError
+public class ValidationError : LoggableHarmonyErrorImpl<ValidationError>
 {
     public string ErrorCode { get; }
     public string Description { get; }

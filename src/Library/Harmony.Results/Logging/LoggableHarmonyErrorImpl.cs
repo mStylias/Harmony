@@ -5,12 +5,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Harmony.Results.Logging;
 
-public class LoggableHarmonyError : ILoggableHarmonyError
+public class LoggableHarmonyErrorImpl<TError> : ILoggableHarmonyError<TError>
+    where TError : class, ILoggableHarmonyError<TError>
 {
     private LogAggregator? _logAggregator;
-    private Action? _logAction;
+    protected internal Action? LogAction;
 
-    public LoggableHarmonyError(Severity severity)
+    public LoggableHarmonyErrorImpl(Severity severity)
     {
         Severity = severity;
     }
@@ -19,40 +20,40 @@ public class LoggableHarmonyError : ILoggableHarmonyError
     
     protected void UseLogAction(Action logAction)
     {
-        _logAction = logAction;
+        LogAction = logAction;
     }
     
-    public ILoggableHarmonyError InitializeLogMessage(ILogger logger, LogLevel logLevel)
+    public TError InitializeLogMessage(ILogger logger, LogLevel logLevel)
     {
         _logAggregator = new LogAggregator(logger, logLevel);
-        return this;
+        return (this as TError)!;
     }
     
-    public ILoggableHarmonyError InitializeLogMessage(ILogger logger, LogLevel logLevel, EventId eventId)
+    public TError InitializeLogMessage(ILogger logger, LogLevel logLevel, EventId eventId)
     {
         _logAggregator = new LogAggregator(logger, logLevel, eventId);
-        return this;
+        return (this as TError)!;
     }
     
     /// <summary>
     /// Sets the exception that will be logged when the log method is called.
     /// </summary>
-    public ILoggableHarmonyError SetLogException(Exception exception)
+    public TError SetLogException(Exception exception)
     {
-        Debug.Assert(_logAggregator is not null, "InitializeLogMessage must be called before any other method");
+        Debug.Assert(_logAggregator is not null, "InitializeLogMessage must be called before any other log building method");
         _logAggregator.SetException(exception);
-        return this;
+        return (this as TError)!;
     }
 
     /// <summary>
     /// Adds the specified message at the end of the log message.
     /// </summary>
     /// <param name="message">The message to add</param>
-    public ILoggableHarmonyError AppendLogMessage(string message)
+    public TError AppendLogMessage(string message)
     {
-        Debug.Assert(_logAggregator is not null, "InitializeLogMessage must be called before any other method");
+        Debug.Assert(_logAggregator is not null, "InitializeLogMessage must be called before any other log building method");
         _logAggregator.AppendLogMessage(message);
-        return this;
+        return (this as TError)!;
     }
 
     /// <summary>
@@ -61,22 +62,22 @@ public class LoggableHarmonyError : ILoggableHarmonyError
     /// <param name="message">The message to add</param>
     /// <param name="args">The arguments that should replace the placeholders in the message.
     /// Exactly like the normal logging works in .NET</param>
-    public ILoggableHarmonyError AppendLogMessage(string message, params object[] args)
+    public TError AppendLogMessage(string message, params object[] args)
     {
-        Debug.Assert(_logAggregator is not null, "InitializeLogMessage must be called before any other method");
+        Debug.Assert(_logAggregator is not null, "InitializeLogMessage must be called before any other log building method");
         _logAggregator.AppendLogMessage(message, args);
-        return this;
+        return (this as TError)!;
     }
 
     /// <summary>
     /// Adds the specified message at the start of the log message.
     /// </summary>
     /// <param name="message">The message to add</param>
-    public ILoggableHarmonyError PrependLogMessage(string message)
+    public TError PrependLogMessage(string message)
     {
-        Debug.Assert(_logAggregator is not null, "InitializeLogMessage must be called before any other method");
+        Debug.Assert(_logAggregator is not null, "InitializeLogMessage must be called before any other log building method");
         _logAggregator.PrependLogMessage(message);
-        return this;
+        return (this as TError)!;
     }
 
     /// <summary>
@@ -85,11 +86,11 @@ public class LoggableHarmonyError : ILoggableHarmonyError
     /// <param name="message">The message to add</param>
     /// <param name="args">The arguments that should replace the placeholders in the message.
     /// Exactly like the normal logging works in .NET</param>
-    public ILoggableHarmonyError PrependLogMessage(string message, params object[] args)
+    public TError PrependLogMessage(string message, params object[] args)
     {
-        Debug.Assert(_logAggregator is not null, "InitializeLogMessage must be called before any other method");
+        Debug.Assert(_logAggregator is not null, "InitializeLogMessage must be called before any other log building method");
         _logAggregator.PrependLogMessage(message, args);
-        return this;
+        return (this as TError)!;
     }
 
     /// <summary>
@@ -98,13 +99,12 @@ public class LoggableHarmonyError : ILoggableHarmonyError
     /// </summary>
     public void Log()
     {
-        if (_logAction is not null)
+        if (LogAction is not null)
         {
-            _logAction.Invoke();
+            LogAction.Invoke();
             return;
         }
         
-        Debug.Assert(_logAggregator is not null, "InitializeLogMessage must be called before any other method");
-        _logAggregator.Log();
+        _logAggregator?.Log();
     }
 }

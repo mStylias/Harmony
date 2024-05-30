@@ -1,10 +1,9 @@
-﻿using Harmony.Results.Abstractions;
-using Harmony.Results.Enums;
+﻿using Harmony.Results.Enums;
 using Harmony.Results.Logging;
 
 namespace Harmony.Results.ErrorTypes;
 
-public class HarmonyError : LoggableHarmonyError
+public class HarmonyError : LoggableHarmonyErrorImpl<HarmonyError>
 {
     public string ErrorCode { get; }
     public string Description { get; }

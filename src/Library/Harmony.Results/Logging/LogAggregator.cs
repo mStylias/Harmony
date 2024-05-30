@@ -38,7 +38,13 @@ public class LogAggregator
     
     public void AppendLogMessage([StructuredMessageTemplate] string message)
     {
-        _message = _message.Insert(_message.Length - 1, message);
+        if (_message.Length == 0)
+        {
+            _message = message;
+            return;
+        }
+        
+        _message = _message.Insert(_message.Length, message);
     }
     
     public void AppendLogMessage([StructuredMessageTemplate] string message, params object[] args)
@@ -49,13 +55,23 @@ public class LogAggregator
     
     public void PrependLogMessage([StructuredMessageTemplate] string message)
     {
+        if (_message.Length == 0)
+        {
+            _message = message;
+            return;
+        }
+        
         _message = _message.Insert(0, message);
     }
     
     public void PrependLogMessage([StructuredMessageTemplate] string message, params object[] args)
     {
         PrependLogMessage(message);
-        _args.AddRange(args);
+        
+        for (int i = args.Length - 1; i >= 0; i--)
+        {
+            _args.Insert(0, args[i]);
+        }
     }
 
     public void Log()
