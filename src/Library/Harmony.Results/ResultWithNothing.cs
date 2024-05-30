@@ -14,21 +14,10 @@ public static class Result
         return success;
     }
     
-    public static Success<TMetadata> Ok<TMetadata>(Success<TMetadata> success)
-    {
-        return success;
-    }
-    
     public static Result<TValue, TError> Ok<TValue, TError>(TValue value, Success success) where TError : IHarmonyError
     {
         return Result<TValue, TError>.Ok(value, success);
     }
-    
-    // TODO: Add support for TMetadata
-    /*public static Result<TValue, TError> Ok<TValue, TError>(TValue value, Success<TMetadata> success)
-    {
-        return Result<TValue, TError>.Ok(value, success);
-    }*/
     
     public static Result<TError> Ok<TError>() where TError : IHarmonyError
     {
