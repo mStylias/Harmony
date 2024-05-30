@@ -53,7 +53,7 @@ public class HttpError : LoggableHarmonyErrorImpl<HttpError>
         UseLogAction(logAction);
     }
     
-    public HttpError IncludeErrorCodeInFinalLog()
+    public HttpError PrependErrorCode()
     {
         Debug.Assert(LogAction is null, "Cannot modify the log message if logging is configured with a log action. " +
                                             "Use the InitializeLogMessage and append methods to build an error message instead");
