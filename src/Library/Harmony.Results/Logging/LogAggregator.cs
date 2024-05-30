@@ -24,6 +24,21 @@ public class LogAggregator
         _logLevel = logLevel;
     }
     
+    public LogAggregator(ILogger logger, LogLevel logLevel, string message)
+    {
+        _logger = logger;
+        _logLevel = logLevel;
+        _message = message;
+    }
+    
+    public LogAggregator(ILogger logger, LogLevel logLevel, string message, params object[] args)
+    {
+        _logger = logger;
+        _logLevel = logLevel;
+        _message = message;
+        _args.AddRange(args);
+    }
+    
     public LogAggregator(ILogger logger, LogLevel logLevel, EventId eventId)
     {
         _logger = logger;
