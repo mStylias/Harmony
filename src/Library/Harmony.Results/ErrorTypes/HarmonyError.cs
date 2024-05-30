@@ -1,4 +1,5 @@
-﻿using Harmony.Results.Enums;
+﻿using System.Diagnostics;
+using Harmony.Results.Enums;
 using Harmony.Results.Logging;
 
 namespace Harmony.Results.ErrorTypes;
@@ -40,5 +41,13 @@ public class HarmonyError : LoggableHarmonyErrorImpl<HarmonyError>
         Description = description;
         ErrorType = errorType;
         UseLogAction(logAction);
+    }
+    
+    public HarmonyError PrependErrorCode()
+    {
+        Debug.Assert(LogAction is null, "Cannot modify the log message if logging is configured with a log action. " +
+                                        "Use the InitializeLogMessage and append methods to build an error message instead");
+        PrependLogMessage("{ErrorCode}: ", ErrorCode);
+        return this;
     }
 }
