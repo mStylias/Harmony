@@ -14,7 +14,7 @@ public static class HttpErrorMapper
     {
         IResult problem;
         
-        if (error.ValidationErrors.Count > 0)
+        if (error.ValidationErrors?.Count > 0)
         {
             problem = Microsoft.AspNetCore.Http.Results.Problem(
                 title: error.ErrorCode,
