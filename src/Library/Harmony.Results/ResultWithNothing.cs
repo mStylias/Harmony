@@ -4,9 +4,11 @@ namespace Harmony.Results;
 
 public static class Result
 {
+    private static readonly Success SuccessForOk = new(); 
+    
     public static Success Ok()
     {
-        return new Success();
+        return SuccessForOk;
     }
     
     public static Success Ok(Success success)
