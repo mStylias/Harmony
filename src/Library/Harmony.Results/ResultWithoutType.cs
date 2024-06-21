@@ -1,4 +1,5 @@
-﻿using Harmony.Results.Abstractions;
+﻿using System.Diagnostics.CodeAnalysis;
+using Harmony.Results.Abstractions;
 using Harmony.Results.Enums;
 
 namespace Harmony.Results;
@@ -10,9 +11,15 @@ public readonly record struct Result<TError> : IResultBase<TError> where TError 
 {
     public TError? Error { get; }
     public Success? Success { get; }
-    public bool IsError { get; }
+    
+    [MemberNotNullWhen(true, nameof(Error))]
+    public bool IsError => Error is not null && Error.Severity == Severity.Error;
+    
+    [MemberNotNullWhen(true, nameof(Error))]
+    public bool IsWarning => Error is not null && Error.Severity == Severity.Warning;
+    
+    [MemberNotNullWhen(false, nameof(Error))]
     public bool IsSuccess => !IsError;
-    public bool IsWarning => Error?.Severity == Severity.Warning;
     public void LogSuccess()
     {
         Success?.Log();
@@ -22,20 +29,11 @@ public readonly record struct Result<TError> : IResultBase<TError> where TError 
     {
         Error = error;
         Success = null;
-        if (error.Severity == Severity.Error)
-        {
-            IsError = true;
-        }
-        else
-        {
-            IsError = false;
-        }
     }
     
     internal Result(Success? success)
     {
         Success = success;
-        IsError = false;
         Error = default;
     }
 

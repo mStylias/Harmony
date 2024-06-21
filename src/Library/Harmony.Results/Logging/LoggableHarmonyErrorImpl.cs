@@ -9,7 +9,7 @@ public class LoggableHarmonyErrorImpl<TError> : ILoggableHarmonyError<TError>
     where TError : class, ILoggableHarmonyError<TError>
 {
     private LogAggregator? _logAggregator;
-    protected internal Action? LogAction;
+    protected Action? LogAction;
 
     public LoggableHarmonyErrorImpl(Severity severity)
     {

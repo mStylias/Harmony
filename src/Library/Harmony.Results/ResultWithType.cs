@@ -1,4 +1,5 @@
-﻿using Harmony.Results.Abstractions;
+﻿using System.Diagnostics.CodeAnalysis;
+using Harmony.Results.Abstractions;
 using Harmony.Results.Enums;
 
 namespace Harmony.Results;
@@ -13,9 +14,18 @@ public readonly record struct Result<TValue, TError> : IResult<TValue, TError> w
     public TValue? Value { get; }
     public TError? Error { get; }
     public Success? Success { get; }
-    public bool IsError { get; }
+    
+    [MemberNotNullWhen(true, nameof(Error))]
+    [MemberNotNullWhen(false, nameof(Value))]
+    public bool IsError => Error is not null && Error.Severity == Severity.Error;
+    
+    [MemberNotNullWhen(true, nameof(Error))]
+    [MemberNotNullWhen(false, nameof(Value))]
+    public bool IsWarning => Error is not null && Error.Severity == Severity.Warning;
+    
+    [MemberNotNullWhen(true, nameof(Value))]
+    [MemberNotNullWhen(false, nameof(Error))]
     public bool IsSuccess => !IsError;
-    public bool IsWarning => Error?.Severity == Severity.Warning;
 
     public void LogSuccess()
     {
@@ -27,21 +37,11 @@ public readonly record struct Result<TValue, TError> : IResult<TValue, TError> w
         Error = error;
         Value = default;
         Success = null;
-        
-        if (error.Severity == Severity.Error)
-        {
-            IsError = true;
-        }
-        else
-        {
-            IsError = false;
-        }
     }
     
     private Result(TValue? value)
     {
         Value = value;
-        IsError = false;
         Error = default;
         Success = null;
     }
@@ -49,7 +49,6 @@ public readonly record struct Result<TValue, TError> : IResult<TValue, TError> w
     private Result(TValue? value, Success? success)
     {
         Value = value;
-        IsError = false;
         Error = default;
         Success = success;
     }
