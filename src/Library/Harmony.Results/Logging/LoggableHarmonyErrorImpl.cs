@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Harmony.Results.Abstractions;
 using Harmony.Results.Enums;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 
 namespace Harmony.Results.Logging;
@@ -29,13 +30,14 @@ public class LoggableHarmonyErrorImpl<TError> : ILoggableHarmonyError<TError>
         return (this as TError)!;
     }
     
-    public TError InitializeLogMessage(ILogger logger, LogLevel logLevel, string message)
+    public TError InitializeLogMessage(ILogger logger, LogLevel logLevel, [StructuredMessageTemplate] string message)
     {
         _logAggregator = new LogAggregator(logger, logLevel, message);
         return (this as TError)!;
     }
     
-    public TError InitializeLogMessage(ILogger logger, LogLevel logLevel, string message, params object[] args)
+    public TError InitializeLogMessage(ILogger logger, LogLevel logLevel, [StructuredMessageTemplate] string message, 
+        params object[] args)
     {
         _logAggregator = new LogAggregator(logger, logLevel, message, args);
         return (this as TError)!;
@@ -61,7 +63,7 @@ public class LoggableHarmonyErrorImpl<TError> : ILoggableHarmonyError<TError>
     /// Adds the specified message at the end of the log message.
     /// </summary>
     /// <param name="message">The message to add</param>
-    public TError AppendLogMessage(string message)
+    public TError AppendLogMessage([StructuredMessageTemplate] string message)
     {
         Debug.Assert(_logAggregator is not null, "InitializeLogMessage must be called before any other log building method");
         _logAggregator.AppendLogMessage(message);
@@ -74,7 +76,7 @@ public class LoggableHarmonyErrorImpl<TError> : ILoggableHarmonyError<TError>
     /// <param name="message">The message to add</param>
     /// <param name="args">The arguments that should replace the placeholders in the message.
     /// Exactly like the normal logging works in .NET</param>
-    public TError AppendLogMessage(string message, params object[] args)
+    public TError AppendLogMessage([StructuredMessageTemplate] string message, params object[] args)
     {
         Debug.Assert(_logAggregator is not null, "InitializeLogMessage must be called before any other log building method");
         _logAggregator.AppendLogMessage(message, args);
@@ -85,7 +87,7 @@ public class LoggableHarmonyErrorImpl<TError> : ILoggableHarmonyError<TError>
     /// Adds the specified message at the start of the log message.
     /// </summary>
     /// <param name="message">The message to add</param>
-    public TError PrependLogMessage(string message)
+    public TError PrependLogMessage([StructuredMessageTemplate] string message)
     {
         Debug.Assert(_logAggregator is not null, "InitializeLogMessage must be called before any other log building method");
         _logAggregator.PrependLogMessage(message);
@@ -98,7 +100,7 @@ public class LoggableHarmonyErrorImpl<TError> : ILoggableHarmonyError<TError>
     /// <param name="message">The message to add</param>
     /// <param name="args">The arguments that should replace the placeholders in the message.
     /// Exactly like the normal logging works in .NET</param>
-    public TError PrependLogMessage(string message, params object[] args)
+    public TError PrependLogMessage([StructuredMessageTemplate] string message, params object[] args)
     {
         Debug.Assert(_logAggregator is not null, "InitializeLogMessage must be called before any other log building method");
         _logAggregator.PrependLogMessage(message, args);
@@ -111,12 +113,18 @@ public class LoggableHarmonyErrorImpl<TError> : ILoggableHarmonyError<TError>
     /// </summary>
     public void Log()
     {
-        if (LogAction is not null)
-        {
-            LogAction.Invoke();
-            return;
-        }
-        
+        LogAction?.Invoke();
         _logAggregator?.Log();
     }
+
+    public override string ToString()
+    {
+        if (_logAggregator is null)
+        {
+            return base.ToString() ?? string.Empty;
+        }
+
+        return _logAggregator.ToString();
+    }
+    
 }
