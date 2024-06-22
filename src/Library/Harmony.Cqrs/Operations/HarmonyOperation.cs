@@ -1,6 +1,8 @@
 ﻿using Harmony.Cqrs.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
+// Keeping this namespace to reduce breaking changes
+// ReSharper disable once CheckNamespace
 namespace Harmony.Cqrs;
 
 public abstract class HarmonyOperation<TInput, TOutput> : IHarmonyOperationWithIO<TInput, TOutput>
