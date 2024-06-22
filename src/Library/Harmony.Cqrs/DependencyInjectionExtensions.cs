@@ -19,9 +19,14 @@ public static class DependencyInjectionExtensions
     {
         OperationFactory.UseScopeFactory = useScopeFactory;
         
+        var assemblyTypes = assembly.GetTypes();
+        
+        var queryTypes = GetQueryTypes(assemblyTypes);
+        var commandTypes = GetCommandTypes(assemblyTypes);
+        
         services
-            .AddHarmonyOperations(assembly)
-            .AddHarmonyOperationValidators(assembly);
+            .AddHarmonyOperations(queryTypes, commandTypes)
+            .AddHarmonyOperationValidators(assemblyTypes);
 
         if (useScopeFactory)
         {
@@ -35,25 +40,38 @@ public static class DependencyInjectionExtensions
         return services;
     }
 
-    private static IServiceCollection AddHarmonyOperations(this IServiceCollection services, Assembly assembly)
+    private static Type[] GetQueryTypes(Type[] assemblyTypes)
     {
-        var assemblyTypes = assembly.GetTypes();
-        
         var queryTypes = assemblyTypes
-            .Where(t => IsSubclassOfRawGeneric(typeof(Query), t) ||
-                        IsSubclassOfRawGeneric(typeof(Query<>), t) ||
-                        IsSubclassOfRawGeneric(typeof(Query<,>), t));
-        
+            .Where(t => 
+                IsSubclassOfRawGeneric(typeof(Query), t) ||
+                IsSubclassOfRawGeneric(typeof(Query<>), t) ||
+                IsSubclassOfRawGeneric(typeof(Query<,>), t))
+            .ToArray();
+
+        return queryTypes;
+    }
+    
+    private static Type[] GetCommandTypes(Type[] assemblyTypes)
+    {
+        var commandTypes = assemblyTypes
+            .Where(t => 
+                IsSubclassOfRawGeneric(typeof(Command), t) ||
+                IsSubclassOfRawGeneric(typeof(Command<>), t) ||
+                IsSubclassOfRawGeneric(typeof(Command<,>), t))
+            .ToArray();
+
+        return commandTypes;
+    }
+    
+    private static IServiceCollection AddHarmonyOperations(this IServiceCollection services, Type[] queryTypes, 
+        Type[] commandTypes)
+    {
         foreach (var type in queryTypes)
         {
             services.AddScoped(type);
         }
         
-        var commandTypes = assemblyTypes
-            .Where(t => IsSubclassOfRawGeneric(typeof(Command), t) ||
-                        IsSubclassOfRawGeneric(typeof(Command<>), t) ||
-                        IsSubclassOfRawGeneric(typeof(Command<,>), t));
-
         foreach (var type in commandTypes)
         {
             services.AddScoped(type);
@@ -76,10 +94,13 @@ public static class DependencyInjectionExtensions
         return false;
     }
     
-    private static IServiceCollection AddHarmonyOperationValidators(this IServiceCollection services, Assembly assembly)
+    private static IServiceCollection AddHarmonyOperationValidators(this IServiceCollection services, 
+        Type[] assemblyTypes)
     {
-        var validatorTypes = assembly.GetTypes()
-            .Where(t => t.IsClass && !t.IsAbstract && t.GetInterfaces().Any(IsHarmonyOperationValidatorInterface))
+        var validatorTypes = assemblyTypes
+            .Where(t => 
+                t is { IsClass: true, IsAbstract: false } && 
+                t.GetInterfaces().Any(IsHarmonyOperationValidatorInterface))
             .ToList();
 
         foreach (var type in validatorTypes)
