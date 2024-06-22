@@ -7,7 +7,7 @@ namespace Harmony.Results.Logging;
 /// Provides a way to gradually build a log message and log it at the end, while retaining
 /// the best practices of logging.
 /// </summary>
-public class LogAggregator
+internal class LogBuilder
 {
     private readonly ILogger _logger;
     private readonly LogLevel _logLevel;
@@ -18,20 +18,20 @@ public class LogAggregator
     private string _message = string.Empty;
     private readonly List<object> _args = new();
     
-    public LogAggregator(ILogger logger, LogLevel logLevel)
+    public LogBuilder(ILogger logger, LogLevel logLevel)
     {
         _logger = logger;
         _logLevel = logLevel;
     }
     
-    public LogAggregator(ILogger logger, LogLevel logLevel, [StructuredMessageTemplate] string message)
+    public LogBuilder(ILogger logger, LogLevel logLevel, [StructuredMessageTemplate] string message)
     {
         _logger = logger;
         _logLevel = logLevel;
         _message = message;
     }
     
-    public LogAggregator(ILogger logger, LogLevel logLevel, [StructuredMessageTemplate] string message, 
+    public LogBuilder(ILogger logger, LogLevel logLevel, [StructuredMessageTemplate] string message, 
         params object[] args)
     {
         _logger = logger;
@@ -40,7 +40,7 @@ public class LogAggregator
         _args.AddRange(args);
     }
     
-    public LogAggregator(ILogger logger, LogLevel logLevel, EventId eventId)
+    public LogBuilder(ILogger logger, LogLevel logLevel, EventId eventId)
     {
         _logger = logger;
         _logLevel = logLevel;
