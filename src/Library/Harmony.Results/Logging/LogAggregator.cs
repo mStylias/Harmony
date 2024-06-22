@@ -24,14 +24,15 @@ public class LogAggregator
         _logLevel = logLevel;
     }
     
-    public LogAggregator(ILogger logger, LogLevel logLevel, string message)
+    public LogAggregator(ILogger logger, LogLevel logLevel, [StructuredMessageTemplate] string message)
     {
         _logger = logger;
         _logLevel = logLevel;
         _message = message;
     }
     
-    public LogAggregator(ILogger logger, LogLevel logLevel, string message, params object[] args)
+    public LogAggregator(ILogger logger, LogLevel logLevel, [StructuredMessageTemplate] string message, 
+        params object[] args)
     {
         _logger = logger;
         _logLevel = logLevel;
@@ -107,5 +108,19 @@ public class LogAggregator
         
         // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
         _logger.Log(_logLevel, _eventId.Value, _exception, _message, parameters);
+    }
+
+    public override string ToString()
+    {
+        // If there are no arguments, simply return the message.
+        if (_args.Count == 0)
+        {
+            return $"[{_logLevel}]: {_message}";
+        }
+        
+        // Format the message with the arguments.
+        var formattedLogValues = LogValuesFormatter.ConvertLogMessageToString(_message, _args.ToArray());
+
+        return $"[{_logLevel}]: {formattedLogValues}";
     }
 }
