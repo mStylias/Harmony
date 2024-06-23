@@ -16,6 +16,6 @@ public class DeleteTodoItem : IEndpoint
         {
             config.Summary = "Deletes the todo item with the given id";
             return config;
-        });;
+        });
     }
 }
