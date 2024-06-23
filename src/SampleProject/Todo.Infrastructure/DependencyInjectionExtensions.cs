@@ -10,12 +10,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Todo.Application.Common.Abstractions.Auth;
 using Todo.Application.Common.Abstractions.Repositories;
+using Todo.Domain.Constants;
 using Todo.Domain.Entities.Auth;
 using Todo.Domain.Errors;
 using Todo.Domain.Options;
 using Todo.Domain.Rules;
 using Todo.Infrastructure.Auth;
-using Todo.Infrastructure.Common.Constants;
 using Todo.Infrastructure.Persistence;
 using Todo.Infrastructure.Persistence.Repositories;
 
@@ -142,6 +142,7 @@ public static class DependencyInjectionExtensions
         services.AddScoped<DapperDbContext>();
         
         services.AddScoped<IAuthRepository, AuthRepository>();
+        services.AddScoped<ITodosRepository, TodosRepository>();
         services.AddScoped<IUsersRepository, UsersRepository>();
         
         return services;

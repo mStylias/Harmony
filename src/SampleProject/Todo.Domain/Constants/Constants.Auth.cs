@@ -1,4 +1,4 @@
-﻿namespace Todo.Infrastructure.Common.Constants;
+﻿namespace Todo.Domain.Constants;
 
 public static partial class Constants
 {

@@ -57,16 +57,17 @@ public class SignupCommand : Command<SignupRequest, Result<AuthTokensModel, Http
             var validationErrors = userCreationResult.Errors
                 .Select(ie => new ValidationInnerError(ie.Code, ie.Description, GetErrorPropertyName(ie.Code)))
                 .ToList();
+            
             return Errors.General.ValidationError(_logger, validationErrors);
         }
 
         var tokens = _tokenCreationService.GenerateTokens(user.Id);
 
         await _authRepository.AddNewUserRefreshToken(user.Id, tokens.RefreshToken);
-        
-        Successes.Auth.SignupSuccess(_logger, user.Email).Log();
 
-        return tokens;
+        var signupSuccess = Successes.Auth.SignupSuccess(_logger, user.Email);
+
+        return Result<AuthTokensModel, HttpError>.Ok(tokens, signupSuccess);
     }
 
     private static string? GetErrorPropertyName(string code)
