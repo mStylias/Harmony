@@ -6,5 +6,9 @@ public static class InnerErrorCodes
     {
         public const string NullSignupRequest = nameof(NullSignupRequest);
         public const string PasswordsDontMatch = nameof(PasswordsDontMatch);
+        public const string RequiredPropertyNotProvided = nameof(RequiredPropertyNotProvided);
+        public const string MaximumCharactersExceeded = nameof(MaximumCharactersExceeded);
+        public const string EntityDoesNotExist = nameof(EntityDoesNotExist);
+        public const string EntityAlreadyExists = nameof(EntityAlreadyExists);
     }
 }

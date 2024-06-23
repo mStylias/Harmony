@@ -32,12 +32,12 @@ public class Refresh : IEndpoint
                     return refreshResult.Error.MapToHttpResult();
                 }
 
-                var authTokensModel = refreshResult.Value!;
+                var authTokensModel = refreshResult.Value;
                 
                 authCookiesService.SetAccessTokenCookie(httpContext, authTokensModel.AccessToken, 
                     authTokensModel.AccessTokenExpiration);
                 
-                return Results.Ok(authTokensModel.MapToAuthResponse());
+                return Results.Ok(authTokensModel.MapToResponse());
             })
             .AllowAnonymous();
     }

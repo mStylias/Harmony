@@ -74,7 +74,7 @@ public class AuthRepository : EfCoreRepositoryBase, IAuthRepository
     /// <summary>
     /// Deletes the given refresh token, but keeps the row in the table and therefore the user id. 
     /// </summary>
-    public async Task DeleteRefreshToken(string refreshToken)
+    public async Task EmptyRefreshToken(string refreshToken)
     {
         using var connection = _dapperContext.CreateConnection();
         

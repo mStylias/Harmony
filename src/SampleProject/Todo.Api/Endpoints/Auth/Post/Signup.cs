@@ -30,12 +30,13 @@ public class Signup : IEndpoint
                 return signupResult.Error.MapToHttpResult();
             }
 
-            var authTokens = signupResult.Value!;
+            signupResult.Success?.Log();
+            var authTokens = signupResult.Value;
             
             authCookiesService.SetAccessTokenCookie(httpContext, authTokens.AccessToken, 
                 authTokens.AccessTokenExpiration);
 
-            return Results.Ok(authTokens.MapToAuthResponse());
+            return Results.Ok(authTokens.MapToResponse());
         })
         .AllowAnonymous();
     }
