@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Todo.Application.Common.Abstractions.Auth;
-using Todo.Infrastructure.Common.Constants;
+using Todo.Domain.Constants;
 
 namespace Todo.Infrastructure.Auth;
 

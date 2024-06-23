@@ -15,7 +15,8 @@ public class Logout : IEndpoint
             [FromBody] LogoutRequest logoutRequest,
             [FromServices] IAuthRepository authRepository) =>
         {
-            await authRepository.DeleteRefreshToken(logoutRequest.RefreshToken);
+            // This is too simple to create a dedicated harmony command for it
+            await authRepository.EmptyRefreshToken(logoutRequest.RefreshToken);
             return Results.Ok();
         });
     }

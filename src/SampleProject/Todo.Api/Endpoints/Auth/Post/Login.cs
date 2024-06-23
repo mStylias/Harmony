@@ -31,11 +31,11 @@ public class Login : IEndpoint
                 return loginResult.Error.MapToHttpResult();
             }
 
-            var tokensModel = loginResult.Value!;
+            var tokensModel = loginResult.Value;
             authCookiesService.SetAccessTokenCookie(httpContext, tokensModel.AccessToken, 
                 tokensModel.AccessTokenExpiration);
             
-            return Results.Ok(tokensModel.MapToAuthResponse());
+            return Results.Ok(tokensModel.MapToResponse());
         })
         .AllowAnonymous();
     }
