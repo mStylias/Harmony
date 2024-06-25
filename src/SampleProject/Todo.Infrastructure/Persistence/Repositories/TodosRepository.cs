@@ -13,6 +13,16 @@ public class TodosRepository : ITodosRepository
         _dbContext = dbContext;
     }
     
+    public async Task<IEnumerable<TodoList>> GetTodoListsOfUserAsync(string userId)
+    {
+        using var connection = _dbContext.CreateConnection();
+        var todoLists = await connection.QueryAsync<TodoList>(
+            "SELECT * FROM todo_lists WHERE user_id=@userId", 
+            new { userId });
+        
+        return todoLists;
+    }
+    
     public async Task<IEnumerable<TodoItem>> GetTodoListItemsAsync(int todoListId)
     {
         using var connection = _dbContext.CreateConnection();
