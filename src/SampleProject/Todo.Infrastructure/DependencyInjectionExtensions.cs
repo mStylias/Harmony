@@ -140,6 +140,7 @@ public static class DependencyInjectionExtensions
         });
 
         services.AddScoped<DapperDbContext>();
+        Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
         
         services.AddScoped<IAuthRepository, AuthRepository>();
         services.AddScoped<ITodosRepository, TodosRepository>();
