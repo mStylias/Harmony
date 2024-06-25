@@ -23,10 +23,10 @@ public class GetTodosOfUser : IEndpoint
 
                 return httpError.MapToHttpResult();
             })
-        .WithOpenApi(config =>
-        {
-            config.Summary = "Gets all todo lists along with their todos for the authenticated user.";
-            return config;
-        }).AllowAnonymous();
+            .WithOpenApi(config =>
+            {
+                config.Summary = "Gets all todo lists along with their todos for the authenticated user";
+                return config;
+            });
     }
 }

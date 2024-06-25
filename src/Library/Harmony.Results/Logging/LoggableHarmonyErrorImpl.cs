@@ -108,8 +108,7 @@ public class LoggableHarmonyErrorImpl<TError> : ILoggableHarmonyError<TError>
     }
 
     /// <summary>
-    /// Logs the message of the log action if it was provided
-    /// or the aggregated log if the log message was built gradually
+    /// Logs the message of the log action and the log builder if they are not null
     /// </summary>
     public void Log()
     {

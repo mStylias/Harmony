@@ -16,7 +16,7 @@ public class CreateTodoList : IEndpoint
     public string Tag => EndpointTagNames.Todos;
     public RouteHandlerBuilder AddEndpoint(IEndpointRouteBuilder app)
     {
-        return app.MapPost($"{EndpointBasePathNames.Todos}", async Task<IResult> (
+        return app.MapPost($"{EndpointBasePathNames.Todos}/lists", async Task<IResult> (
             HttpContext httpContext,
             [FromServices] ILogger<CreateTodoList> logger,
             [FromServices] IOperationFactory operationFactory,
@@ -35,7 +35,7 @@ public class CreateTodoList : IEndpoint
 
             var createCommand = operationFactory.SynthesizeOperation<CreateTodoListCommand, CreateTodoListInput>(
                 commandInput);
-
+            
             var result = await createCommand.ExecuteAsync();
             if (result.IsError)
             {
@@ -43,7 +43,11 @@ public class CreateTodoList : IEndpoint
                 return result.Error.MapToHttpResult();
             }
 
-            return Results.Ok(result.Value.MapToResponse());
+            return Results.Ok(result.Value.MapToCreateTodoListResponse());
+        }).WithOpenApi(config =>
+        {
+            config.Summary = "Creates a todo list for the authenticated user";
+            return config;
         });
     }
 }
