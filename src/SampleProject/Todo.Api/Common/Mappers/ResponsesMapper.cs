@@ -1,5 +1,6 @@
 ﻿using Todo.Application.Auth.Common;
 using Todo.Contracts.Auth.Common;
+using Todo.Contracts.Todos;
 using Todo.Contracts.Todos.CreateTodoList;
 using Todo.Domain.Entities.Todos;
 
@@ -15,8 +16,13 @@ public static class ResponsesMapper
             authTokensModel.RefreshTokenExpiration);
     }
 
-    public static CreateTodoListResponse MapToResponse(this TodoList todoList)
+    public static CreateTodoListResponse MapToCreateTodoListResponse(this TodoList todoList)
     {
         return new CreateTodoListResponse(todoList.Id, todoList.Name, todoList.Description);
+    }
+    
+    public static TodoListsResponse MapToTodoListResponse(this TodoList todoList)
+    {
+        return new TodoListsResponse(todoList.Id, todoList.Name, todoList.Description);
     }
 }
