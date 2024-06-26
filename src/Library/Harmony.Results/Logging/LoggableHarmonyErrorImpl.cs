@@ -9,7 +9,7 @@ namespace Harmony.Results.Logging;
 public class LoggableHarmonyErrorImpl<TError> : ILoggableHarmonyError<TError>
     where TError : class, ILoggableHarmonyError<TError>
 {
-    private LogBuilder? _logBuilder;
+    protected LogBuilder? LogBuilder;
     protected Action? LogAction;
 
     public LoggableHarmonyErrorImpl(Severity severity)
@@ -26,26 +26,26 @@ public class LoggableHarmonyErrorImpl<TError> : ILoggableHarmonyError<TError>
     
     public TError InitializeLogMessage(ILogger logger, LogLevel logLevel)
     {
-        _logBuilder = new LogBuilder(logger, logLevel);
+        LogBuilder = new LogBuilder(logger, logLevel);
         return (this as TError)!;
     }
     
     public TError InitializeLogMessage(ILogger logger, LogLevel logLevel, [StructuredMessageTemplate] string message)
     {
-        _logBuilder = new LogBuilder(logger, logLevel, message);
+        LogBuilder = new LogBuilder(logger, logLevel, message);
         return (this as TError)!;
     }
     
     public TError InitializeLogMessage(ILogger logger, LogLevel logLevel, [StructuredMessageTemplate] string message, 
         params object[] args)
     {
-        _logBuilder = new LogBuilder(logger, logLevel, message, args);
+        LogBuilder = new LogBuilder(logger, logLevel, message, args);
         return (this as TError)!;
     }
     
     public TError InitializeLogMessage(ILogger logger, LogLevel logLevel, EventId eventId)
     {
-        _logBuilder = new LogBuilder(logger, logLevel, eventId);
+        LogBuilder = new LogBuilder(logger, logLevel, eventId);
         return (this as TError)!;
     }
     
@@ -54,8 +54,8 @@ public class LoggableHarmonyErrorImpl<TError> : ILoggableHarmonyError<TError>
     /// </summary>
     public TError SetLogException(Exception exception)
     {
-        Debug.Assert(_logBuilder is not null, "InitializeLogMessage must be called before any other log building method");
-        _logBuilder.SetException(exception);
+        Debug.Assert(LogBuilder is not null, "InitializeLogMessage must be called before any other log building method");
+        LogBuilder.SetException(exception);
         return (this as TError)!;
     }
 
@@ -65,8 +65,8 @@ public class LoggableHarmonyErrorImpl<TError> : ILoggableHarmonyError<TError>
     /// <param name="message">The message to add</param>
     public TError AppendLogMessage([StructuredMessageTemplate] string message)
     {
-        Debug.Assert(_logBuilder is not null, "InitializeLogMessage must be called before any other log building method");
-        _logBuilder.AppendLogMessage(message);
+        Debug.Assert(LogBuilder is not null, "InitializeLogMessage must be called before any other log building method");
+        LogBuilder.AppendLogMessage(message);
         return (this as TError)!;
     }
 
@@ -78,8 +78,8 @@ public class LoggableHarmonyErrorImpl<TError> : ILoggableHarmonyError<TError>
     /// Exactly like the normal logging works in .NET</param>
     public TError AppendLogMessage([StructuredMessageTemplate] string message, params object[] args)
     {
-        Debug.Assert(_logBuilder is not null, "InitializeLogMessage must be called before any other log building method");
-        _logBuilder.AppendLogMessage(message, args);
+        Debug.Assert(LogBuilder is not null, "InitializeLogMessage must be called before any other log building method");
+        LogBuilder.AppendLogMessage(message, args);
         return (this as TError)!;
     }
 
@@ -89,8 +89,8 @@ public class LoggableHarmonyErrorImpl<TError> : ILoggableHarmonyError<TError>
     /// <param name="message">The message to add</param>
     public TError PrependLogMessage([StructuredMessageTemplate] string message)
     {
-        Debug.Assert(_logBuilder is not null, "InitializeLogMessage must be called before any other log building method");
-        _logBuilder.PrependLogMessage(message);
+        Debug.Assert(LogBuilder is not null, "InitializeLogMessage must be called before any other log building method");
+        LogBuilder.PrependLogMessage(message);
         return (this as TError)!;
     }
 
@@ -102,8 +102,8 @@ public class LoggableHarmonyErrorImpl<TError> : ILoggableHarmonyError<TError>
     /// Exactly like the normal logging works in .NET</param>
     public TError PrependLogMessage([StructuredMessageTemplate] string message, params object[] args)
     {
-        Debug.Assert(_logBuilder is not null, "InitializeLogMessage must be called before any other log building method");
-        _logBuilder.PrependLogMessage(message, args);
+        Debug.Assert(LogBuilder is not null, "InitializeLogMessage must be called before any other log building method");
+        LogBuilder.PrependLogMessage(message, args);
         return (this as TError)!;
     }
 
@@ -113,17 +113,17 @@ public class LoggableHarmonyErrorImpl<TError> : ILoggableHarmonyError<TError>
     public void Log()
     {
         LogAction?.Invoke();
-        _logBuilder?.Log();
+        LogBuilder?.Log();
     }
 
     public override string ToString()
     {
-        if (_logBuilder is null)
+        if (LogBuilder is null)
         {
             return base.ToString() ?? string.Empty;
         }
 
-        return _logBuilder.ToString();
+        return LogBuilder.ToString();
     }
     
 }
