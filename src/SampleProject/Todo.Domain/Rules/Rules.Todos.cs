@@ -8,7 +8,7 @@ public static partial class Rules
 {
     public static class Todos
     {
-        public const int MaximumListNameCharacters = 50;
-        
+        public const int MaximumListNameCharacters = 100;
+        public const int MaximumTodoItemNameCharacters = 100;
     }
 }
