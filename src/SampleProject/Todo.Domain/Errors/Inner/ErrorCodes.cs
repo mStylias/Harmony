@@ -10,5 +10,6 @@ public static class InnerErrorCodes
         public const string MaximumCharactersExceeded = nameof(MaximumCharactersExceeded);
         public const string EntityDoesNotExist = nameof(EntityDoesNotExist);
         public const string EntityAlreadyExists = nameof(EntityAlreadyExists);
+        public const string InvalidEnumValue = nameof(InvalidEnumValue);
     }
 }

@@ -14,6 +14,14 @@ public class TodoItem
 
     public int TodoListId { get; set; }
     
+    public TodoItem(string name, string description, TodoStatus status, int todoListId)
+    {
+        Name = name;
+        Description = description;
+        Status = status;
+        TodoListId = todoListId;
+    }
+    
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public TodoItem() { /* Empty constructor needed for dapper */ }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.

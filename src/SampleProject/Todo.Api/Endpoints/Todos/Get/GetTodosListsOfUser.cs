@@ -1,6 +1,5 @@
 ﻿using Harmony.MinimalApis.Mappers;
 using Harmony.MinimalApis.Structure;
-using Microsoft.OpenApi.Models;
 using Todo.Api.Common.Constants;
 using Todo.Api.Common.HttpContext;
 using Todo.Api.Common.Mappers;
@@ -15,6 +14,7 @@ public class GetTodosListsOfUser : IEndpoint
     public RouteHandlerBuilder AddEndpoint(IEndpointRouteBuilder app)
     {
         return app.MapGet($"{EndpointBasePathNames.Todos}/lists", async (
+                CancellationToken cancellationToken,
                 ILogger<GetTodosListsOfUser> logger, 
                 HttpContext httpContext, 
                 ITodosRepository todosRepository) =>
@@ -27,7 +27,8 @@ public class GetTodosListsOfUser : IEndpoint
 
                 // Not to be confused with Harmony. This is the Microsoft Results class that is used to return
                 // HTTP responses in minimal APIs.
-                var todoLists = await todosRepository.GetTodoListsOfUserAsync(userId);
+                var todoLists = await todosRepository
+                    .GetTodoListsOfUserAsync(userId, cancellationToken);
                 return Results.Ok(todoLists.Select(x => x.MapToTodoListResponse()));
             })
             .WithOpenApi(config =>
