@@ -27,11 +27,11 @@ public class CreateTodoListValidator : IHarmonyOperationValidator<CreateTodoList
     // Here we don't need to await anything, but we need the async to be able 
     // to use the implicit operators of the Result class
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-    public async Task<Result<HttpError>> ValidateAsync(CreateTodoListCommand operation,
-        CancellationToken cancellation = default)
+    public async Task<Result<HttpError>> ValidateAsync(CreateTodoListCommand command,
+        CancellationToken cancellationToken = default)
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
     {
-        var createTodoListInput = operation.Input;
+        var createTodoListInput = command.Input;
         if (createTodoListInput is null)
         {
             return Errors.General.NullReferenceError(_logger, nameof(createTodoListInput));

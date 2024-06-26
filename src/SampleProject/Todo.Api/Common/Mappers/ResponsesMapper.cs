@@ -1,6 +1,7 @@
 ﻿using Todo.Application.Auth.Common;
 using Todo.Contracts.Auth.Common;
 using Todo.Contracts.Todos;
+using Todo.Contracts.Todos.CreateTodoItem;
 using Todo.Contracts.Todos.CreateTodoList;
 using Todo.Domain.Entities.Todos;
 
@@ -24,5 +25,11 @@ public static class ResponsesMapper
     public static TodoListsResponse MapToTodoListResponse(this TodoList todoList)
     {
         return new TodoListsResponse(todoList.Id, todoList.Name, todoList.Description);
+    }
+    
+    public static CreateTodoItemResponse MapToCreateTodoItemResponse(this TodoItem todoItem)
+    {
+        return new CreateTodoItemResponse(todoItem.Id, todoItem.Name, todoItem.Description, todoItem.Status, 
+            todoItem.TodoListId);
     }
 }
