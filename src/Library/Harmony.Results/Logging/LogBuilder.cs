@@ -7,7 +7,7 @@ namespace Harmony.Results.Logging;
 /// Provides a way to gradually build a log message and log it at the end, while retaining
 /// the best practices of logging.
 /// </summary>
-internal class LogBuilder
+public class LogBuilder
 {
     private readonly ILogger _logger;
     private readonly LogLevel _logLevel;
