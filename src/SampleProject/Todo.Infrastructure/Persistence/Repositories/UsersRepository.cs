@@ -16,11 +16,12 @@ public class UsersRepository : IUsersRepository
         _userManager = userManager;
     }
 
-    public async Task<bool> UserExistsAsync(string userId)
+    public async Task<bool> UserExistsAsync(string userId, CancellationToken cancellationToken)
     {
         using var connection = _dapperContext.CreateConnection();
-        var result = await connection.QueryFirstOrDefaultAsync<int>(
-            "SELECT 1 FROM AspNetUsers WHERE Id = @UserId", new { UserId = userId });
+        var result = await connection.QueryFirstOrDefaultAsync<int>(new CommandDefinition(
+            "SELECT 1 FROM AspNetUsers WHERE Id = @UserId", new { UserId = userId },
+            cancellationToken: cancellationToken));
 
         return result == 1;
     }
