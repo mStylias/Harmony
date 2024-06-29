@@ -1,6 +1,6 @@
 ﻿using Todo.Application.Auth.Common;
 using Todo.Contracts.Auth.Common;
-using Todo.Contracts.Todos;
+using Todo.Contracts.Todos.Lists;
 using Todo.Contracts.Todos.Lists.CreateTodoList;
 using Todo.Contracts.Todos.Lists.Items.CreateTodoItem;
 using Todo.Domain.Entities.Todos;
@@ -9,7 +9,7 @@ namespace Todo.Api.Common.Mappers;
 
 public static class ResponsesMapper
 {
-    public static AuthResponse MapToResponse(this AuthTokensModel authTokensModel)
+    public static AuthResponse MapToAuthResponse(this AuthTokensModel authTokensModel)
     {
         return new AuthResponse(
             authTokensModel.RefreshToken,
@@ -26,5 +26,18 @@ public static class ResponsesMapper
     {
         return new CreateTodoItemResponse(todoItem.Id, todoItem.Name, todoItem.Description, todoItem.Status, 
             todoItem.TodoListId);
+    }
+
+    public static GetTodoListResponse MapToGetTodoListResponse(this TodoList todoList)
+    {
+        return new GetTodoListResponse(todoList.Id, todoList.Name, todoList.Description);
+    }
+    
+    public static GetTodoListsResponse MapToGetTodoListsResponse(this IEnumerable<TodoList> todoLists)
+    {
+        return new GetTodoListsResponse(todoLists.Select(list => 
+                list.MapToGetTodoListResponse())
+            .ToList()
+        );
     }
 }

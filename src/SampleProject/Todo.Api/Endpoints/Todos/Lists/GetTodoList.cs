@@ -3,6 +3,7 @@ using Harmony.MinimalApis.Structure;
 using Harmony.Results.ErrorTypes.InnerErrorTypes;
 using Todo.Api.Common.Constants;
 using Todo.Api.Common.HttpContext;
+using Todo.Api.Common.Mappers;
 using Todo.Application.Common.Abstractions.Repositories;
 using Todo.Domain.Errors;
 using Todo.Domain.Errors.Inner;
@@ -39,7 +40,7 @@ public class GetTodoList : IEndpoint
                 return Errors.Auth.AccessDenied(logger, null).MapToHttpResult();
             }
             
-            return Results.Ok(todoList);
+            return Results.Ok(todoList.MapToGetTodoListResponse());
         })
         .WithOpenApi(config =>
         {

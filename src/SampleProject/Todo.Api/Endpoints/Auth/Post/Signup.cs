@@ -36,7 +36,7 @@ public class Signup : IEndpoint
             authCookiesService.SetAccessTokenCookie(httpContext, authTokens.AccessToken, 
                 authTokens.AccessTokenExpiration);
 
-            return Results.Ok(authTokens.MapToResponse());
+            return Results.Ok(authTokens.MapToAuthResponse());
         })
         .AllowAnonymous();
     }
