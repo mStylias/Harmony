@@ -39,7 +39,7 @@ public class CreateTodoItem : IEndpoint
             var (name, description, todoStatus) = createTodoItemRequest;
 
             var createCommand = operationFactory.SynthesizeOperation<CreateTodoItemCommand, CreateTodoItemInput>(
-                new CreateTodoItemInput(name, description, todoStatus, listId));
+                new CreateTodoItemInput(name, description, todoStatus, listId, userId));
             
             var result = await createCommand.ExecuteAsync();
             if (result.IsError)
@@ -51,7 +51,7 @@ public class CreateTodoItem : IEndpoint
             return Results.Ok(result.Value.MapToCreateTodoItemResponse());
         }).WithOpenApi(config =>
         {
-            config.Summary = "Creates a todo list for the given list id";
+            config.Summary = "Gets a list item by the list id and the item id";
             config.Description = $"The available todo statuses are: <br>" +
                                  $"{todosStatuses.Aggregate((x, y) => $"{x}<br>{y}")}";
             return config;

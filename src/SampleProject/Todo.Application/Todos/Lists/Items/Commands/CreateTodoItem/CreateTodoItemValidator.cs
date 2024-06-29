@@ -47,14 +47,21 @@ public class CreateTodoItemValidator : IOperationValidator<CreateTodoItemCommand
                 $"The name of the todo item exceeds the maximum of '{Rules.Todos.MaximumTodoItemNameCharacters}' " +
                 "characters", nameof(createTodoItemRequest.Name)));
         }
-
-        var todoListExists = await _todosRepository.TodoListExistsAsync(
+        
+        var todoList = await _todosRepository.GetTodoListById(
             createTodoItemRequest.TodoListId, cancellationToken);
-        if (todoListExists == false)
+        if (todoList is null)
         {
             validationErrors.Add(new ValidationInnerError(InnerErrorCodes.Validation.EntityDoesNotExist,
                 $"The todo list with id '{createTodoItemRequest.TodoListId}' " +
                 $"does not exist", nameof(createTodoItemRequest.TodoListId)));
+        }
+
+        if (todoList is not null && todoList.UserId != createTodoItemRequest.UserId)
+        {
+            validationErrors.Add(new ValidationInnerError(InnerErrorCodes.Validation.NoPermission,
+                $"The todo list with id '{createTodoItemRequest.TodoListId}' " +
+                $"doesn't belong to this user", nameof(createTodoItemRequest.TodoListId)));
         }
         
         var nameAlreadyExists = await _todosRepository.TodoItemExistsAsync(
