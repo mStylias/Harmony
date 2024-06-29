@@ -13,22 +13,27 @@ public class GetTodoListsWithItems : IEndpoint
     public RouteHandlerBuilder AddEndpoint(IEndpointRouteBuilder app)
     {
         return app.MapGet($"{EndpointBasePathNames.Todos}", async Task<IResult> (
-            HttpContext httpContext,
-            IOperationFactory operationFactory) =>
-        {
-            var userId = httpContext.GetUserId();
-
-            var query = operationFactory.SynthesizeOperation<TodoListsWithItemsQuery, string?>(userId);
-
-            var result = await query.ExecuteAsync();
-            if (result.IsError)
+                HttpContext httpContext,
+                IOperationFactory operationFactory) =>
             {
-                // Here we don't want to log the error, but in another place we might have wanted to.
-                // Harmony gives us the flexibility to decide.
-                return result.Error.MapToHttpResult();
-            }
+                var userId = httpContext.GetUserId();
 
-            return Results.Ok(result.Value);
-        });
+                var query = operationFactory.SynthesizeOperation<TodoListsWithItemsQuery, string?>(userId);
+
+                var result = await query.ExecuteAsync();
+                if (result.IsError)
+                {
+                    // Here we don't want to log the error, but in another place we might have wanted to.
+                    // Harmony gives us the flexibility to decide.
+                    return result.Error.MapToHttpResult();
+                }
+
+                return Results.Ok(result.Value);
+            })
+            .WithOpenApi(config =>
+            {
+                config.Summary = "Gets all todo lists along with their todos for the logged on user";
+                return config;
+            });
     }
 }
