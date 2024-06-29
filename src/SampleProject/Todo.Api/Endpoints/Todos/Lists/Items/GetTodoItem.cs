@@ -8,13 +8,14 @@ public class GetTodoItem : IEndpoint
     public string Tag => EndpointTagNames.Todos;
     public RouteHandlerBuilder AddEndpoint(IEndpointRouteBuilder app)
     {
-        return app.MapGet($"{EndpointBasePathNames.Todos}/lists/{{todoListId:int}}", (int todoListId) =>
+        return app.MapGet($"{EndpointBasePathNames.Todos}/lists/{{todoListId:int}}/items/{{todoItemId:int}}", 
+                async Task<IResult> (int todoListId) =>
             {
                 return Results.Ok();
             })
             .WithOpenApi(config =>
             {
-                config.Summary = "Gets the list with the given ID without its inner todos for the authenticated user";
+                config.Summary = "Gets a list item by the list id and the item id";
                 return config;
             });
     }

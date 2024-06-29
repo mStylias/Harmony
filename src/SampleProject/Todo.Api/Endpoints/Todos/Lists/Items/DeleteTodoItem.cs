@@ -14,7 +14,7 @@ public class DeleteTodoItem : IEndpoint
             })
         .WithOpenApi(config =>
         {
-            config.Summary = "Deletes the todo item with the given id";
+            config.Summary = "Deletes the item in the specified list by item id and list id if it belongs to the logged on user";
             return config;
         });
     }
