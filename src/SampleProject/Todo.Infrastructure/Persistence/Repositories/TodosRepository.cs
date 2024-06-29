@@ -33,6 +33,17 @@ public class TodosRepository : ITodosRepository
         return todoItems;
     }
 
+    public Task<IEnumerable<TodoItem>> GetTodoItemsOfMultipleListsAsync(IEnumerable<int> todoListIds, 
+        CancellationToken cancellationToken)
+    {
+        using var connection = _dbContext.CreateConnection();
+        var todoItems = connection.QueryAsync<TodoItem>(
+            new CommandDefinition("SELECT * FROM todo_items WHERE todo_list_id in @todoListIds", 
+                new { todoListIds }, cancellationToken: cancellationToken));
+
+        return todoItems;
+    }
+
     public async Task<TodoList> CreateTodoListAsync(TodoList todoList)
     {
         using var connection = _dbContext.CreateConnection();

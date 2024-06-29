@@ -8,7 +8,7 @@ using Todo.Domain.Errors.Inner;
 
 namespace Todo.Application.Auth.Commands.Signup;
 
-public class SignupValidator : IHarmonyOperationValidator<SignupCommand, Result<HttpError>>
+public class SignupValidator : IOperationValidator<SignupCommand, Result<HttpError>>
 {
     private readonly ILogger<SignupValidator> _logger;
 
