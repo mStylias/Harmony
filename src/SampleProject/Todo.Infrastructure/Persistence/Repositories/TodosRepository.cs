@@ -12,7 +12,17 @@ public class TodosRepository : ITodosRepository
     {
         _dbContext = dbContext;
     }
-    
+
+    public Task<TodoList?> GetTodoListById(int todoListId, CancellationToken cancellationToken = default)
+    {
+        using var connection = _dbContext.CreateConnection();
+        var todoList = connection.QueryFirstOrDefaultAsync<TodoList>(new CommandDefinition(
+            "SELECT * FROM todo_lists WHERE id=@todoListId", 
+            new { todoListId }, cancellationToken: cancellationToken));
+
+        return todoList;
+    }
+
     public async Task<IEnumerable<TodoList>> GetTodoListsOfUserAsync(string userId, CancellationToken cancellationToken)
     {
         using var connection = _dbContext.CreateConnection();
