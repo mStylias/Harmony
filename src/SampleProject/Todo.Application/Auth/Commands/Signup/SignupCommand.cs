@@ -20,11 +20,11 @@ public class SignupCommand : Command<SignupRequest, Result<AuthTokensModel, Http
     private readonly ILogger<SignupCommand> _logger;
     private readonly IAuthRepository _authRepository;
     private readonly ITokenCreationService _tokenCreationService;
-    private readonly IHarmonyOperationValidator<SignupCommand, Result<HttpError>> _validator;
+    private readonly IOperationValidator<SignupCommand, Result<HttpError>> _validator;
 
     public SignupCommand(ILogger<SignupCommand> logger, IAuthRepository authRepository, 
         ITokenCreationService tokenCreationService, 
-        IHarmonyOperationValidator<SignupCommand, Result<HttpError>> validator)
+        IOperationValidator<SignupCommand, Result<HttpError>> validator)
     {
         _logger = logger;
         _authRepository = authRepository;
