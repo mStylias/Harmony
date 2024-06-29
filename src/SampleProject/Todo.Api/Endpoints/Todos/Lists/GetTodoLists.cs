@@ -8,33 +8,32 @@ using Todo.Domain.Errors;
 
 namespace Todo.Api.Endpoints.Todos.Lists;
 
-/*public class GetTodoLists : IEndpoint
+public class GetTodoLists : IEndpoint
 {
     public string Tag => EndpointTagNames.Todos;
     public RouteHandlerBuilder AddEndpoint(IEndpointRouteBuilder app)
     {
-        return app.MapGet($"{EndpointBasePathNames.Todos}/lists", async (
-                CancellationToken cancellationToken,
-                ILogger<GetTodoLists> logger, 
-                HttpContext httpContext, 
-                ITodosRepository todosRepository) =>
+        return app.MapGet($"{EndpointBasePathNames.Todos}/lists", async Task<IResult>(
+                ILogger<GetTodoList> logger,
+                HttpContext httpContext,
+                ITodosRepository todosRepository,
+                CancellationToken cancellationToken) =>
             {
                 var userId = httpContext.GetUserId();
                 if (userId is null)
                 {
                     return Errors.Auth.AccessDenied(logger, null).MapToHttpResult();
                 }
-                
-                // Not to be confused with Harmony. This is the Microsoft Results class that is used to return
-                // HTTP responses in minimal APIs.
-                var todoLists = await todosRepository
+            
+                var todoList = await todosRepository
                     .GetTodoListsOfUserAsync(userId, cancellationToken);
-                return Results.Ok(todoLists.Select(x => x.MapToTodoListResponse()));
+            
+                return Results.Ok(todoList);
             })
             .WithOpenApi(config =>
             {
-                config.Summary = "Gets all todo lists without their inner todos for the authenticated user";
+                config.Summary = "Gets a specific list by it's id if it belongs to the logged on user";
                 return config;
             });
     }
-}*/
+}
