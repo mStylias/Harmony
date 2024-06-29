@@ -2,6 +2,7 @@
 using Todo.Contracts.Auth.Common;
 using Todo.Contracts.Todos.Lists;
 using Todo.Contracts.Todos.Lists.CreateTodoList;
+using Todo.Contracts.Todos.Lists.Items;
 using Todo.Contracts.Todos.Lists.Items.CreateTodoItem;
 using Todo.Domain.Entities.Todos;
 
@@ -37,6 +38,19 @@ public static class ResponsesMapper
     {
         return new GetTodoListsResponse(todoLists.Select(list => 
                 list.MapToGetTodoListResponse())
+            .ToList()
+        );
+    }
+    
+    public static GetTodoItemResponse MapToGetTodoItemResponse(this TodoItem todoItem)
+    {
+        return new GetTodoItemResponse(todoItem.Id, todoItem.Name, todoItem.Description, todoItem.Status);
+    }
+    
+    public static GetTodoItemsResponse MapToGetTodoItemsResponse(this IEnumerable<TodoItem> todoItems)
+    {
+        return new GetTodoItemsResponse(todoItems.Select(list => 
+                list.MapToGetTodoItemResponse())
             .ToList()
         );
     }

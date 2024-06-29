@@ -24,7 +24,6 @@
       <Folder Include="Auth\Queries\" />
       <Folder Include="Todos\Lists\Commands\" />
       <Folder Include="Todos\Lists\Items\Commands\" />
-      <Folder Include="Todos\Lists\Items\Queries\" />
     </ItemGroup>
 
 </Project>
