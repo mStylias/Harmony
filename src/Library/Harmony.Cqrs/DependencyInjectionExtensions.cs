@@ -118,6 +118,6 @@ public static class DependencyInjectionExtensions
             return false;
 
         var typeDefinition = type.GetGenericTypeDefinition();
-        return typeDefinition == typeof(IHarmonyOperationValidator<,>);
+        return typeDefinition == typeof(IOperationValidator<,>);
     }
 }
