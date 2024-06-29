@@ -6,6 +6,9 @@ public interface ITodosRepository
 {
     Task<IEnumerable<TodoList>> GetTodoListsOfUserAsync(string userId, CancellationToken cancellationToken = default);
     Task<IEnumerable<TodoItem>> GetTodoListItemsAsync(int todoListId, CancellationToken cancellationToken = default);
+
+    Task<IEnumerable<TodoItem>> GetTodoItemsOfMultipleListsAsync(IEnumerable<int> todoListIds,
+        CancellationToken cancellationToken = default);
     Task<TodoList> CreateTodoListAsync(TodoList todoList);
     Task<TodoItem> CreateTodoItemAsync(TodoItem todoItem);
     Task<bool> TodoListExistsAsync(string name, string userId, CancellationToken cancellationToken = default);
