@@ -80,10 +80,16 @@ public class TodosRepository : ITodosRepository
         return todoItem;
     }
 
-    public async Task DeleteTodoList(int todoListId)
+    public async Task<int> DeleteTodoList(int todoListId)
     {
         using var connection = _dbContext.CreateConnection();
-        await connection.ExecuteAsync("DELETE FROM todo_lists WHERE id=@todoListId", new { todoListId });
+        return await connection.ExecuteAsync("DELETE FROM todo_lists WHERE id=@todoListId", new { todoListId });
+    }
+    
+    public async Task<int> DeleteTodoItem(int todoItemId)
+    {
+        using var connection = _dbContext.CreateConnection();
+        return await connection.ExecuteAsync("DELETE FROM todo_items WHERE id=@todoItemId", new { todoItemId });
     }
 
     public async Task<bool> TodoListExistsAsync(string name, string userId, CancellationToken cancellationToken)

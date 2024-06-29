@@ -28,6 +28,7 @@ public class DeleteTodoListCommand : Command<DeleteTodoListInput, Result<HttpErr
             return validationResult.Error;
         }
 
+        // The items will also be deleted because of the foreign key constraint and cascade being on
         await _todosRepository.DeleteTodoList(Input!.ListId);
 
         return Result.Ok();

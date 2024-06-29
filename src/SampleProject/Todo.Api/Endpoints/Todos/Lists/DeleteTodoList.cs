@@ -41,6 +41,6 @@ public class DeleteTodoList : IEndpoint
             {
                 config.Summary = "Deletes the todo list with the given id and all it's todo items if it belongs to the logged in user";
                 return config;
-            });;
+            });
     }
 }
