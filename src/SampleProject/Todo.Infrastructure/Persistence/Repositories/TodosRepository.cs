@@ -80,6 +80,12 @@ public class TodosRepository : ITodosRepository
         return todoItem;
     }
 
+    public async Task DeleteTodoList(int todoListId)
+    {
+        using var connection = _dbContext.CreateConnection();
+        await connection.ExecuteAsync("DELETE FROM todo_lists WHERE id=@todoListId", new { todoListId });
+    }
+
     public async Task<bool> TodoListExistsAsync(string name, string userId, CancellationToken cancellationToken)
     {
         using var connection = _dbContext.CreateConnection();
@@ -108,5 +114,15 @@ public class TodosRepository : ITodosRepository
             new { name, todoListId }, cancellationToken: cancellationToken));
 
         return todoItem == 1;
+    }
+
+    public async Task<bool> UserOwnsListAsync(int listId, string userId, CancellationToken cancellationToken)
+    {
+        using var connection = _dbContext.CreateConnection();
+        var result = await connection.ExecuteScalarAsync<int>(new CommandDefinition(
+            "SELECT 1 FROM todo_lists WHERE id=@listId AND user_id=@userId LIMIT 1",
+            new { listId, userId }, cancellationToken: cancellationToken));
+        
+        return result == 1;
     }
 }

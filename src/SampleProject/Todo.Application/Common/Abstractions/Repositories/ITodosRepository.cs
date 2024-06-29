@@ -11,7 +11,9 @@ public interface ITodosRepository
         CancellationToken cancellationToken = default);
     Task<TodoList> CreateTodoListAsync(TodoList todoList);
     Task<TodoItem> CreateTodoItemAsync(TodoItem todoItem);
+    Task DeleteTodoList(int todoListId);
     Task<bool> TodoListExistsAsync(string name, string userId, CancellationToken cancellationToken = default);
     Task<bool> TodoListExistsAsync(int id, CancellationToken cancellationToken = default);
     Task<bool> TodoItemExistsAsync(string name, int todoListId, CancellationToken cancellationToken = default);
+    Task<bool> UserOwnsListAsync(int listId, string userId, CancellationToken cancellationToken = default);
 }
