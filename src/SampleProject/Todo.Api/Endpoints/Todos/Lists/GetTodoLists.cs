@@ -25,14 +25,14 @@ public class GetTodoLists : IEndpoint
                     return Errors.Auth.AccessDenied(logger, null).MapToHttpResult();
                 }
             
-                var todoList = await todosRepository
+                var todoLists = await todosRepository
                     .GetTodoListsOfUserAsync(userId, cancellationToken);
             
-                return Results.Ok(todoList);
+                return Results.Ok(todoLists.MapToGetTodoListsResponse());
             })
             .WithOpenApi(config =>
             {
-                config.Summary = "Gets a specific list by it's id if it belongs to the logged on user";
+                config.Summary = "Gets all the lists of the logged on user";
                 return config;
             });
     }

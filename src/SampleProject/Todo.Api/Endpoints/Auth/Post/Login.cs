@@ -35,7 +35,7 @@ public class Login : IEndpoint
             authCookiesService.SetAccessTokenCookie(httpContext, tokensModel.AccessToken, 
                 tokensModel.AccessTokenExpiration);
             
-            return Results.Ok(tokensModel.MapToResponse());
+            return Results.Ok(tokensModel.MapToAuthResponse());
         })
         .AllowAnonymous();
     }

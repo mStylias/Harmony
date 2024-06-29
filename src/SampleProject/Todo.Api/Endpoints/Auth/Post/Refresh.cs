@@ -37,7 +37,7 @@ public class Refresh : IEndpoint
                 authCookiesService.SetAccessTokenCookie(httpContext, authTokensModel.AccessToken, 
                     authTokensModel.AccessTokenExpiration);
                 
-                return Results.Ok(authTokensModel.MapToResponse());
+                return Results.Ok(authTokensModel.MapToAuthResponse());
             })
             .AllowAnonymous();
     }
