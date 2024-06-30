@@ -18,4 +18,4 @@ Harmony.Results and Harmony.Cqrs are completely independent of each other, while
 A complete documentation is available at the [wiki](https://github.com/mStylias/Harmony/wiki) of this repository. Also a sample todo api that uses Harmony is included in the project files as an example.
 
 # Star ⭐
-Does Harmony offer value to you and your project? If so consider supporting the project by giving it a star! ⭐
+Does Harmony offer value to you and your project? If so, consider showing your support by giving it a star! ⭐
