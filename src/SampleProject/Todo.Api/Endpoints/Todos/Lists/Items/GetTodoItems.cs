@@ -14,30 +14,30 @@ public class GetTodoItems : IEndpoint
     public RouteHandlerBuilder AddEndpoint(IEndpointRouteBuilder app)
     {
         return app.MapGet($"{EndpointBasePathNames.Todos}/lists/{{todoListId:int}}/items", 
-                async Task<IResult> (
-                    int todoListId,
-                    ILogger<GetTodoItems> logger,
-                    HttpContext httpContext,
-                    ITodosRepository todosRepository,
-                    CancellationToken cancellationToken) =>
+            async Task<IResult> (
+                int todoListId,
+                ILogger<GetTodoItems> logger,
+                HttpContext httpContext,
+                ITodosRepository todosRepository,
+                CancellationToken cancellationToken) =>
+            {
+                var userId = httpContext.GetUserId();
+                if (userId is null)
                 {
-                    var userId = httpContext.GetUserId();
-                    if (userId is null)
-                    {
-                        return Errors.Auth.AccessDenied(logger, null).MapToHttpResult();
-                    }
+                    return Errors.Auth.AccessDenied(logger, null).MapToHttpResult();
+                }
 
-                    bool userOwnsList = await todosRepository.UserOwnsListAsync(todoListId, userId, cancellationToken);
-                    if (userOwnsList == false)
-                    {
-                        return Errors.Auth.AccessDenied(logger,null).MapToHttpResult();
-                    }
-                    
-                    var todoItems = await todosRepository
-                        .GetTodoListItemsAsync(todoListId, cancellationToken);
-                    
-                    return Results.Ok(todoItems.MapToGetTodoItemsResponse());
-                })
+                bool userOwnsList = await todosRepository.UserOwnsListAsync(todoListId, userId, cancellationToken);
+                if (userOwnsList == false)
+                {
+                    return Errors.Auth.AccessDenied(logger,null).MapToHttpResult();
+                }
+                
+                var todoItems = await todosRepository
+                    .GetTodoListItemsAsync(todoListId, cancellationToken);
+                
+                return Results.Ok(todoItems.MapToGetTodoItemsResponse());
+            })
             .WithOpenApi(config =>
             {
                 config.Summary = "Gets all the items of the given list if it belong to the logged on user";
