@@ -11,7 +11,7 @@ internal static class LogValuesFormatter
     /// <summary>
     /// Replaces the arguments in the given string exactly like it is done in logging.
     /// It uses reflection to get a hold of <see cref="Microsoft.Extensions.Logging.FormattedLogValues"/> which is
-    /// used internall by the logging system for this purpose. There is an issue to make this public in dotnet runtime,
+    /// used internally by the logging system for this purpose. There is an issue to make this public in dotnet runtime,
     /// but hasn't yet been merged. https://github.com/dotnet/runtime/issues/67577
     /// </summary>
     /// <param name="message">The message template of the log</param>

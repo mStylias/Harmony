@@ -6,6 +6,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Harmony.Results.Logging;
 
+/// <summary>
+/// Provides the base class for an error that can be logged using the log builder
+/// </summary>
+/// <typeparam name="TError"></typeparam>
 public class LoggableHarmonyErrorImpl<TError> : ILoggableHarmonyError<TError>
     where TError : class, ILoggableHarmonyError<TError>
 {

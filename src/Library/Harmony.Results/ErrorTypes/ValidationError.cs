@@ -5,6 +5,10 @@ using Harmony.Results.Logging;
 
 namespace Harmony.Results.ErrorTypes;
 
+/// <summary>
+/// An error type implementation that is used when a validation error occurs. This error type can be used
+/// to return multiple inner errors in order to provide more information about the error that occured
+/// </summary>
 public class ValidationError : LoggableHarmonyErrorImpl<ValidationError>
 {
     public string ErrorCode { get; }
