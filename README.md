@@ -8,8 +8,8 @@ Harmony includes three packages, all requiring a minimum of .NET 6 and fully sup
 
 Harmony Package                                                           | NuGet                                                                                                                                                         |
 ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-[Harmony.Results](https://www.nuget.org/packages/Harmony.Results)         | [<img src='https://img.shields.io/nuget/v/Harmony.Results' alt='harmony-results-nuget-version'>](https://www.nuget.org/packages/Harmony.Results)              |
 [Harmony.Cqrs](https://www.nuget.org/packages/Harmony.Cqrs)               | [<img src='https://img.shields.io/nuget/v/Harmony.Cqrs' alt='harmony-cqrs-nuget-version'>](https://www.nuget.org/packages/Harmony.Cqrs)                       |
+[Harmony.Results](https://www.nuget.org/packages/Harmony.Results)         | [<img src='https://img.shields.io/nuget/v/Harmony.Results' alt='harmony-results-nuget-version'>](https://www.nuget.org/packages/Harmony.Results)              |
 [Harmony.MinimalApis](https://www.nuget.org/packages/Harmony.MinimalApis) | [<img src='https://img.shields.io/nuget/v/Harmony.MinimalApis' alt='harmony-minimal-apis-nuget-version'>](https://www.nuget.org/packages/Harmony.MinimalApis) |
 
 Harmony.Results and Harmony.Cqrs are completely independent of each other, while Harmony.MinimalApis has a dependency on Harmony.Results.
