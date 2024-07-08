@@ -111,6 +111,13 @@ public class LoggableHarmonyErrorImpl<TError> : ILoggableHarmonyError<TError>
         return (this as TError)!;
     }
 
+    public TError IncludeLogLevelInToString(bool value)
+    {
+        Debug.Assert(LogBuilder is not null, "InitializeLogMessage must be called before any other log building method");
+        LogBuilder.IncludeLogLevelInToString(value);
+        return (this as TError)!;
+    }
+    
     /// <summary>
     /// Logs the message of the log action and the log builder if they are not null
     /// </summary>
@@ -119,7 +126,7 @@ public class LoggableHarmonyErrorImpl<TError> : ILoggableHarmonyError<TError>
         LogAction?.Invoke();
         LogBuilder?.Log();
     }
-
+    
     public override string ToString()
     {
         if (LogBuilder is null)

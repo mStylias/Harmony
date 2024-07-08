@@ -15,6 +15,7 @@ public class LogBuilder
     
     private Exception? _exception;
 
+    private bool _includeLogLevelInToString = true;
     private string _message = string.Empty;
     private readonly List<object> _args = new();
     
@@ -45,6 +46,11 @@ public class LogBuilder
         _logger = logger;
         _logLevel = logLevel;
         _eventId = eventId;
+    }
+
+    public void IncludeLogLevelInToString(bool value)
+    {
+        _includeLogLevelInToString = value;
     }
     
     public void SetException(Exception exception)
@@ -112,15 +118,19 @@ public class LogBuilder
 
     public override string ToString()
     {
+        var startingMessage = _includeLogLevelInToString 
+            ? $"[{_logLevel}]: " 
+            : string.Empty;
+
         // If there are no arguments, simply return the message.
         if (_args.Count == 0)
         {
-            return $"[{_logLevel}]: {_message}";
+            return startingMessage + _message;
         }
         
         // Format the message with the arguments.
         var formattedLogValues = LogValuesFormatter.ConvertLogMessageToString(_message, _args.ToArray());
 
-        return $"[{_logLevel}]: {formattedLogValues}";
+        return startingMessage + formattedLogValues;
     }
 }

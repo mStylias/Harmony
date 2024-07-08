@@ -16,5 +16,6 @@ public interface ILoggableHarmonyError<out TError> : IHarmonyError
     TError AppendLogMessage([StructuredMessageTemplate] string message, params object[] args);
     TError PrependLogMessage([StructuredMessageTemplate] string message);
     TError PrependLogMessage([StructuredMessageTemplate] string message, params object[] args);
+    TError IncludeLogLevelInToString(bool value);
     void Log();
 }
