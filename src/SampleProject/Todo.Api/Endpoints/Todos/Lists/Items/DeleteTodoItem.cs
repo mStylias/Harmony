@@ -26,10 +26,10 @@ public class DeleteTodoItem : IEndpoint
                 {
                     return Errors.Auth.AccessDenied(logger, null).MapToHttpResult();
                 }
-                
-                var deleteOperation = operationFactory
-                    .SynthesizeOperation<DeleteTodoItemCommand, DeleteTodoItemInput>(
-                        new(todoItemId, todoListId, userId));
+
+                var deleteOperation = operationFactory.GetBuilder<DeleteTodoItemCommand>()
+                    .WithInput(new DeleteTodoItemInput(todoItemId, todoListId, userId))
+                    .Build();
                 
                 var deleteResult = await deleteOperation.ExecuteAsync();
                 if (deleteResult.IsError)

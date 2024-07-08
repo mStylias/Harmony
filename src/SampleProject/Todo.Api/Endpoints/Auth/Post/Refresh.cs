@@ -22,8 +22,9 @@ public class Refresh : IEndpoint
                 [FromServices] IOperationFactory operationFactory
             ) =>
             {
-                var refreshTokenCommand = operationFactory
-                    .SynthesizeOperation<RefreshTokenCommand, RefreshRequest>(refreshRequest);
+                var refreshTokenCommand = operationFactory.GetBuilder<RefreshTokenCommand>()
+                    .WithInput(refreshRequest)
+                    .Build();
 
                 var refreshResult = await refreshTokenCommand.ExecuteAsync();
                 if (refreshResult.IsError)

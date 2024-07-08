@@ -22,7 +22,10 @@ public class Signup : IEndpoint
                 [FromServices] IAuthCookiesService authCookiesService
             ) =>
         {
-            using var signupCommand = operationFactory.SynthesizeOperation<SignupCommand, SignupRequest>(signupRequest);
+            var signupCommand = operationFactory.GetBuilder<SignupCommand>()
+                .WithInput(signupRequest)
+                .Build();
+            
             var signupResult = await signupCommand.ExecuteAsync();
             if (signupResult.IsError)
             {

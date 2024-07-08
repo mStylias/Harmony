@@ -21,22 +21,24 @@ public class Login : IEndpoint
             [FromBody] LoginRequest loginRequest,
             [FromServices] IOperationFactory operationFactory,
             [FromServices] IAuthCookiesService authCookiesService) =>
-        {
-            var loginQuery = operationFactory.SynthesizeOperation<LoginQuery, LoginRequest>(loginRequest);
-            
-            var loginResult = await loginQuery.ExecuteAsync();
-            if (loginResult.IsError)
             {
-                loginResult.Error.Log();
-                return loginResult.Error.MapToHttpResult();
-            }
-
-            var tokensModel = loginResult.Value;
-            authCookiesService.SetAccessTokenCookie(httpContext, tokensModel.AccessToken, 
-                tokensModel.AccessTokenExpiration);
+                var loginQuery = operationFactory.GetBuilder<LoginQuery>()
+                    .WithInput(loginRequest)
+                    .Build();
             
-            return Results.Ok(tokensModel.MapToAuthResponse());
-        })
-        .AllowAnonymous();
+                var loginResult = await loginQuery.ExecuteAsync();
+                if (loginResult.IsError)
+                {
+                    loginResult.Error.Log();
+                    return loginResult.Error.MapToHttpResult();
+                }
+
+                var tokensModel = loginResult.Value;
+                authCookiesService.SetAccessTokenCookie(httpContext, tokensModel.AccessToken, 
+                    tokensModel.AccessTokenExpiration);
+                
+                return Results.Ok(tokensModel.MapToAuthResponse());
+            })
+            .AllowAnonymous();
     }
 }

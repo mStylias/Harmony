@@ -28,13 +28,10 @@ public class CreateTodoList : IEndpoint
                 return Errors.Auth.AccessDenied(logger, null).MapToHttpResult();
             }
 
-            var commandInput = new CreateTodoListInput(
-                userId,
-                createTodoListRequest.Name,
-                createTodoListRequest.Description);
 
-            var createCommand = operationFactory.SynthesizeOperation<CreateTodoListCommand, CreateTodoListInput>(
-                commandInput);
+            var createCommand = operationFactory.GetBuilder<CreateTodoListCommand>()
+                .WithInput(new CreateTodoListInput(userId, createTodoListRequest.Name, createTodoListRequest.Description))
+                .Build();
             
             var result = await createCommand.ExecuteAsync();
             if (result.IsError)

@@ -38,8 +38,9 @@ public class CreateTodoItem : IEndpoint
 
             var (name, description, todoStatus) = createTodoItemRequest;
 
-            var createCommand = operationFactory.SynthesizeOperation<CreateTodoItemCommand, CreateTodoItemInput>(
-                new CreateTodoItemInput(name, description, todoStatus, listId, userId));
+            var createCommand = operationFactory.GetBuilder<CreateTodoItemCommand>()
+                .WithInput(new CreateTodoItemInput(name, description, todoStatus, listId, userId))
+                .Build();
             
             var result = await createCommand.ExecuteAsync();
             if (result.IsError)
