@@ -20,6 +20,12 @@ public class OperationFactory : IOperationFactory
     }
     
     /// <inheritdoc/>
+    public OperationBuilder<TOperation> GetBuilder<TOperation>() where TOperation : class, IHarmonyOperation
+    {
+        return new(_serviceProvider);
+    }
+    
+    /// <inheritdoc/>
     public TOperation SynthesizeOperation<TOperation>() where TOperation : IHarmonyOperation
     {
         Debug.WriteLineIf(typeof(TOperation).IsAssignableTo(typeof(IHarmonyOperationWithInput<>)), 
