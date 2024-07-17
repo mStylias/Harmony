@@ -12,18 +12,12 @@ It integrates with Harmony and constitutes an essential part of some of its stru
         <RepositoryUrl>https://github.com/mStylias/Harmony</RepositoryUrl>
         <PackageTags>harmony;railway-programming;design-patterns;.net;result;error-handling;validation</PackageTags>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
-        <PackageReleaseNotes>+ Added log action to Success
-+ Added severity to errors. The available values are Error and Warning
-+ Added a log building alternative to log action (see more in docs)
-+ Added support of converting a log from a log builder to string
-+ Added more xml comments
-
-* Slightly improved performance</PackageReleaseNotes>
+        <PackageReleaseNotes>* Remove class constraint from TError in ILoggableHarmonyError</PackageReleaseNotes>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <Authors>StyleM</Authors>
-        <AssemblyVersion>2.0.0</AssemblyVersion>
-        <FileVersion>2.0.0</FileVersion>
-        <Version>2.0.0</Version>
+        <AssemblyVersion>2.0.1</AssemblyVersion>
+        <FileVersion>2.0.1</FileVersion>
+        <Version>2.0.1</Version>
     </PropertyGroup>
 
     <ItemGroup>

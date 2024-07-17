@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 namespace Harmony.Results.Abstractions;
 
 public interface ILoggableHarmonyError<out TError> : IHarmonyError
-    where TError : class, ILoggableHarmonyError<TError>
+    where TError : ILoggableHarmonyError<TError>
 {
     TError InitializeLogMessage(ILogger logger, LogLevel logLevel);
     TError InitializeLogMessage(ILogger logger, LogLevel logLevel, [StructuredMessageTemplate] string message);
