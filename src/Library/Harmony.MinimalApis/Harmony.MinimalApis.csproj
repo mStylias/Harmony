@@ -14,11 +14,15 @@
         <RepositoryUrl>https://github.com/mStylias/Harmony</RepositoryUrl>
         <PackageIcon>harmony_logo.png</PackageIcon>
         <PackageTags>minimal-apis;structure;single-responsibility;error-handling</PackageTags>
-        <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+        <PackageReleaseNotes>+ Added debug assertion messages to assist development
++ Added global exception handler
+
+* Improved HttpError
+* Fixed bugs</PackageReleaseNotes>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
-        <AssemblyVersion>1.0.1</AssemblyVersion>
-        <FileVersion>1.0.1</FileVersion>
-        <Version>1.0.1</Version>
+        <AssemblyVersion>2.0.0</AssemblyVersion>
+        <FileVersion>2.0.0</FileVersion>
+        <Version>2.0.0</Version>
     </PropertyGroup>
 
     <ItemGroup>
