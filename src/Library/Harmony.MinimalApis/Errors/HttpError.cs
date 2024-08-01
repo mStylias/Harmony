@@ -55,9 +55,9 @@ public class HttpError : LoggableHarmonyErrorImpl<HttpError>
     
     public HttpError PrependErrorCodeToLog()
     {
-        Debug.Assert(LogBuilder is not null, "Cannot modify the log message if logging " +
-            "is configured with a log action or not configured at all. Use the InitializeLogMessage and Append " +
-            "methods to build an error message instead");
+        Debug.Assert(GetLogBuilder() is not null, "Cannot modify the log message if logging " +
+          "is configured with a log action or not configured at all. Use the InitializeLogMessage and Append " +
+          "methods to build an error message instead");
         
         PrependLogMessage("{ErrorCode}: ", ErrorCode);
         return this;

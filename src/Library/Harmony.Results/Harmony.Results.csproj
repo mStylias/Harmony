@@ -12,12 +12,36 @@ It integrates with Harmony and constitutes an essential part of some of its stru
         <RepositoryUrl>https://github.com/mStylias/Harmony</RepositoryUrl>
         <PackageTags>harmony;railway-programming;design-patterns;.net;result;error-handling;validation</PackageTags>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
-        <PackageReleaseNotes>* Readd class constraint from TError in ILoggableHarmonyError, it was needed</PackageReleaseNotes>
+        <PackageReleaseNotes>* Fix jetbrains annotations not showing for log builder</PackageReleaseNotes>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <Authors>StyleM</Authors>
-        <AssemblyVersion>2.0.2</AssemblyVersion>
-        <FileVersion>2.0.2</FileVersion>
-        <Version>2.0.2</Version>
+        <AssemblyVersion>2.0.3</AssemblyVersion>
+        <FileVersion>2.0.3</FileVersion>
+        <Version>2.0.3</Version>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0|AnyCPU'">
+      <DefineConstants>$(DefineConstants);JETBRAINS_ANNOTATIONS</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0|AnyCPU'">
+      <DefineConstants>$(DefineConstants);JETBRAINS_ANNOTATIONS</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0|AnyCPU'">
+      <DefineConstants>$(DefineConstants);JETBRAINS_ANNOTATIONS</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0|AnyCPU'">
+      <DefineConstants>$(DefineConstants);JETBRAINS_ANNOTATIONS</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0|AnyCPU'">
+      <DefineConstants>$(DefineConstants);JETBRAINS_ANNOTATIONS</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0|AnyCPU'">
+      <DefineConstants>$(DefineConstants);JETBRAINS_ANNOTATIONS</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>
@@ -33,7 +57,7 @@ It integrates with Harmony and constitutes an essential part of some of its stru
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
+      <PackageReference Include="JetBrains.Annotations" Version="2024.2.0" />
       <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
     </ItemGroup>

@@ -13,8 +13,13 @@ namespace Harmony.Results.Logging;
 public class LoggableHarmonyErrorImpl<TError> : ILoggableHarmonyError<TError>
     where TError : class, ILoggableHarmonyError<TError>
 {
-    protected LogBuilder? LogBuilder;
-    protected Action? LogAction;
+    internal LogBuilder? LogBuilder { get; set; }
+    internal Action? LogAction { get; set; }
+
+    protected LogBuilder? GetLogBuilder()
+    {
+        return LogBuilder;
+    }
 
     public LoggableHarmonyErrorImpl(Severity severity)
     {
@@ -136,5 +141,11 @@ public class LoggableHarmonyErrorImpl<TError> : ILoggableHarmonyError<TError>
 
         return LogBuilder.ToString();
     }
-    
+
+    /// <inheritdoc/>
+    public void OverrideLogBuilderWith<TErrorType>(LoggableHarmonyErrorImpl<TErrorType> error)
+        where TErrorType : class, ILoggableHarmonyError<TErrorType>
+    {
+        this.LogBuilder = error.LogBuilder;
+    }
 }
