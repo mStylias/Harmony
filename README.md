@@ -15,7 +15,7 @@ Harmony Package                                                           | NuGe
 Harmony.Results and Harmony.Cqrs are completely independent of each other, while Harmony.MinimalApis has a dependency on Harmony.Results.
 
 # Documentation
-A complete documentation is available at the [wiki](https://github.com/mStylias/Harmony/wiki/1.-Introduction) of this repository.
+A complete documentation is available at the [wiki](https://github.com/mStylias/Harmony/wiki) of this repository.
 
 # Examples and sample project
 A complete Todo minimal API utilizing Harmony is included in the project files as an example. Additionally, numerous usage examples are provided throughout the documentation.
