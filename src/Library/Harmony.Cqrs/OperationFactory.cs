@@ -6,17 +6,11 @@ namespace Harmony.Cqrs;
 
 public class OperationFactory : IOperationFactory
 {
-    internal static bool UseScopeFactory { get; set; }
     private readonly IServiceProvider _serviceProvider;
-    private readonly IServiceScopeFactory? _serviceScopeFactory;
     
     public OperationFactory(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
-        if (UseScopeFactory)
-        {
-            _serviceScopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
-        }
     }
     
     /// <inheritdoc/>
@@ -30,15 +24,15 @@ public class OperationFactory : IOperationFactory
     {
         Debug.WriteLineIf(typeof(TOperation).IsAssignableTo(typeof(IHarmonyOperationWithInput<>)), 
             "Warning: You are synthesizing an operation that requires input without " +
-            "using the harmonicon SynthesizeOperation overload that accepts input. " +
+            "using the SynthesizeOperation overload that accepts input. " +
             "Consider using that instead.");
         
         Debug.WriteLineIf(typeof(TOperation).IsAssignableTo(typeof(IConfigurable<>)), 
             "Warning: You are synthesizing an operation that requires configuration without " +
-            "using the harmonicon SynthesizeOperation overload that accepts configuration. " +
+            "using the SynthesizeOperation overload that accepts configuration. " +
             "Consider using that instead.");
         
-        var operation = CreateOperation<TOperation>();
+        var operation = _serviceProvider.GetRequiredService<TOperation>();
         return operation;
     }
     
@@ -48,10 +42,10 @@ public class OperationFactory : IOperationFactory
     {
         Debug.WriteLineIf(typeof(TOperation).IsAssignableTo(typeof(IConfigurable<>)), 
             "Warning: You are synthesizing an operation that requires configuration without " +
-            "using the harmonicon SynthesizeOperation overload that accepts configuration. " +
+            "using the SynthesizeOperation overload that accepts configuration. " +
             "Consider using that instead.");
 
-        var operation = CreateOperation<TOperation>();
+        var operation = _serviceProvider.GetRequiredService<TOperation>();
         
         operation.Input = input;
 
@@ -65,10 +59,10 @@ public class OperationFactory : IOperationFactory
     {
         Debug.WriteLineIf(typeof(TOperation).IsAssignableTo(typeof(IConfigurable<>)), 
             "Warning: You are synthesizing an operation that requires configuration without " +
-            "using the harmonicon SynthesizeOperation overload that accepts configuration. " +
+            "using the SynthesizeOperation overload that accepts configuration. " +
             "Consider using that instead.");
         
-        var operation = CreateOperation<TOperation>();
+        var operation = _serviceProvider.GetRequiredService<TOperation>();
 
         var config = new TConfiguration();
 
@@ -83,7 +77,7 @@ public class OperationFactory : IOperationFactory
         where TOperation : IHarmonyOperationWithInput<TInput>, IConfigurable<TConfiguration>
         where TConfiguration : new()
     {
-        var operation = CreateOperation<TOperation>();
+        var operation =_serviceProvider.GetRequiredService<TOperation>();
 
         var config = new TConfiguration();
 
@@ -91,25 +85,6 @@ public class OperationFactory : IOperationFactory
         operation.Configuration = config;
         
         operation.Input = input;
-
-        return operation;
-    }
-
-    private TOperation CreateOperation<TOperation>()
-        where TOperation : IHarmonyOperation
-    {
-        TOperation operation;
-        
-        if (UseScopeFactory)
-        {
-            var scope = _serviceScopeFactory!.CreateScope();
-            operation = scope.ServiceProvider.GetRequiredService<TOperation>();
-            operation.Scope = scope;
-        }
-        else
-        {
-            operation = _serviceProvider.GetRequiredService<TOperation>();
-        }
 
         return operation;
     }

@@ -13,14 +13,9 @@ public static class DependencyInjectionExtensions
     /// </summary>
     /// <param name="services"></param>
     /// <param name="assembly"></param>
-    /// <param name="useScopeFactory"></param>
-    public static IServiceCollection AddHarmony(this IServiceCollection services, Assembly assembly, 
-        bool useScopeFactory = false)
+    public static IServiceCollection AddHarmony(this IServiceCollection services, Assembly assembly)
     {
-        OperationFactory.UseScopeFactory = useScopeFactory;
-        
         var assemblyTypes = assembly.GetTypes();
-        
         var queryTypes = GetQueryTypes(assemblyTypes);
         var commandTypes = GetCommandTypes(assemblyTypes);
         
@@ -28,14 +23,7 @@ public static class DependencyInjectionExtensions
             .AddHarmonyOperations(queryTypes, commandTypes)
             .AddHarmonyOperationValidators(assemblyTypes);
 
-        if (useScopeFactory)
-        {
-            services.AddSingleton<IOperationFactory, OperationFactory>();
-        }
-        else
-        {
-            services.AddScoped<IOperationFactory, OperationFactory>();
-        }
+        services.AddScoped<IOperationFactory, OperationFactory>();
         
         return services;
     }
@@ -69,12 +57,12 @@ public static class DependencyInjectionExtensions
     {
         foreach (var type in queryTypes)
         {
-            services.AddScoped(type);
+            services.AddTransient(type);
         }
         
         foreach (var type in commandTypes)
         {
-            services.AddScoped(type);
+            services.AddTransient(type);
         }
         
         return services;

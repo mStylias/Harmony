@@ -1,28 +1,22 @@
 ﻿using System.Diagnostics;
+using System.Linq.Expressions;
 using Harmony.Cqrs.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Harmony.Cqrs;
 
-public class OperationBuilder<TOperation> : IOperationBuilder<TOperation> where TOperation : class, IHarmonyOperation
+public class OperationBuilder<TOperation>// : IOperationBuilder<TOperation> 
+    where TOperation : class, IHarmonyOperation
 {
-    private readonly IServiceProvider _serviceProvider;
-    private readonly IServiceScopeFactory? _serviceScopeFactory;
-
     private readonly TOperation _harmonyOperation;
+    
 #if DEBUG
     private bool _isInputSet;
 #endif
     
     public OperationBuilder(IServiceProvider serviceProvider)
     {
-        _serviceProvider = serviceProvider;
-        if (OperationFactory.UseScopeFactory)
-        {
-            _serviceScopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
-        }
-
-        _harmonyOperation = CreateHarmonyOperation();
+        _harmonyOperation = serviceProvider.GetRequiredService<TOperation>();
     }
 
     public OperationBuilder<TOperation> WithInput<TInput>(TInput input)
@@ -30,7 +24,7 @@ public class OperationBuilder<TOperation> : IOperationBuilder<TOperation> where 
         var operationWithInput = _harmonyOperation as IHarmonyOperationWithInput<TInput>;
         Debug.Assert(operationWithInput is not null, "To use the WithInput method, the operation must have " +
             "the input type defined in this method. Use a Command or Query that supports the given Input type.");
-
+        
         operationWithInput.Input = input;
 #if DEBUG
         _isInputSet = true;
@@ -40,7 +34,7 @@ public class OperationBuilder<TOperation> : IOperationBuilder<TOperation> where 
     }
 
     public OperationBuilder<TOperation> WithConfiguration<TConfiguration>(TConfiguration config) 
-        where TConfiguration : class
+        where TConfiguration : class 
     {
         // ReSharper disable once SuspiciousTypeConversion.Global
         var operationWithConfiguration = _harmonyOperation as IConfigurable<TConfiguration>;
@@ -85,23 +79,5 @@ public class OperationBuilder<TOperation> : IOperationBuilder<TOperation> where 
         }
 #endif
         return _harmonyOperation;
-    }
-    
-    private TOperation CreateHarmonyOperation()
-    {
-        TOperation operation;
-        
-        if (OperationFactory.UseScopeFactory)
-        {
-            var scope = _serviceScopeFactory!.CreateScope();
-            operation = scope.ServiceProvider.GetRequiredService<TOperation>();
-            operation.Scope = scope;
-        }
-        else
-        {
-            operation = _serviceProvider.GetRequiredService<TOperation>();
-        }
-
-        return operation;
     }
 }
