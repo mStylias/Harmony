@@ -16,7 +16,7 @@ public class OperationFactory : IOperationFactory
     /// <inheritdoc/>
     public OperationBuilder<TOperation> GetBuilder<TOperation>() where TOperation : class, IHarmonyOperation
     {
-        return new(_serviceProvider);
+        return new OperationBuilder<TOperation>(_serviceProvider);
     }
     
     /// <inheritdoc/>
