@@ -13,7 +13,7 @@ public class LogBuilder
     private readonly LogLevel _logLevel;
     private readonly EventId? _eventId;
     
-    private Exception? _exception;
+    internal Exception? Exception;
 
     private bool _includeLogLevelInToString = true;
     private string _message = string.Empty;
@@ -55,7 +55,7 @@ public class LogBuilder
     
     public void SetException(Exception exception)
     {
-        _exception = exception;
+        Exception = exception;
     }
     
     public void AppendLogMessage([StructuredMessageTemplate] string message)
@@ -108,12 +108,12 @@ public class LogBuilder
         if (_eventId is null)
         {
             // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-            _logger.Log(_logLevel, _exception, _message, parameters);
+            _logger.Log(_logLevel, Exception, _message, parameters);
             return;
         }
         
         // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-        _logger.Log(_logLevel, _eventId.Value, _exception, _message, parameters);
+        _logger.Log(_logLevel, _eventId.Value, Exception, _message, parameters);
     }
 
     public override string ToString()

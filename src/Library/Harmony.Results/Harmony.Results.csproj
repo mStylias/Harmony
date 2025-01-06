@@ -57,7 +57,7 @@ It integrates with Harmony and constitutes an essential part of some of its stru
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="JetBrains.Annotations" Version="2024.2.0" />
+      <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
       <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
     </ItemGroup>

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text.Json.Serialization;
 using Harmony.Results.Abstractions;
 using Harmony.Results.Enums;
 using JetBrains.Annotations;
@@ -21,6 +22,9 @@ public class LoggableHarmonyErrorImpl<TError> : ILoggableHarmonyError<TError>
         return LogBuilder;
     }
 
+    [JsonIgnore]
+    public Exception? LogException => LogBuilder?.Exception;
+    
     public LoggableHarmonyErrorImpl(Severity severity)
     {
         Severity = severity;
