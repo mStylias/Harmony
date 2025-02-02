@@ -38,7 +38,7 @@ public class CreateTodoItem : IEndpoint
 
             var (name, description, todoStatus) = createTodoItemRequest;
 
-            var createCommand = operationFactory.GetBuilder<CreateTodoItemCommand>()
+            var createCommand = operationFactory.CreateBuilder<CreateTodoItemCommand>()
                 .WithInput(new CreateTodoItemInput(name, description, todoStatus, listId, userId))
                 .Build();
             

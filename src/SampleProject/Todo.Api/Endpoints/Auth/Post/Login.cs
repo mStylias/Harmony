@@ -22,7 +22,7 @@ public class Login : IEndpoint
             [FromServices] IOperationFactory operationFactory,
             [FromServices] IAuthCookiesService authCookiesService) =>
             {
-                var loginQuery = operationFactory.GetBuilder<LoginQuery>()
+                var loginQuery = operationFactory.CreateBuilder<LoginQuery>()
                     .WithInput(loginRequest)
                     .Build();
             

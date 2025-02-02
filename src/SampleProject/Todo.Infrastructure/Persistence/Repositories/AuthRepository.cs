@@ -59,7 +59,7 @@ public class AuthRepository : EfCoreRepositoryBase, IAuthRepository
         using var connection = _dapperContext.CreateConnection(); 
         
         const string insertSql = @"INSERT INTO refresh_tokens (user_id, refresh_token) 
-                             VALUES (@UserId, @RefreshToken)";
+                                   VALUES (@UserId, @RefreshToken)";
         await connection.ExecuteAsync(insertSql, new { UserId = newUserId, RefreshToken = refreshToken });
     }
     

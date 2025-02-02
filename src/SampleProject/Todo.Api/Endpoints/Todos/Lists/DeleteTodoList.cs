@@ -25,7 +25,7 @@ public class DeleteTodoList : IEndpoint
                     return Errors.Auth.AccessDenied(logger, null).MapToHttpResult();
                 }
                 
-                var deleteOperation = operationFactory.GetBuilder<DeleteTodoListCommand>()
+                var deleteOperation = operationFactory.CreateBuilder<DeleteTodoListCommand>()
                     .WithInput(new DeleteTodoListInput(todoListId, userId))
                     .Build();
                 

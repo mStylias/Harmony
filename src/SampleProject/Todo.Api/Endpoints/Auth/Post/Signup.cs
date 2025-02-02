@@ -22,7 +22,7 @@ public class Signup : IEndpoint
                 [FromServices] IAuthCookiesService authCookiesService
             ) =>
         {
-            var signupCommand = operationFactory.GetBuilder<SignupCommand>()
+            var signupCommand = operationFactory.CreateBuilder<SignupCommand>()
                 .WithInput(signupRequest)
                 .Build();
             

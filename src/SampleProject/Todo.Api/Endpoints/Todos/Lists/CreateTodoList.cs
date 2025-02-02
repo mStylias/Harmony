@@ -29,7 +29,7 @@ public class CreateTodoList : IEndpoint
             }
 
 
-            var createCommand = operationFactory.GetBuilder<CreateTodoListCommand>()
+            var createCommand = operationFactory.CreateBuilder<CreateTodoListCommand>()
                 .WithInput(new CreateTodoListInput(userId, createTodoListRequest.Name, createTodoListRequest.Description))
                 .Build();
             

@@ -22,7 +22,7 @@ public class Refresh : IEndpoint
                 [FromServices] IOperationFactory operationFactory
             ) =>
             {
-                var refreshTokenCommand = operationFactory.GetBuilder<RefreshTokenCommand>()
+                var refreshTokenCommand = operationFactory.CreateBuilder<RefreshTokenCommand>()
                     .WithInput(refreshRequest)
                     .Build();
 

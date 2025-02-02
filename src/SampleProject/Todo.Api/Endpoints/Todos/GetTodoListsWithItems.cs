@@ -18,7 +18,7 @@ public class GetTodoListsWithItems : IEndpoint
             {
                 var userId = httpContext.GetUserId();
 
-                var query = operationFactory.GetBuilder<TodoListsWithItemsQuery>()
+                var query = operationFactory.CreateBuilder<TodoListsWithItemsQuery>()
                     .WithInput(userId)
                     .Build();
 

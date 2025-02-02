@@ -39,6 +39,15 @@ public class SignupValidator : IOperationValidator<SignupCommand, Result<HttpErr
             return Errors.General.ValidationError(_logger, validationErrors);
         }
 
+        var shouldBeTrue = command.Metadata;
+        if (shouldBeTrue == false)
+        {
+            validationErrors.Add(new ValidationInnerError(
+                InnerErrorCodes.Validation.GeneralError,
+                "Harmony metadata didn't work"));
+            return Errors.General.ValidationError(_logger, validationErrors);
+        }
+
         return Result.Ok();
     }
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously

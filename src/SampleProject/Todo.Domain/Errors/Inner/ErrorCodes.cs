@@ -4,6 +4,7 @@ public static class InnerErrorCodes
 {
     public static class Validation
     {
+        public const string GeneralError = nameof(GeneralError);
         public const string NullSignupRequest = nameof(NullSignupRequest);
         public const string PasswordsDontMatch = nameof(PasswordsDontMatch);
         public const string RequiredPropertyNotProvided = nameof(RequiredPropertyNotProvided);
