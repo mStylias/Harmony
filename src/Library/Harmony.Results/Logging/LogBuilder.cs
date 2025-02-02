@@ -122,15 +122,22 @@ public class LogBuilder
             ? $"[{_logLevel}]: " 
             : string.Empty;
 
+        var exceptionContent = string.Empty;
+        if (Exception is not null)
+        {
+            exceptionContent = $"{Environment.NewLine} Exception message: {Exception.Message} + Environment.NewLine" +
+                               $"Stack trace: {Exception.StackTrace}";
+        }
+        
         // If there are no arguments, simply return the message.
         if (_args.Count == 0)
         {
-            return startingMessage + _message;
+            return startingMessage + _message + exceptionContent;
         }
         
         // Format the message with the arguments.
         var formattedLogValues = LogValuesFormatter.ConvertLogMessageToString(_message, _args.ToArray());
 
-        return startingMessage + formattedLogValues;
+        return startingMessage + formattedLogValues + exceptionContent;
     }
 }
