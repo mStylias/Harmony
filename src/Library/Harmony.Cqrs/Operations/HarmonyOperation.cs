@@ -8,6 +8,8 @@ namespace Harmony.Cqrs;
 public abstract class HarmonyOperation<TInput, TOutput> : IHarmonyOperationWithIO<TInput, TOutput>
 {
     public abstract TInput? Input { get; set; }
+    public IServiceScope? Scope { get; set; }
+    
     public virtual TOutput Execute(CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
@@ -17,8 +19,27 @@ public abstract class HarmonyOperation<TInput, TOutput> : IHarmonyOperationWithI
     {
         throw new NotImplementedException();
     }
+
+    public virtual void Undo(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public virtual Task UndoAsync(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
     
-    public IServiceScope? Scope { get; set; }
+    public virtual TResult Undo<TResult>(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public virtual Task<TResult> UndoAsync<TResult>(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
     public void Dispose()
     {
         if (Scope is null) return;
@@ -30,6 +51,8 @@ public abstract class HarmonyOperation<TInput, TOutput> : IHarmonyOperationWithI
 
 public abstract class HarmonyOperation<TOutput> : IHarmonyOperation
 {
+    public IServiceScope? Scope { get; set; }
+
     public virtual TOutput Execute(CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
@@ -39,8 +62,27 @@ public abstract class HarmonyOperation<TOutput> : IHarmonyOperation
     {
         throw new NotImplementedException();
     }
-    
-    public IServiceScope? Scope { get; set; }
+
+    public virtual void Undo(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public virtual Task UndoAsync(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public virtual TResult Undo<TResult>(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public virtual Task<TResult> UndoAsync<TResult>(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
     public void Dispose()
     {
         if (Scope is null) return;
@@ -52,6 +94,8 @@ public abstract class HarmonyOperation<TOutput> : IHarmonyOperation
 
 public abstract class HarmonyOperation : IHarmonyOperation
 {
+    public IServiceScope? Scope { get; set; }
+    
     public virtual void Execute(CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
@@ -62,7 +106,26 @@ public abstract class HarmonyOperation : IHarmonyOperation
         throw new NotImplementedException();
     }
 
-    public IServiceScope? Scope { get; set; }
+    public virtual void Undo(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public virtual Task UndoAsync(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public virtual TResult Undo<TResult>(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public virtual Task<TResult> UndoAsync<TResult>(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
     public void Dispose()
     {
         if (Scope is null) return;
@@ -71,3 +134,4 @@ public abstract class HarmonyOperation : IHarmonyOperation
         GC.SuppressFinalize(this);
     }
 }
+
