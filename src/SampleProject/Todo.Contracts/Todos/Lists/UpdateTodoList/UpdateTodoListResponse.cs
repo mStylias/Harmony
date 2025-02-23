@@ -1,5 +1,3 @@
 ﻿namespace Todo.Contracts.Todos.Lists.UpdateTodoList;
 
-public record UpdateTodoListResponse(
-    
-);
+public record UpdateTodoListResponse();

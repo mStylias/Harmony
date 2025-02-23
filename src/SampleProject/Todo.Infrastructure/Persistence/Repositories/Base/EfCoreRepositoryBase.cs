@@ -13,16 +13,16 @@ public class EfCoreRepositoryBase : IEfCoreRepositoryBase
     
     public async Task StartTransactionAsync()
     {
-        await _dbContext.Database.BeginTransactionAsync();
+        await _dbContext.Database.BeginTransactionAsync().ConfigureAwait(false);
     }
 
     public async Task CommitTransactionAsync()
     {
-        await _dbContext.Database.CommitTransactionAsync();
+        await _dbContext.Database.CommitTransactionAsync().ConfigureAwait(false);
     }
 
     public async Task RollbackTransaction()
     {
-        await _dbContext.Database.RollbackTransactionAsync();
+        await _dbContext.Database.RollbackTransactionAsync().ConfigureAwait(false);
     }
 }

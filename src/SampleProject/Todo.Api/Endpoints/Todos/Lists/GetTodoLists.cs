@@ -1,4 +1,5 @@
-﻿using Harmony.MinimalApis.Mappers;
+﻿using Harmony.MinimalApis.Endpoints;
+using Harmony.MinimalApis.Mappers;
 using Todo.Api.Common.Constants;
 using Todo.Api.Common.HttpContext;
 using Todo.Api.Common.Mappers;
@@ -7,12 +8,12 @@ using Todo.Domain.Errors;
 
 namespace Todo.Api.Endpoints.Todos.Lists;
 
-public class GetTodoLists : IEndpoint
+internal class GetTodoLists : IEndpoint
 {
     public string Tag => EndpointTagNames.Todos;
     public RouteHandlerBuilder AddEndpoint(IEndpointRouteBuilder app)
     {
-        return app.MapGet($"{EndpointBasePathNames.Todos}/lists", async Task<IResult>(
+        return app.MapGet($"{EndpointBasePathNames.Todos}/lists", async Task<IResult> (
                 ILogger<GetTodoList> logger,
                 HttpContext httpContext,
                 ITodosRepository todosRepository,
@@ -21,7 +22,7 @@ public class GetTodoLists : IEndpoint
                 var userId = httpContext.GetUserId();
                 if (userId is null)
                 {
-                    return Errors.Auth.AccessDenied(logger, null).MapToHttpResult();
+                    return DomainErrors.Auth.AccessDenied(logger, null).MapToHttpResult();
                 }
             
                 var todoLists = await todosRepository

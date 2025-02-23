@@ -1,4 +1,6 @@
-﻿using Harmony.MinimalApis.Mappers;
+﻿using Harmony.MinimalApis.Endpoints;
+using Harmony.MinimalApis.Mappers;
+using JetBrains.Annotations;
 using Todo.Api.Common.Constants;
 using Todo.Api.Common.HttpContext;
 using Todo.Api.Common.Mappers;
@@ -7,12 +9,14 @@ using Todo.Domain.Errors;
 
 namespace Todo.Api.Endpoints.Todos.Lists.Items;
 
-public class GetTodoItems : IEndpoint
+[UsedImplicitly]
+internal class GetTodoItems : IEndpoint
 {
     public string Tag => EndpointTagNames.Todos;
     public RouteHandlerBuilder AddEndpoint(IEndpointRouteBuilder app)
     {
-        return app.MapGet($"{EndpointBasePathNames.Todos}/lists/{{todoListId:int}}/items", 
+        return app.MapGet(
+            $"{EndpointBasePathNames.Todos}/lists/{{todoListId:int}}/items", 
             async Task<IResult> (
                 int todoListId,
                 ILogger<GetTodoItems> logger,
@@ -23,13 +27,13 @@ public class GetTodoItems : IEndpoint
                 var userId = httpContext.GetUserId();
                 if (userId is null)
                 {
-                    return Errors.Auth.AccessDenied(logger, null).MapToHttpResult();
+                    return DomainErrors.Auth.AccessDenied(logger, null).MapToHttpResult();
                 }
 
                 bool userOwnsList = await todosRepository.UserOwnsListAsync(todoListId, userId, cancellationToken);
                 if (userOwnsList == false)
                 {
-                    return Errors.Auth.AccessDenied(logger,null).MapToHttpResult();
+                    return DomainErrors.Auth.AccessDenied(logger, null).MapToHttpResult();
                 }
                 
                 var todoItems = await todosRepository

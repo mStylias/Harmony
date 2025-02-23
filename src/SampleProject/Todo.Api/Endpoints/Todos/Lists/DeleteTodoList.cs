@@ -1,5 +1,7 @@
 ﻿using Harmony.Cqrs.Abstractions;
+using Harmony.MinimalApis.Endpoints;
 using Harmony.MinimalApis.Mappers;
+using JetBrains.Annotations;
 using Todo.Api.Common.Constants;
 using Todo.Api.Common.HttpContext;
 using Todo.Application.Todos.Lists.Commands.DeleteTodoList;
@@ -7,7 +9,8 @@ using Todo.Domain.Errors;
 
 namespace Todo.Api.Endpoints.Todos.Lists;
 
-public class DeleteTodoList : IEndpoint
+[UsedImplicitly]
+internal class DeleteTodoList : IEndpoint
 {
     public string Tag => EndpointTagNames.Todos;
     public RouteHandlerBuilder AddEndpoint(IEndpointRouteBuilder app)
@@ -21,7 +24,7 @@ public class DeleteTodoList : IEndpoint
                 var userId = httpContext.GetUserId();
                 if (userId is null)
                 {
-                    return Errors.Auth.AccessDenied(logger, null).MapToHttpResult();
+                    return DomainErrors.Auth.AccessDenied(logger, null).MapToHttpResult();
                 }
                 
                 var deleteOperation = operationFactory.CreateBuilder<DeleteTodoListCommand>()

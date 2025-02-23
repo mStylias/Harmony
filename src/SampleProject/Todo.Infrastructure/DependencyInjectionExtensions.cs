@@ -23,7 +23,9 @@ namespace Todo.Infrastructure;
 
 public static class DependencyInjectionExtensions
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration config, 
+    public static IServiceCollection AddInfrastructure(
+        this IServiceCollection services, 
+        IConfiguration config, 
         bool enableSensitiveDataLogging)
     {
         services
@@ -53,8 +55,8 @@ public static class DependencyInjectionExtensions
             var refreshTokenOptions = config.GetRequiredSection(RefreshTokenOptions.SectionName)
                 .Get<RefreshTokenOptions>();
             
-            Debug.Assert(jwtOptions is not null);
-            Debug.Assert(refreshTokenOptions is not null);
+            Debug.Assert(jwtOptions is not null, "Jwt options were not loaded");
+            Debug.Assert(refreshTokenOptions is not null, "Refresh token options were not loaded");
 
             options.TokenValidationParameters = RefreshTokenValidator
                 .GetTokenValidationParameters(jwtOptions, jwtOptions.Key);
@@ -83,14 +85,15 @@ public static class DependencyInjectionExtensions
 
                     // Here you should use whatever logger you have in your project. E.g. if you have Serilog use the 
                     // static logger of Serilog.
-                    var response = Errors.Auth.AccessDenied(loggerFactory.CreateLogger("Auth"), 
+                    var response = DomainErrors.Auth.AccessDenied(
+                        loggerFactory.CreateLogger("Auth"), 
                         context.Error);
                     
                     response.Log();
 
                     var result = response.MapToHttpResult();
                     return result.ExecuteAsync(context.HttpContext);
-                }
+                },
             };
         });
         
@@ -112,28 +115,30 @@ public static class DependencyInjectionExtensions
     {
         services.AddIdentity<User, IdentityRole>(options =>
             {
-                options.SignIn.RequireConfirmedAccount = Rules.Auth.RequireConfirmedAccount;
-                options.User.RequireUniqueEmail = Rules.Auth.RequireUniqueEmail;
-                options.Password.RequireDigit = Rules.Auth.RequireDigit;
-                options.Password.RequiredLength = Rules.Auth.RequiredLength;
-                options.Password.RequireNonAlphanumeric = Rules.Auth.RequireNonAlphanumeric;
-                options.Password.RequireUppercase = Rules.Auth.RequireUppercase;
-                options.Password.RequireLowercase = Rules.Auth.RequireLowercase;
+                options.SignIn.RequireConfirmedAccount = DomainRules.Auth.RequireConfirmedAccount;
+                options.User.RequireUniqueEmail = DomainRules.Auth.RequireUniqueEmail;
+                options.Password.RequireDigit = DomainRules.Auth.RequireDigit;
+                options.Password.RequiredLength = DomainRules.Auth.RequiredLength;
+                options.Password.RequireNonAlphanumeric = DomainRules.Auth.RequireNonAlphanumeric;
+                options.Password.RequireUppercase = DomainRules.Auth.RequireUppercase;
+                options.Password.RequireLowercase = DomainRules.Auth.RequireLowercase;
             })
             .AddEntityFrameworkStores<AuthDbContext>();
         
         return services;
     }
 
-    private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration config, 
+    private static IServiceCollection AddPersistence(
+        this IServiceCollection services, 
+        IConfiguration config, 
         bool enableSensitiveDataLogging)
     {
         var connectionStrings = config.GetRequiredSection(ConnectionStringsOptions.SectionName)
             .Get<ConnectionStringsOptions>();
         
-        Debug.Assert(connectionStrings is not null);
+        Debug.Assert(connectionStrings is not null, "Connection strings were not loaded");
         
-        services.AddDbContext<AuthDbContext> (options =>
+        services.AddDbContext<AuthDbContext>(options =>
         {
             options.UseSqlite(connectionStrings.Default);
             options.EnableSensitiveDataLogging(enableSensitiveDataLogging);

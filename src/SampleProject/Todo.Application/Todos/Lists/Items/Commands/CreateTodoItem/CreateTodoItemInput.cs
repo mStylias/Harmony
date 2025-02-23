@@ -7,5 +7,4 @@ public record CreateTodoItemInput(
     string Description,
     TodoStatus Status,
     int TodoListId,
-    string UserId
-);
+    string UserId);

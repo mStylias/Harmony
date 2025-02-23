@@ -6,5 +6,4 @@ public record GetTodoItemResponse(
     int Id,
     string Name,
     string Description,
-    TodoStatus Status
-);
+    TodoStatus Status);

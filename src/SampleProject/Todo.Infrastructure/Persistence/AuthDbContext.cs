@@ -10,7 +10,8 @@ public class AuthDbContext : IdentityDbContext<User, IdentityRole, string>
 {
     private readonly ILoggerFactory? _loggerFactory;
 
-    public AuthDbContext(DbContextOptions options, ILoggerFactory? loggerFactory) : base(options)
+    public AuthDbContext(DbContextOptions options, ILoggerFactory? loggerFactory) 
+        : base(options)
     {
         _loggerFactory = loggerFactory;
     }

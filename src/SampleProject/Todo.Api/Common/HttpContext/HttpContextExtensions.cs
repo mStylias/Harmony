@@ -2,7 +2,7 @@
 
 namespace Todo.Api.Common.HttpContext;
 
-public static class HttpContextExtensions
+internal static class HttpContextExtensions
 {
     public static string? GetUserId(this Microsoft.AspNetCore.Http.HttpContext httpContext)
     {

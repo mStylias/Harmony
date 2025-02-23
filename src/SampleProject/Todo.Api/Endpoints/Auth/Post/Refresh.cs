@@ -1,5 +1,7 @@
 ﻿using Harmony.Cqrs.Abstractions;
+using Harmony.MinimalApis.Endpoints;
 using Harmony.MinimalApis.Mappers;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Todo.Api.Common.Constants;
@@ -9,7 +11,8 @@ using Todo.Application.Common.Abstractions.Auth;
 
 namespace Todo.Api.Endpoints.Auth.Post;
 
-public class Refresh : IEndpoint
+[UsedImplicitly]
+internal class Refresh : IEndpoint
 {
     public string Tag => EndpointTagNames.Auth;
     public RouteHandlerBuilder AddEndpoint(IEndpointRouteBuilder app)
@@ -18,8 +21,7 @@ public class Refresh : IEndpoint
                 HttpContext httpContext,
                 [FromBody] RefreshRequest refreshRequest,
                 [FromServices] IAuthCookiesService authCookiesService,
-                [FromServices] IOperationFactory operationFactory
-            ) =>
+                [FromServices] IOperationFactory operationFactory) =>
             {
                 var refreshTokenCommand = operationFactory.CreateBuilder<RefreshTokenCommand>()
                     .WithInput(refreshRequest)
@@ -34,7 +36,9 @@ public class Refresh : IEndpoint
 
                 var authTokensModel = refreshResult.Value;
                 
-                authCookiesService.SetAccessTokenCookie(httpContext, authTokensModel.AccessToken, 
+                authCookiesService.SetAccessTokenCookie(
+                    httpContext, 
+                    authTokensModel.AccessToken, 
                     authTokensModel.AccessTokenExpiration);
                 
                 return Results.Ok(authTokensModel.MapToAuthResponse());

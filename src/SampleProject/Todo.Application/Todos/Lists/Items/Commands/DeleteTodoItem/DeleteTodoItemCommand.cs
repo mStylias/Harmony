@@ -16,7 +16,8 @@ public class DeleteTodoItemCommand : Command<DeleteTodoItemInput, Result<HttpErr
     private readonly IOperationValidator<DeleteTodoItemCommand, Result<HttpError>> _validator;
     private readonly ITodosRepository _todosRepository;
 
-    public DeleteTodoItemCommand(ILogger<DeleteTodoItemCommand> logger,
+    public DeleteTodoItemCommand(
+        ILogger<DeleteTodoItemCommand> logger,
         IOperationValidator<DeleteTodoItemCommand, Result<HttpError>> validator,
         ITodosRepository todosRepository)
     {
@@ -29,7 +30,7 @@ public class DeleteTodoItemCommand : Command<DeleteTodoItemInput, Result<HttpErr
 
     public override async Task<Result<HttpError>> ExecuteAsync(CancellationToken cancellationToken = default)
     {
-        var validationResult = await _validator.ValidateAsync(this, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(this, cancellationToken).ConfigureAwait(false);
         if (validationResult.IsError)
         {
             return validationResult.Error;
@@ -37,10 +38,10 @@ public class DeleteTodoItemCommand : Command<DeleteTodoItemInput, Result<HttpErr
 
         var itemId = Input!.ItemId;
 
-        int rowsAffectedNum = await _todosRepository.DeleteTodoItem(itemId);
+        int rowsAffectedNum = await _todosRepository.DeleteTodoItem(itemId).ConfigureAwait(false);
         if (rowsAffectedNum == 0)
         {
-            return Errors.General.ValidationError(_logger, [
+            return DomainErrors.General.ValidationError(_logger, [
                 new ValidationInnerError(
                     InnerErrorCodes.Validation.EntityDoesNotExist,
                     "Item not found",

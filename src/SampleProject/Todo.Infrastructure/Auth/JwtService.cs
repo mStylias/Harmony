@@ -12,20 +12,22 @@ namespace Todo.Infrastructure.Auth;
 
 public class JwtService : ITokenCreationService
 {
-    private DateTime _creationDateTime;
-    
     private readonly JwtOptions _jwtOptions;
     private readonly RefreshTokenOptions _refreshTokenOptions;
     private readonly TimeProvider _timeProvider;
 
-    public JwtService(IOptions<JwtOptions> jwtOptions, IOptions<RefreshTokenOptions> refreshTokenOptions, 
+    private DateTime _creationDateTime;
+    
+    public JwtService(
+        IOptions<JwtOptions> jwtOptions, 
+        IOptions<RefreshTokenOptions> refreshTokenOptions, 
         TimeProvider timeProvider)
     {
         _jwtOptions = jwtOptions.Value;
         _refreshTokenOptions = refreshTokenOptions.Value;
         _timeProvider = timeProvider;
     }
-
+    
     /// <summary>
     /// Generates a set of JWT tokens. Specifically, an access token and a refresh token. The refresh token expiration
     /// can optionally be provided as an argument. The reason is the following: When creating a refresh token for the first time,
@@ -37,9 +39,8 @@ public class JwtService : ITokenCreationService
     /// expiration date time would be updated based on the current time every time a pair of access token and
     /// refresh token are generated.
     /// </summary>
-    /// <param name="userId">The id of the user to store in the access token</param>
-    /// <param name="refreshTokenExpiration">(Optional) The refresh token expiration datetime</param>
-    /// <returns></returns>
+    /// <param name="userId">The id of the user to store in the access token.</param>
+    /// <param name="refreshTokenExpiration">(Optional) The refresh token expiration datetime.</param>
     public AuthTokensModel GenerateTokens(string userId, DateTime? refreshTokenExpiration = null)
     {
         (string accessToken, DateTime accessTokenExpiration) = CreateAccessToken(userId);
@@ -48,7 +49,18 @@ public class JwtService : ITokenCreationService
         return new AuthTokensModel(accessToken, refreshToken, accessTokenExpiration, refreshTokenExpiration.Value);
     }
     
-    private (string accessToken, DateTime expiration) CreateAccessToken(string userId)
+    private static SigningCredentials CreateSigningCredentials(string tokenSecret)
+    {
+        var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(tokenSecret));
+        
+        var signingCredentials = new SigningCredentials(
+            symmetricSecurityKey,
+            SecurityAlgorithms.HmacSha256);
+
+        return signingCredentials;
+    }
+    
+    private (string AccessToken, DateTime Expiration) CreateAccessToken(string userId)
     {
         _creationDateTime = _timeProvider.GetUtcNow().UtcDateTime;
         var expiration = _creationDateTime.Add(_jwtOptions.ExpirationTime);
@@ -58,15 +70,14 @@ public class JwtService : ITokenCreationService
         var token = CreateJwtToken(
             CreateAccessTokenClaims(userId),
             CreateSigningCredentials(jwtKey),
-            expiration
-        );
+            expiration);
 
         var tokenHandler = new JwtSecurityTokenHandler();
 
         return (tokenHandler.WriteToken(token), expiration);
     }
     
-    private (string refreshToken, DateTime refreshTokenExpiration) CreateRefreshToken(DateTime? refreshTokenExpiration)
+    private (string RefreshToken, DateTime RefreshTokenExpiration) CreateRefreshToken(DateTime? refreshTokenExpiration)
     {
         var refreshTokenKey = _refreshTokenOptions.Key;
         if (refreshTokenExpiration.HasValue == false)
@@ -75,7 +86,9 @@ public class JwtService : ITokenCreationService
                 .Add(_refreshTokenOptions.ExpirationTime);
         }
         
-        var refreshToken = CreateJwtToken(null, CreateSigningCredentials(refreshTokenKey), 
+        var refreshToken = CreateJwtToken(
+            null,
+            CreateSigningCredentials(refreshTokenKey), 
             refreshTokenExpiration.Value);
         
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -91,8 +104,7 @@ public class JwtService : ITokenCreationService
             claims: claims,
             notBefore: _creationDateTime,
             expires: expirationDateTime,
-            signingCredentials: credentials
-        );
+            signingCredentials: credentials);
 
         return securityToken;
     }
@@ -109,17 +121,5 @@ public class JwtService : ITokenCreationService
         ];
 
         return claims;
-    }
-    
-    private SigningCredentials CreateSigningCredentials(string tokenSecret)
-    {
-        var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(tokenSecret));
-        
-        var signingCredentials = new SigningCredentials(
-            symmetricSecurityKey,
-            SecurityAlgorithms.HmacSha256
-        );
-
-        return signingCredentials;
     }
 }

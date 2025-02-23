@@ -16,9 +16,11 @@ public class TodosRepository : ITodosRepository
     public Task<TodoList?> GetTodoListById(int todoListId, CancellationToken cancellationToken = default)
     {
         using var connection = _dbContext.CreateConnection();
-        var todoList = connection.QueryFirstOrDefaultAsync<TodoList>(new CommandDefinition(
+        var todoList = connection.QueryFirstOrDefaultAsync<TodoList>(
+            new CommandDefinition(
             "SELECT * FROM todo_lists WHERE id=@todoListId", 
-            new { todoListId }, cancellationToken: cancellationToken));
+            new { todoListId }, 
+            cancellationToken: cancellationToken));
 
         return todoList;
     }
@@ -28,7 +30,8 @@ public class TodosRepository : ITodosRepository
         using var connection = _dbContext.CreateConnection();
         var todoLists = await connection.QueryAsync<TodoList>(new CommandDefinition(
             "SELECT * FROM todo_lists WHERE user_id=@userId", 
-            new { userId }, cancellationToken: cancellationToken));
+            new { userId }, 
+            cancellationToken: cancellationToken)).ConfigureAwait(false);
         
         return todoLists;
     }
@@ -38,7 +41,8 @@ public class TodosRepository : ITodosRepository
         using var connection = _dbContext.CreateConnection();
         var todoItems = await connection.QueryAsync<TodoItem>(new CommandDefinition(
             "SELECT * FROM todo_items WHERE todo_list_id=@todoListId", 
-            new { todoListId }, cancellationToken: cancellationToken));
+            new { todoListId }, 
+            cancellationToken: cancellationToken)).ConfigureAwait(false);
         
         return todoItems;
     }
@@ -48,18 +52,21 @@ public class TodosRepository : ITodosRepository
         using var connection = _dbContext.CreateConnection();
         var todoItem = connection.QueryFirstOrDefaultAsync<TodoItem>(new CommandDefinition(
             "SELECT * FROM todo_items WHERE id=@todoItemId", 
-            new { todoItemId }, cancellationToken: cancellationToken));
+            new { todoItemId }, 
+            cancellationToken: cancellationToken));
 
         return todoItem;
     }
 
-    public Task<IEnumerable<TodoItem>> GetTodoItemsOfMultipleListsAsync(IEnumerable<int> todoListIds, 
+    public Task<IEnumerable<TodoItem>> GetTodoItemsOfMultipleListsAsync(
+        IEnumerable<int> todoListIds, 
         CancellationToken cancellationToken)
     {
         using var connection = _dbContext.CreateConnection();
-        var todoItems = connection.QueryAsync<TodoItem>(
-            new CommandDefinition("SELECT * FROM todo_items WHERE todo_list_id in @todoListIds", 
-                new { todoListIds }, cancellationToken: cancellationToken));
+        var todoItems = connection.QueryAsync<TodoItem>(new CommandDefinition(
+            "SELECT * FROM todo_items WHERE todo_list_id in @todoListIds", 
+            new { todoListIds }, 
+            cancellationToken: cancellationToken));
 
         return todoItems;
     }
@@ -70,7 +77,7 @@ public class TodosRepository : ITodosRepository
         var todoListId = await connection.ExecuteScalarAsync<int>(
             "INSERT INTO todo_lists (name, description, user_id) " +
             "VALUES (@Name, @Description, @UserId) RETURNING id",
-            todoList);
+            todoList).ConfigureAwait(false);
         
         todoList.Id = todoListId;
 
@@ -83,7 +90,7 @@ public class TodosRepository : ITodosRepository
         var todoItemId = await connection.ExecuteScalarAsync<int>(
             "INSERT INTO todo_items (name, description, status, todo_list_id) " +
             "VALUES (@Name, @Description, @Status, @TodoListId) RETURNING id",
-            todoItem);
+            todoItem).ConfigureAwait(false);
         
         todoItem.Id = todoItemId;
         
@@ -93,13 +100,15 @@ public class TodosRepository : ITodosRepository
     public async Task<int> DeleteTodoList(int todoListId)
     {
         using var connection = _dbContext.CreateConnection();
-        return await connection.ExecuteAsync("DELETE FROM todo_lists WHERE id=@todoListId", new { todoListId });
+        return await connection.ExecuteAsync("DELETE FROM todo_lists WHERE id=@todoListId", new { todoListId })
+            .ConfigureAwait(false);
     }
     
     public async Task<int> DeleteTodoItem(int todoItemId)
     {
         using var connection = _dbContext.CreateConnection();
-        return await connection.ExecuteAsync("DELETE FROM todo_items WHERE id=@todoItemId", new { todoItemId });
+        return await connection.ExecuteAsync("DELETE FROM todo_items WHERE id=@todoItemId", new { todoItemId })
+            .ConfigureAwait(false);
     }
 
     public async Task<bool> TodoListExistsAsync(string name, string userId, CancellationToken cancellationToken)
@@ -107,7 +116,8 @@ public class TodosRepository : ITodosRepository
         using var connection = _dbContext.CreateConnection();
         var todoList = await connection.QueryFirstOrDefaultAsync<int>(new CommandDefinition(
             "SELECT 1 FROM todo_lists WHERE name=@name AND user_id=@userId LIMIT 1",
-            new { name, userId }, cancellationToken: cancellationToken));
+            new { name, userId }, 
+            cancellationToken: cancellationToken)).ConfigureAwait(false);
 
         return todoList == 1;
     }
@@ -117,7 +127,8 @@ public class TodosRepository : ITodosRepository
         using var connection = _dbContext.CreateConnection();
         var todoList = await connection.QueryFirstOrDefaultAsync<int>(new CommandDefinition(
             "SELECT 1 FROM todo_lists WHERE id=@id LIMIT 1",
-            new { id }, cancellationToken: cancellationToken));
+            new { id }, 
+            cancellationToken: cancellationToken)).ConfigureAwait(false);
         
         return todoList == 1;
     }
@@ -127,7 +138,8 @@ public class TodosRepository : ITodosRepository
         using var connection = _dbContext.CreateConnection();
         var todoItem = await connection.QueryFirstOrDefaultAsync<int>(new CommandDefinition(
             "SELECT 1 FROM todo_items WHERE name=@name AND todo_list_id=@todoListId LIMIT 1",
-            new { name, todoListId }, cancellationToken: cancellationToken));
+            new { name, todoListId }, 
+            cancellationToken: cancellationToken)).ConfigureAwait(false);
 
         return todoItem == 1;
     }
@@ -137,7 +149,8 @@ public class TodosRepository : ITodosRepository
         using var connection = _dbContext.CreateConnection();
         var result = await connection.ExecuteScalarAsync<int>(new CommandDefinition(
             "SELECT 1 FROM todo_lists WHERE id=@listId AND user_id=@userId LIMIT 1",
-            new { listId, userId }, cancellationToken: cancellationToken));
+            new { listId, userId }, 
+            cancellationToken: cancellationToken)).ConfigureAwait(false);
         
         return result == 1;
     }

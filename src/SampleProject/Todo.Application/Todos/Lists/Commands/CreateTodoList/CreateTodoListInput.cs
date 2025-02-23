@@ -3,5 +3,4 @@
 public record CreateTodoListInput(
     string UserId,
     string Name,
-    string? Description
-);
+    string? Description);

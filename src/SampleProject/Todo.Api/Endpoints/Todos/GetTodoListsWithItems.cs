@@ -1,12 +1,15 @@
 ﻿using Harmony.Cqrs.Abstractions;
+using Harmony.MinimalApis.Endpoints;
 using Harmony.MinimalApis.Mappers;
+using JetBrains.Annotations;
 using Todo.Api.Common.Constants;
 using Todo.Api.Common.HttpContext;
 using Todo.Application.Todos.Queries;
 
 namespace Todo.Api.Endpoints.Todos;
 
-public class GetTodoListsWithItems : IEndpoint
+[UsedImplicitly]
+internal class GetTodoListsWithItems : IEndpoint
 {
     public string Tag => EndpointTagNames.Todos;
     public RouteHandlerBuilder AddEndpoint(IEndpointRouteBuilder app)

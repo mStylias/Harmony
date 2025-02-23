@@ -18,8 +18,11 @@ public class LoginQuery : Query<LoginRequest, Result<AuthTokensModel, HttpError>
     private readonly IUsersRepository _usersRepository;
     private readonly IAuthRepository _authRepository;
 
-    public LoginQuery(ILogger<LoginQuery> logger, ITokenCreationService tokenCreationService,
-        IUsersRepository usersRepository, IAuthRepository authRepository)
+    public LoginQuery(
+        ILogger<LoginQuery> logger, 
+        ITokenCreationService tokenCreationService,
+        IUsersRepository usersRepository, 
+        IAuthRepository authRepository)
     {
         _logger = logger;
         _tokenCreationService = tokenCreationService;
@@ -35,24 +38,24 @@ public class LoginQuery : Query<LoginRequest, Result<AuthTokensModel, HttpError>
         var loginRequest = Input;
         if (loginRequest is null)
         {
-            return Errors.General.NullReferenceError(_logger, nameof(loginRequest));
+            return DomainErrors.General.NullReferenceError(_logger, nameof(loginRequest));
         }
 
-        var user = await _usersRepository.GetUserByEmailAsync(loginRequest.Email);
+        var user = await _usersRepository.GetUserByEmailAsync(loginRequest.Email).ConfigureAwait(false);
         if (user is null)
         {
-            return Errors.Auth.InvalidCredentials(_logger, loginRequest.Email);
+            return DomainErrors.Auth.InvalidCredentials(_logger, loginRequest.Email);
         }
         
-        var isPasswordCorrect = await _authRepository.CheckPasswordAsync(user, loginRequest.Password);
+        var isPasswordCorrect = await _authRepository.CheckPasswordAsync(user, loginRequest.Password).ConfigureAwait(false);
         if (isPasswordCorrect == false)
         {
-            return Errors.Auth.InvalidCredentials(_logger, loginRequest.Email);
+            return DomainErrors.Auth.InvalidCredentials(_logger, loginRequest.Email);
         }
 
         var tokens = _tokenCreationService.GenerateTokens(user.Id);
         
-        await _authRepository.UpdateRefreshToken(tokens.RefreshToken, user.Id);
+        await _authRepository.UpdateRefreshToken(tokens.RefreshToken, user.Id).ConfigureAwait(false);
 
         Successes.Auth.LoginSuccess(_logger, loginRequest.Email).Log();
         

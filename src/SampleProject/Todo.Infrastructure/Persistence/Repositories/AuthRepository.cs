@@ -16,8 +16,12 @@ public class AuthRepository : EfCoreRepositoryBase, IAuthRepository
     private readonly UserManager<User> _userManager;
     private readonly DapperDbContext _dapperContext;
 
-    public AuthRepository(ILogger<AuthRepository> logger, AuthDbContext dbContext, UserManager<User> userManager, 
-        DapperDbContext dapperContext) : base(dbContext)
+    public AuthRepository(
+        ILogger<AuthRepository> logger, 
+        AuthDbContext dbContext, 
+        UserManager<User> userManager, 
+        DapperDbContext dapperContext) 
+        : base(dbContext)
     {
         _logger = logger;
         _userManager = userManager;
@@ -37,18 +41,18 @@ public class AuthRepository : EfCoreRepositoryBase, IAuthRepository
     /// <summary>
     /// Gets the refresh token info like user id and username for the given refresh token.
     /// </summary>
-    public async Task<Result<string, HttpError>> GetUserIdByRefreshToken(string refreshToken, 
-        CancellationToken cancellationToken)
+    public async Task<Result<string, HttpError>> GetUserIdByRefreshToken(
+        string refreshToken, CancellationToken cancellationToken)
     {
         using var connection = _dapperContext.CreateConnection();
         
         const string sql = @"SELECT user_id FROM refresh_tokens WHERE refresh_token = @refreshToken";
         var userId = await connection.QueryFirstOrDefaultAsync<string>(new CommandDefinition(
-            sql, parameters: new { refreshToken }, cancellationToken: cancellationToken));
+            sql, parameters: new { refreshToken }, cancellationToken: cancellationToken)).ConfigureAwait(false);
 
         if (userId is null)
         {
-            return Errors.Auth.InvalidRefreshToken(_logger, refreshToken);
+            return DomainErrors.Auth.InvalidRefreshToken(_logger, refreshToken);
         }
         
         return userId;
@@ -60,7 +64,9 @@ public class AuthRepository : EfCoreRepositoryBase, IAuthRepository
         
         const string insertSql = @"INSERT INTO refresh_tokens (user_id, refresh_token) 
                                    VALUES (@UserId, @RefreshToken)";
-        await connection.ExecuteAsync(insertSql, new { UserId = newUserId, RefreshToken = refreshToken });
+        
+        await connection.ExecuteAsync(insertSql, new { UserId = newUserId, RefreshToken = refreshToken })
+            .ConfigureAwait(false);
     }
     
     public async Task UpdateRefreshToken(string newRefreshToken, string userId)
@@ -68,7 +74,8 @@ public class AuthRepository : EfCoreRepositoryBase, IAuthRepository
         using var connection = _dapperContext.CreateConnection(); 
         
         const string updateSql = @"UPDATE refresh_tokens SET refresh_token = @RefreshToken WHERE user_id = @UserId";
-        await connection.ExecuteAsync(updateSql, new { RefreshToken = newRefreshToken, UserId = userId });
+        await connection.ExecuteAsync(updateSql, new { RefreshToken = newRefreshToken, UserId = userId })
+            .ConfigureAwait(false);
     }
 
     /// <summary>
@@ -82,12 +89,22 @@ public class AuthRepository : EfCoreRepositoryBase, IAuthRepository
                                  UPDATE refresh_tokens SET refresh_token = @EmptyString 
                                  WHERE refresh_token = @RefreshToken
                                  """;
-        await connection.ExecuteAsync(updateSql, new { EmptyString = string.Empty, RefreshToken = refreshToken });
+        
+        await connection.ExecuteAsync(updateSql, new { EmptyString = string.Empty, RefreshToken = refreshToken })
+            .ConfigureAwait(false);
     }
     
     public void Dispose()
     {
-        _userManager.Dispose();
+        Dispose(true);
         GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _userManager.Dispose();
+        }
     }
 }

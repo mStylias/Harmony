@@ -17,16 +17,34 @@ public class RefreshTokenValidator : IRefreshTokenValidator
     private readonly RefreshTokenOptions _refreshTokenOptions;
     private readonly JwtOptions _jwtOptions;
 
-    public RefreshTokenValidator(ILogger<RefreshTokenValidator> logger,
-        IOptions<RefreshTokenOptions> refreshTokenOptions, IOptions<JwtOptions> jwtOptions)
+    public RefreshTokenValidator(
+        ILogger<RefreshTokenValidator> logger,
+        IOptions<RefreshTokenOptions> refreshTokenOptions, 
+        IOptions<JwtOptions> jwtOptions)
     {
         _logger = logger;
         _refreshTokenOptions = refreshTokenOptions.Value;
         _jwtOptions = jwtOptions.Value;
     }
     
+    public static TokenValidationParameters GetTokenValidationParameters(JwtOptions jwtOptions, string tokenSecret)
+    {
+        return new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtOptions.Issuer,
+            ValidAudience = jwtOptions.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.ASCII.GetBytes(tokenSecret)),
+            ClockSkew = TimeSpan.Zero,
+        };
+    }
+    
     /// <summary>
-    /// Checks if the provided refresh token is legit
+    /// Checks if the provided refresh token is legit.
     /// </summary>
     public Result<JwtSecurityToken, HttpError> Validate(string refreshToken)
     {
@@ -41,24 +59,7 @@ public class RefreshTokenValidator : IRefreshTokenValidator
         }
         catch (Exception ex)
         {
-            return Errors.Auth.InvalidRefreshToken(_logger, refreshToken, ex);
+            return DomainErrors.Auth.InvalidRefreshToken(_logger, refreshToken, ex);
         }
-    }
-    
-    public static TokenValidationParameters GetTokenValidationParameters(JwtOptions jwtOptions, string tokenSecret)
-    {
-        return new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = jwtOptions.Issuer,
-            ValidAudience = jwtOptions.Audience,
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.ASCII.GetBytes(tokenSecret)
-            ),
-            ClockSkew = TimeSpan.Zero
-        };
     }
 }

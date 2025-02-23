@@ -11,7 +11,8 @@ public class DeleteTodoListCommand : Command<DeleteTodoListInput, Result<HttpErr
     private readonly IOperationValidator<DeleteTodoListCommand, Result<HttpError>> _validator;
     private readonly ITodosRepository _todosRepository;
 
-    public DeleteTodoListCommand(IOperationValidator<DeleteTodoListCommand, Result<HttpError>> validator,
+    public DeleteTodoListCommand(
+        IOperationValidator<DeleteTodoListCommand, Result<HttpError>> validator,
         ITodosRepository todosRepository)
     {
         _validator = validator;
@@ -22,14 +23,14 @@ public class DeleteTodoListCommand : Command<DeleteTodoListInput, Result<HttpErr
 
     public override async Task<Result<HttpError>> ExecuteAsync(CancellationToken cancellationToken = default)
     {
-        var validationResult = await _validator.ValidateAsync(this, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(this, cancellationToken).ConfigureAwait(false);
         if (validationResult.IsError)
         {
             return validationResult.Error;
         }
 
         // The items will also be deleted because of the foreign key constraint and cascade being on
-        await _todosRepository.DeleteTodoList(Input!.ListId);
+        await _todosRepository.DeleteTodoList(Input!.ListId).ConfigureAwait(false);
 
         return Result.Ok();
     }

@@ -8,8 +8,7 @@ namespace Todo.Application.Common.Abstractions.Repositories;
 
 public interface IAuthRepository : IEfCoreRepositoryBase, IDisposable
 {
-    Task<Result<string, HttpError>> GetUserIdByRefreshToken(string refreshToken,
-        CancellationToken cancellationToken = default);
+    Task<Result<string, HttpError>> GetUserIdByRefreshToken(string refreshToken, CancellationToken cancellationToken = default);
     Task<IdentityResult> CreateUserAsync(User user, string password);
     Task<bool> CheckPasswordAsync(User user, string password);
     Task AddNewUserRefreshToken(string newUserId, string refreshToken);

@@ -3,5 +3,4 @@
 public record GetTodoListResponse(
     int Id,
     string Name,
-    string? Description
-);
+    string? Description);

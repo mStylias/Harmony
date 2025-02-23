@@ -23,7 +23,9 @@ public class SignupCommand : Command<SignupRequest, Result<AuthTokensModel, Http
     private readonly ITokenCreationService _tokenCreationService;
     private readonly IOperationValidator<SignupCommand, Result<HttpError>> _validator;
 
-    public SignupCommand(ILogger<SignupCommand> logger, IAuthRepository authRepository, 
+    public SignupCommand(
+        ILogger<SignupCommand> logger, 
+        IAuthRepository authRepository, 
         ITokenCreationService tokenCreationService, 
         IOperationValidator<SignupCommand, Result<HttpError>> validator)
     {
@@ -38,7 +40,7 @@ public class SignupCommand : Command<SignupRequest, Result<AuthTokensModel, Http
     public override async Task<Result<AuthTokensModel, HttpError>> ExecuteAsync(
         CancellationToken cancellationToken = default)
     {
-        var validationResult = await _validator.ValidateAsync(this, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(this, cancellationToken).ConfigureAwait(false);
         if (validationResult.IsError)
         {
             return validationResult.Error;
@@ -50,22 +52,23 @@ public class SignupCommand : Command<SignupRequest, Result<AuthTokensModel, Http
         var user = new User
         {
             UserName = signupRequest.Email,
-            Email = signupRequest.Email
+            Email = signupRequest.Email,
         };
         
-        IdentityResult userCreationResult = await _authRepository.CreateUserAsync(user, signupRequest.Password);
+        IdentityResult userCreationResult = await _authRepository.CreateUserAsync(user, signupRequest.Password)
+            .ConfigureAwait(false);
         if (userCreationResult.Succeeded == false)
         {
             var validationErrors = userCreationResult.Errors
                 .Select(ie => new ValidationInnerError(ie.Code, ie.Description, GetErrorPropertyName(ie.Code)))
                 .ToList();
             
-            return Errors.General.ValidationError(_logger, validationErrors);
+            return DomainErrors.General.ValidationError(_logger, validationErrors);
         }
 
         var tokens = _tokenCreationService.GenerateTokens(user.Id);
 
-        await _authRepository.AddNewUserRefreshToken(user.Id, tokens.RefreshToken);
+        await _authRepository.AddNewUserRefreshToken(user.Id, tokens.RefreshToken).ConfigureAwait(false);
 
         var signupSuccess = Successes.Auth.SignupSuccess(_logger, user.Email);
 
@@ -74,12 +77,12 @@ public class SignupCommand : Command<SignupRequest, Result<AuthTokensModel, Http
 
     private static string? GetErrorPropertyName(string code)
     {
-        if (code.Contains("Password"))
+        if (code.Contains("Password", StringComparison.OrdinalIgnoreCase))
         {
             return "password";
         }
         
-        if (code.Contains("Email"))
+        if (code.Contains("Email", StringComparison.OrdinalIgnoreCase))
         {
             return "email";
         }

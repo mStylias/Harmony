@@ -3,5 +3,4 @@
 public record DeleteTodoItemInput(
     int ItemId,
     int ListId,
-    string UserId
-);
+    string UserId);

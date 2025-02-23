@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Todo.Domain.Errors;
 
-public static partial class Errors
+public static partial class DomainErrors
 {
     [LoggerMessage(Message = "Entity '{EntityName}' was null", Level = LogLevel.Error)]
     private static partial void LogNullReference(this ILogger logger, string entityName);
@@ -25,7 +25,7 @@ public static partial class Errors
         #endregion
 
         #region Validation Errors
-        public static HttpError ValidationError(ILogger logger, List<ValidationInnerError> validationErrors) => new(
+        public static HttpError ValidationError(ILogger logger, ICollection<ValidationInnerError> validationErrors) => new(
             nameof(ValidationError),
             "Input was not valid",
             StatusCodes.Status400BadRequest,

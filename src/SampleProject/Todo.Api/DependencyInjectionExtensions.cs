@@ -8,7 +8,7 @@ using Todo.Domain.Options.Validators;
 
 namespace Todo.Api;
 
-public static class DependencyInjectionExtensions
+internal static class DependencyInjectionExtensions
 {
     public static IServiceCollection AddPresentation(this IServiceCollection services, IConfiguration config)
     {
@@ -22,6 +22,17 @@ public static class DependencyInjectionExtensions
         return services;
     }
 
+    public static void UseConfiguredSwagger(this WebApplication app)
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI(options =>
+        {
+            // options.SwaggerEndpoint("/swagger/v2/swagger.json", "v2");
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+            options.DisplayRequestDuration();
+        });
+    }
+    
     private static IServiceCollection AddAppOptions(this IServiceCollection services, IConfiguration config)
     {
         services.AddOptions<JwtOptions>()
@@ -53,7 +64,7 @@ public static class DependencyInjectionExtensions
             { 
                 Version = "v1",
                 Title = $"{title} v1",
-                Description = description
+                Description = description,
             });
             
             /*opts.SwaggerDoc("v2", new OpenApiInfo
@@ -68,16 +79,5 @@ public static class DependencyInjectionExtensions
         });
 
         return services;
-    }
-    
-    public static void UseConfiguredSwagger(this WebApplication app)
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI(options =>
-        {
-            // options.SwaggerEndpoint("/swagger/v2/swagger.json", "v2");
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-            options.DisplayRequestDuration();
-        });
     }
 }

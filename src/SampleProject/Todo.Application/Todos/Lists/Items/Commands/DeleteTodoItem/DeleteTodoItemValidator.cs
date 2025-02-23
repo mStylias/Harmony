@@ -15,24 +15,26 @@ public class DeleteTodoItemValidator : IOperationValidator<DeleteTodoItemCommand
     private readonly ILogger<DeleteTodoItemValidator> _logger;
     private readonly ITodosRepository _todosRepository;
 
-    public DeleteTodoItemValidator(ILogger<DeleteTodoItemValidator> logger,
+    public DeleteTodoItemValidator(
+        ILogger<DeleteTodoItemValidator> logger,
         ITodosRepository todosRepository)
     {
         _logger = logger;
         _todosRepository = todosRepository;
     }
     
-    public async Task<Result<HttpError>> ValidateAsync(DeleteTodoItemCommand operation, 
-        CancellationToken cancellation = default)
+    public async Task<Result<HttpError>> ValidateAsync(
+        DeleteTodoItemCommand operation, 
+        CancellationToken cancellationToken = default)
     {
         Debug.Assert(operation.Input is not null, "You must provide a value to this command");
 
         var (itemId, listId, userId) = operation.Input;
         
-        var listExists = await _todosRepository.TodoListExistsAsync(listId, cancellation);
+        var listExists = await _todosRepository.TodoListExistsAsync(listId, cancellationToken).ConfigureAwait(false);
         if (listExists == false)
         {
-            return Errors.General.ValidationError(_logger, [
+            return DomainErrors.General.ValidationError(_logger, [
                 new ValidationInnerError(
                     InnerErrorCodes.Validation.EntityDoesNotExist,
                     "List not found",
@@ -40,10 +42,12 @@ public class DeleteTodoItemValidator : IOperationValidator<DeleteTodoItemCommand
             ]);
         }
         
-        var userOwnsList = await _todosRepository.UserOwnsListAsync(listId, userId, cancellation);
+        var userOwnsList = await _todosRepository.UserOwnsListAsync(listId, userId, cancellationToken)
+            .ConfigureAwait(false);
+        
         if (userOwnsList == false)
         {
-            return Errors.General.ValidationError(_logger, [
+            return DomainErrors.General.ValidationError(_logger, [
                 new ValidationInnerError(
                     InnerErrorCodes.Validation.NoPermission,
                     "This list doesn't belong to the logged in user",

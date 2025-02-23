@@ -1,5 +1,7 @@
 ﻿using Harmony.Cqrs.Abstractions;
+using Harmony.MinimalApis.Endpoints;
 using Harmony.MinimalApis.Mappers;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Todo.Api.Common.Constants;
 using Todo.Api.Common.Mappers;
@@ -9,7 +11,8 @@ using Todo.Contracts.Auth;
 
 namespace Todo.Api.Endpoints.Auth.Post;
 
-public class Signup : IEndpoint
+[UsedImplicitly]
+internal class Signup : IEndpoint
 {
     public string Tag => EndpointTagNames.Auth;
     public RouteHandlerBuilder AddEndpoint(IEndpointRouteBuilder app)
@@ -18,8 +21,7 @@ public class Signup : IEndpoint
                 HttpContext httpContext,
                 [FromBody] SignupRequest signupRequest, 
                 [FromServices] IOperationFactory operationFactory,
-                [FromServices] IAuthCookiesService authCookiesService
-            ) =>
+                [FromServices] IAuthCookiesService authCookiesService) =>
         {
             var signupCommand = operationFactory.CreateBuilder<SignupCommand>()
                 .WithInput(signupRequest)
@@ -35,8 +37,7 @@ public class Signup : IEndpoint
             signupResult.Success?.Log();
             var authTokens = signupResult.Value;
             
-            authCookiesService.SetAccessTokenCookie(httpContext, authTokens.AccessToken, 
-                authTokens.AccessTokenExpiration);
+            authCookiesService.SetAccessTokenCookie(httpContext, authTokens.AccessToken, authTokens.AccessTokenExpiration);
 
             return Results.Ok(authTokens.MapToAuthResponse());
         })

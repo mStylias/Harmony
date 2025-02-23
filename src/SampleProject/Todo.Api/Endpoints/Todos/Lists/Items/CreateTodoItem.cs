@@ -1,5 +1,7 @@
 ﻿using Harmony.Cqrs.Abstractions;
+using Harmony.MinimalApis.Endpoints;
 using Harmony.MinimalApis.Mappers;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Todo.Api.Common.Constants;
 using Todo.Api.Common.HttpContext;
@@ -11,7 +13,8 @@ using Todo.Domain.Errors;
 
 namespace Todo.Api.Endpoints.Todos.Lists.Items;
 
-public class CreateTodoItem : IEndpoint
+[UsedImplicitly]
+internal class CreateTodoItem : IEndpoint
 {
     public string Tag => EndpointTagNames.Todos;
     public RouteHandlerBuilder AddEndpoint(IEndpointRouteBuilder app)
@@ -32,7 +35,7 @@ public class CreateTodoItem : IEndpoint
             var userId = httpContext.GetUserId();
             if (userId is null)
             {
-                return Errors.Auth.AccessDenied(logger, null).MapToHttpResult();
+                return DomainErrors.Auth.AccessDenied(logger, null).MapToHttpResult();
             }
 
             var (name, description, todoStatus) = createTodoItemRequest;

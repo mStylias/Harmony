@@ -14,7 +14,8 @@ public class CreateTodoListCommand : Command<CreateTodoListInput, Result<TodoLis
     private readonly IOperationValidator<CreateTodoListCommand, Result<HttpError>> _validator;
     private readonly ITodosRepository _todosRepository;
 
-    public CreateTodoListCommand(ILogger<CreateTodoListCommand> logger,
+    public CreateTodoListCommand(
+        ILogger<CreateTodoListCommand> logger,
         IOperationValidator<CreateTodoListCommand, Result<HttpError>> validator,
         ITodosRepository todosRepository)
     {
@@ -27,7 +28,7 @@ public class CreateTodoListCommand : Command<CreateTodoListInput, Result<TodoLis
 
     public override async Task<Result<TodoList, HttpError>> ExecuteAsync(CancellationToken cancellationToken = default)
     {
-        var validationResult = await _validator.ValidateAsync(this, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(this, cancellationToken).ConfigureAwait(false);
         if (validationResult.IsError)
         {
             return validationResult.Error;
@@ -35,7 +36,7 @@ public class CreateTodoListCommand : Command<CreateTodoListInput, Result<TodoLis
         
         var todoList = new TodoList(Input!.Name, Input.Description, Input.UserId);
         
-        var createdTodoList = await _todosRepository.CreateTodoListAsync(todoList);
+        var createdTodoList = await _todosRepository.CreateTodoListAsync(todoList).ConfigureAwait(false);
 
         _logger.LogInformation("Successfully created todo list with id '{TodoListId}'", createdTodoList.Id);
         

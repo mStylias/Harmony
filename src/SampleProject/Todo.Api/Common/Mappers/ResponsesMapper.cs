@@ -8,7 +8,7 @@ using Todo.Domain.Entities.Todos;
 
 namespace Todo.Api.Common.Mappers;
 
-public static class ResponsesMapper
+internal static class ResponsesMapper
 {
     public static AuthResponse MapToAuthResponse(this AuthTokensModel authTokensModel)
     {
@@ -25,7 +25,11 @@ public static class ResponsesMapper
     
     public static CreateTodoItemResponse MapToCreateTodoItemResponse(this TodoItem todoItem)
     {
-        return new CreateTodoItemResponse(todoItem.Id, todoItem.Name, todoItem.Description, todoItem.Status, 
+        return new CreateTodoItemResponse(
+            todoItem.Id, 
+            todoItem.Name, 
+            todoItem.Description, 
+            todoItem.Status, 
             todoItem.TodoListId);
     }
 
@@ -38,8 +42,7 @@ public static class ResponsesMapper
     {
         return new GetTodoListsResponse(todoLists.Select(list => 
                 list.MapToGetTodoListResponse())
-            .ToList()
-        );
+            .ToList());
     }
     
     public static GetTodoItemResponse MapToGetTodoItemResponse(this TodoItem todoItem)
@@ -51,7 +54,6 @@ public static class ResponsesMapper
     {
         return new GetTodoItemsResponse(todoItems.Select(list => 
                 list.MapToGetTodoItemResponse())
-            .ToList()
-        );
+            .ToList());
     }
 }

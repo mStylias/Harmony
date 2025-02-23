@@ -1,5 +1,7 @@
-﻿using Harmony.MinimalApis.Mappers;
+﻿using Harmony.MinimalApis.Endpoints;
+using Harmony.MinimalApis.Mappers;
 using Harmony.Results.ErrorTypes.InnerErrorTypes;
+using JetBrains.Annotations;
 using Todo.Api.Common.Constants;
 using Todo.Api.Common.HttpContext;
 using Todo.Api.Common.Mappers;
@@ -9,12 +11,15 @@ using Todo.Domain.Errors.Inner;
 
 namespace Todo.Api.Endpoints.Todos.Lists;
 
-public class GetTodoList : IEndpoint
+[UsedImplicitly]
+internal class GetTodoList : IEndpoint
 {
     public string Tag => EndpointTagNames.Todos;
     public RouteHandlerBuilder AddEndpoint(IEndpointRouteBuilder app)
     {
-        return app.MapGet($"{EndpointBasePathNames.Todos}/lists/{{todoListId:int}}", async Task<IResult>(
+        return app.MapGet(
+            $"{EndpointBasePathNames.Todos}/lists/{{todoListId:int}}", 
+            async Task<IResult> (
                 int todoListId,
                 ILogger<GetTodoList> logger,
                 HttpContext httpContext,
@@ -26,7 +31,7 @@ public class GetTodoList : IEndpoint
             var todoList = await todosRepository.GetTodoListById(todoListId, cancellationToken);
             if (todoList is null)
             {
-                return Errors.General.ValidationError(logger, [
+                return DomainErrors.General.ValidationError(logger, [
                     new ValidationInnerError(
                         InnerErrorCodes.Validation.EntityDoesNotExist,
                         "No todo list found for the given ID",
@@ -36,7 +41,7 @@ public class GetTodoList : IEndpoint
             
             if (todoList.UserId != userId)
             {
-                return Errors.Auth.AccessDenied(logger, null).MapToHttpResult();
+                return DomainErrors.Auth.AccessDenied(logger, null).MapToHttpResult();
             }
             
             return Results.Ok(todoList.MapToGetTodoListResponse());

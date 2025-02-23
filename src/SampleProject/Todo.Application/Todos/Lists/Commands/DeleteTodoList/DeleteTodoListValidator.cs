@@ -23,17 +23,18 @@ public class DeleteTodoListValidator : IOperationValidator<DeleteTodoListCommand
         _todosRepository = todosRepository;
     }
     
-    public async Task<Result<HttpError>> ValidateAsync(DeleteTodoListCommand operation, 
-        CancellationToken cancellation = default)
+    public async Task<Result<HttpError>> ValidateAsync(
+        DeleteTodoListCommand operation, 
+        CancellationToken cancellationToken = default)
     {
         Debug.Assert(operation.Input is not null, "You must provide an input to this command");
         
-        var (listId, userId)= operation.Input;
+        var (listId, userId) = operation.Input;
         
-        var listExists = await _todosRepository.TodoListExistsAsync(listId, cancellation);
+        var listExists = await _todosRepository.TodoListExistsAsync(listId, cancellationToken).ConfigureAwait(false);
         if (listExists == false)
         {
-            return Errors.General.ValidationError(_logger, [
+            return DomainErrors.General.ValidationError(_logger, [
                 new ValidationInnerError(
                     InnerErrorCodes.Validation.EntityDoesNotExist,
                     "List not found",
@@ -41,10 +42,12 @@ public class DeleteTodoListValidator : IOperationValidator<DeleteTodoListCommand
             ]);
         }
         
-        var userOwnsList = await _todosRepository.UserOwnsListAsync(listId, userId, cancellation);
+        var userOwnsList = await _todosRepository.UserOwnsListAsync(listId, userId, cancellationToken)
+            .ConfigureAwait(false);
+        
         if (userOwnsList == false)
         {
-            return Errors.General.ValidationError(_logger, [
+            return DomainErrors.General.ValidationError(_logger, [
                 new ValidationInnerError(
                     InnerErrorCodes.Validation.NoPermission,
                     "This list doesn't belong to the logged in user",

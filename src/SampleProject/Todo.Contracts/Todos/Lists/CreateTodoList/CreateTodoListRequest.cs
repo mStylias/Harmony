@@ -2,5 +2,4 @@
 
 public record CreateTodoListRequest(
     string Name,
-    string? Description
-);
+    string? Description);

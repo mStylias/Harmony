@@ -1,8 +1,6 @@
 ﻿namespace Todo.Contracts.Auth.Common;
 
-public record AuthResponse
-(
+public record AuthResponse(
     string RefreshToken,
     DateTime AccessTokenExpiration,
-    DateTime RefreshTokenExpiration    
-);
+    DateTime RefreshTokenExpiration);

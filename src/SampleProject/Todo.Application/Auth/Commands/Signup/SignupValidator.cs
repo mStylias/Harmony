@@ -27,16 +27,20 @@ public class SignupValidator : IOperationValidator<SignupCommand, Result<HttpErr
         {
             validationErrors.Add(new ValidationInnerError(
                 InnerErrorCodes.Validation.NullSignupRequest,
-                "Signup request was null", null));
-            return Errors.General.ValidationError(_logger, validationErrors);
+                "Signup request was null", 
+                null));
+            
+            return DomainErrors.General.ValidationError(_logger, validationErrors);
         }
         
         if (signupRequest.Password != signupRequest.ConfirmPassword)
         {
             validationErrors.Add(new ValidationInnerError(
                 InnerErrorCodes.Validation.PasswordsDontMatch,
-                "Passwords don't match", "password"));
-            return Errors.General.ValidationError(_logger, validationErrors);
+                "Passwords don't match", 
+                "password"));
+            
+            return DomainErrors.General.ValidationError(_logger, validationErrors);
         }
 
         var shouldBeTrue = command.Metadata;
@@ -45,7 +49,7 @@ public class SignupValidator : IOperationValidator<SignupCommand, Result<HttpErr
             validationErrors.Add(new ValidationInnerError(
                 InnerErrorCodes.Validation.GeneralError,
                 "Harmony metadata didn't work"));
-            return Errors.General.ValidationError(_logger, validationErrors);
+            return DomainErrors.General.ValidationError(_logger, validationErrors);
         }
 
         return Result.Ok();

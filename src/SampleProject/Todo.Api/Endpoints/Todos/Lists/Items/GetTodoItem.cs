@@ -1,4 +1,6 @@
-﻿using Harmony.MinimalApis.Mappers;
+﻿using Harmony.MinimalApis.Endpoints;
+using Harmony.MinimalApis.Mappers;
+using JetBrains.Annotations;
 using Todo.Api.Common.Constants;
 using Todo.Api.Common.HttpContext;
 using Todo.Api.Common.Mappers;
@@ -8,12 +10,14 @@ using Todo.Domain.Errors.Inner;
 
 namespace Todo.Api.Endpoints.Todos.Lists.Items;
 
-public class GetTodoItem : IEndpoint
+[UsedImplicitly]
+internal class GetTodoItem : IEndpoint
 {
     public string Tag => EndpointTagNames.Todos;
     public RouteHandlerBuilder AddEndpoint(IEndpointRouteBuilder app)
     {
-        return app.MapGet($"{EndpointBasePathNames.Todos}/lists/{{todoListId:int}}/items/{{todoItemId:int}}", 
+        return app.MapGet(
+            $"{EndpointBasePathNames.Todos}/lists/{{todoListId:int}}/items/{{todoItemId:int}}", 
             async Task<IResult> (
                 int todoListId,
                 int todoItemId,
@@ -25,20 +29,20 @@ public class GetTodoItem : IEndpoint
                 var userId = httpContext.GetUserId();
                 if (userId is null)
                 {
-                    return Errors.Auth.AccessDenied(logger, null).MapToHttpResult();
+                    return DomainErrors.Auth.AccessDenied(logger, null).MapToHttpResult();
                 }
 
                 bool userOwnsList = await todosRepository.UserOwnsListAsync(todoListId, userId, cancellationToken);
                 if (userOwnsList == false)
                 {
-                    return Errors.Auth.AccessDenied(logger,null).MapToHttpResult();
+                    return DomainErrors.Auth.AccessDenied(logger, null).MapToHttpResult();
                 }
                 
                 var todoItem = await todosRepository
                     .GetTodoItemById(todoItemId, cancellationToken);
                 if (todoItem is null)
                 {
-                    return Errors.General.ValidationError(logger, [
+                    return DomainErrors.General.ValidationError(logger, [
                         new(
                             InnerErrorCodes.Validation.EntityDoesNotExist, 
                             "Item not found", 

@@ -29,6 +29,7 @@ public class RefreshTokenCommand : Command<RefreshRequest, Result<AuthTokensMode
         _authRepository = authRepository;
         _refreshTokenValidator = refreshTokenValidator;
     }
+    
     public override RefreshRequest? Input { get; set; }
 
     public override async Task<Result<AuthTokensModel, HttpError>> ExecuteAsync(CancellationToken cancellationToken = default)
@@ -36,7 +37,7 @@ public class RefreshTokenCommand : Command<RefreshRequest, Result<AuthTokensMode
         var refreshRequest = Input;
         if (refreshRequest is null)
         {
-            return Errors.General.NullReferenceError(_logger, nameof(refreshRequest));
+            return DomainErrors.General.NullReferenceError(_logger, nameof(refreshRequest));
         }
         
         var validationResult = _refreshTokenValidator.Validate(refreshRequest.RefreshToken);
@@ -45,7 +46,8 @@ public class RefreshTokenCommand : Command<RefreshRequest, Result<AuthTokensMode
             return validationResult.Error;
         }
                 
-        var userIdResult = await _authRepository.GetUserIdByRefreshToken(refreshRequest.RefreshToken, cancellationToken);
+        var userIdResult = await _authRepository.GetUserIdByRefreshToken(refreshRequest.RefreshToken, cancellationToken)
+            .ConfigureAwait(false);
         if (userIdResult.IsError)
         {
             return userIdResult.Error;
@@ -59,7 +61,7 @@ public class RefreshTokenCommand : Command<RefreshRequest, Result<AuthTokensMode
         var authTokensModel = _tokenCreationService.GenerateTokens(existingUserId, refreshTokenExpiration);
 
         // Override the previous refresh token with the new one, while keeping the same user id
-        await _authRepository.UpdateRefreshToken(authTokensModel.RefreshToken, existingUserId);
+        await _authRepository.UpdateRefreshToken(authTokensModel.RefreshToken, existingUserId).ConfigureAwait(false);
 
         Successes.Auth.RefreshTokenSuccess(_logger, existingUserId).Log();
 

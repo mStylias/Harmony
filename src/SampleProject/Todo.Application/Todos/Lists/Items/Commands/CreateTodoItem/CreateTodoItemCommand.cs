@@ -14,7 +14,8 @@ public class CreateTodoItemCommand : Command<CreateTodoItemInput, Result<TodoIte
     private readonly IOperationValidator<CreateTodoItemCommand, Result<HttpError>> _validator;
     private readonly ITodosRepository _todosRepository;
 
-    public CreateTodoItemCommand(ILogger<CreateTodoItemCommand> logger, 
+    public CreateTodoItemCommand(
+        ILogger<CreateTodoItemCommand> logger, 
         IOperationValidator<CreateTodoItemCommand, Result<HttpError>> validator,
         ITodosRepository todosRepository)
     {
@@ -27,7 +28,7 @@ public class CreateTodoItemCommand : Command<CreateTodoItemInput, Result<TodoIte
 
     public override async Task<Result<TodoItem, HttpError>> ExecuteAsync(CancellationToken cancellationToken = default)
     {
-        var validationResult = await _validator.ValidateAsync(this, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(this, cancellationToken).ConfigureAwait(false);
         if (validationResult.IsError)
         {
             return validationResult.Error;
@@ -41,7 +42,7 @@ public class CreateTodoItemCommand : Command<CreateTodoItemInput, Result<TodoIte
             createTodoItemRequest.Status,
             createTodoItemRequest.TodoListId);
 
-        await _todosRepository.CreateTodoItemAsync(todoItem);
+        await _todosRepository.CreateTodoItemAsync(todoItem).ConfigureAwait(false);
 
         _logger.LogInformation("Successfully created todo item with id {TodoItemId}", todoItem.Id);
         

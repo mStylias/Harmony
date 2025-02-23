@@ -17,14 +17,16 @@ public class CreateTodoItemValidator : IOperationValidator<CreateTodoItemCommand
     private readonly ILogger<CreateTodoItemValidator> _logger;
     private readonly ITodosRepository _todosRepository;
 
-    public CreateTodoItemValidator(ILogger<CreateTodoItemValidator> logger,
+    public CreateTodoItemValidator(
+        ILogger<CreateTodoItemValidator> logger,
         ITodosRepository todosRepository)
     {
         _logger = logger;
         _todosRepository = todosRepository;
     }
     
-    public async Task<Result<HttpError>> ValidateAsync(CreateTodoItemCommand command, 
+    public async Task<Result<HttpError>> ValidateAsync(
+        CreateTodoItemCommand command, 
         CancellationToken cancellationToken = default)
     {
         // This is a debug only check to ensure that the caller of the command provides an input
@@ -35,47 +37,60 @@ public class CreateTodoItemValidator : IOperationValidator<CreateTodoItemCommand
 
         if (Enum.IsDefined(typeof(TodoStatus), (int)createTodoItemRequest.Status) == false)
         {
-            validationErrors.Add(new ValidationInnerError(InnerErrorCodes.Validation.InvalidEnumValue,
+            validationErrors.Add(new ValidationInnerError(
+                InnerErrorCodes.Validation.InvalidEnumValue,
                 $"The status '{createTodoItemRequest.Status}' is not a valid value",
                 nameof(createTodoItemRequest.Status)));
         }
         
         var nameLength = createTodoItemRequest.Name.Length;
-        if (nameLength > Rules.Todos.MaximumTodoItemNameCharacters)
+        if (nameLength > DomainRules.Todos.MaximumTodoItemNameCharacters)
         {
-            validationErrors.Add(new ValidationInnerError(InnerErrorCodes.Validation.MaximumCharactersExceeded,
-                $"The name of the todo item exceeds the maximum of '{Rules.Todos.MaximumTodoItemNameCharacters}' " +
-                "characters", nameof(createTodoItemRequest.Name)));
+            validationErrors.Add(new ValidationInnerError(
+                InnerErrorCodes.Validation.MaximumCharactersExceeded,
+                $"The name of the todo item exceeds the maximum of '{DomainRules.Todos.MaximumTodoItemNameCharacters}' " +
+                "characters", 
+                nameof(createTodoItemRequest.Name)));
         }
         
         var todoList = await _todosRepository.GetTodoListById(
-            createTodoItemRequest.TodoListId, cancellationToken);
+            createTodoItemRequest.TodoListId, 
+            cancellationToken).ConfigureAwait(false);
+        
         if (todoList is null)
         {
-            validationErrors.Add(new ValidationInnerError(InnerErrorCodes.Validation.EntityDoesNotExist,
+            validationErrors.Add(new ValidationInnerError(
+                InnerErrorCodes.Validation.EntityDoesNotExist,
                 $"The todo list with id '{createTodoItemRequest.TodoListId}' " +
-                $"does not exist", nameof(createTodoItemRequest.TodoListId)));
+                $"does not exist", 
+                nameof(createTodoItemRequest.TodoListId)));
         }
 
         if (todoList is not null && todoList.UserId != createTodoItemRequest.UserId)
         {
-            validationErrors.Add(new ValidationInnerError(InnerErrorCodes.Validation.NoPermission,
+            validationErrors.Add(new ValidationInnerError(
+                InnerErrorCodes.Validation.NoPermission,
                 $"The todo list with id '{createTodoItemRequest.TodoListId}' " +
-                $"doesn't belong to this user", nameof(createTodoItemRequest.TodoListId)));
+                $"doesn't belong to this user", 
+                nameof(createTodoItemRequest.TodoListId)));
         }
         
         var nameAlreadyExists = await _todosRepository.TodoItemExistsAsync(
-            createTodoItemRequest.Name, createTodoItemRequest.TodoListId, cancellationToken);
+            createTodoItemRequest.Name, 
+            createTodoItemRequest.TodoListId, 
+            cancellationToken).ConfigureAwait(false);
+        
         if (nameAlreadyExists)
         {
-            validationErrors.Add(new ValidationInnerError(InnerErrorCodes.Validation.EntityAlreadyExists,
+            validationErrors.Add(new ValidationInnerError(
+                InnerErrorCodes.Validation.EntityAlreadyExists,
                 "A todo item with the same name already exists in the todo list", 
                 nameof(createTodoItemRequest.Name)));
         }
         
         if (validationErrors.Count > 0)
         {
-            return Errors.General.ValidationError(_logger, validationErrors);
+            return DomainErrors.General.ValidationError(_logger, validationErrors);
         }
 
         return Result.Ok();

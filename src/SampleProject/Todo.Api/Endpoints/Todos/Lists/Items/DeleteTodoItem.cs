@@ -1,5 +1,7 @@
 ﻿using Harmony.Cqrs.Abstractions;
+using Harmony.MinimalApis.Endpoints;
 using Harmony.MinimalApis.Mappers;
+using JetBrains.Annotations;
 using Todo.Api.Common.Constants;
 using Todo.Api.Common.HttpContext;
 using Todo.Application.Todos.Lists.Items.Commands.DeleteTodoItem;
@@ -7,13 +9,15 @@ using Todo.Domain.Errors;
 
 namespace Todo.Api.Endpoints.Todos.Lists.Items;
 
-public class DeleteTodoItem : IEndpoint
+[UsedImplicitly]
+internal class DeleteTodoItem : IEndpoint
 {
     public string Tag => EndpointTagNames.Todos;
     public RouteHandlerBuilder AddEndpoint(IEndpointRouteBuilder app)
     {
-        return app.MapDelete($"{EndpointBasePathNames.Todos}/lists/{{todoListId:int}}/items/{{todoItemId:int}}", 
-    async Task<IResult> (
+        return app.MapDelete(
+            $"{EndpointBasePathNames.Todos}/lists/{{todoListId:int}}/items/{{todoItemId:int}}", 
+            async Task<IResult> (
                 int todoListId,
                 int todoItemId,
                 ILogger<DeleteTodoList> logger,
@@ -23,7 +27,7 @@ public class DeleteTodoItem : IEndpoint
                 var userId = httpContext.GetUserId();
                 if (userId is null)
                 {
-                    return Errors.Auth.AccessDenied(logger, null).MapToHttpResult();
+                    return DomainErrors.Auth.AccessDenied(logger, null).MapToHttpResult();
                 }
 
                 var deleteOperation = operationFactory.CreateBuilder<DeleteTodoItemCommand>()
@@ -43,6 +47,6 @@ public class DeleteTodoItem : IEndpoint
                 config.Summary = "Deletes the todo item with the given item id and list id " +
                                  "if it belongs to the logged in user";
                 return config;
-            });;
+            });
     }
 }

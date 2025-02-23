@@ -5,12 +5,11 @@ using Microsoft.Extensions.Logging;
 
 namespace Todo.Domain.Errors;
 
-public static partial class Errors
+public static partial class DomainErrors
 {
     // This is the most optimized way to perform logging in .NET in terms of performance. More information can be found
     // at: https://andrewlock.net/exploring-dotnet-6-part-8-improving-logging-performance-with-source-generators/
     // Specifically look for the section "The .NET 6 [LoggerMessage] source generator"
-    
     [LoggerMessage(Level = LogLevel.Error,
         Message = "User with email: '{Email}' failed to login, because of incorrect credentials. Trace Id: '{TraceId}'")]
     private static partial void LogInvalidCredentials(this ILogger logger, string email, string traceId);
@@ -31,13 +30,13 @@ public static partial class Errors
             StatusCodes.Status401Unauthorized,
             () => logger.LogInvalidCredentials(email, Activity.Current!.Id!));
         
-        public static HttpError AccessDenied(ILogger logger, string? contextError) => new (
+        public static HttpError AccessDenied(ILogger logger, string? contextError) => new(
             nameof(AccessDenied), 
             "You don't have access to the specified resource",
             StatusCodes.Status401Unauthorized,
             () => logger.LogAccessDenied(contextError, Activity.Current!.Id!));
         
-        public static HttpError InvalidRefreshToken(ILogger logger, string refreshToken, Exception? ex = null) => new (
+        public static HttpError InvalidRefreshToken(ILogger logger, string refreshToken, Exception? ex = null) => new(
             nameof(InvalidRefreshToken), 
             "The refresh token is invalid",
             StatusCodes.Status401Unauthorized,

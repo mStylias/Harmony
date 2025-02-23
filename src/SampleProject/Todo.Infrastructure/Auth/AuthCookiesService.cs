@@ -14,14 +14,16 @@ public class AuthCookiesService : IAuthCookiesService
     /// <param name="expiration">The expiration DateTime of the cookie</param>
     public void SetAccessTokenCookie(HttpContext httpContext, string accessToken, DateTime expiration)
     {
-        httpContext.Response.Cookies.Append(Constants.Auth.AccessTokenCookieName, accessToken,
+        httpContext.Response.Cookies.Append(
+            Constants.Auth.AccessTokenCookieName, 
+            accessToken,
             new CookieOptions
             {
                 Expires = expiration,
                 HttpOnly = true,
                 SameSite = SameSiteMode.Unspecified,
                 Secure = true,
-                Path = "/"
+                Path = "/",
             });
     }
 }

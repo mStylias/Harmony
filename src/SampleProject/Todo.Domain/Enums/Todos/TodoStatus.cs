@@ -3,5 +3,5 @@
 public enum TodoStatus
 {
     Pending = 0,
-    Done = 1
+    Done = 1,
 }

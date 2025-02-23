@@ -1,5 +1,7 @@
 ﻿using Harmony.Cqrs.Abstractions;
+using Harmony.MinimalApis.Endpoints;
 using Harmony.MinimalApis.Mappers;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Todo.Api.Common.Constants;
 using Todo.Api.Common.Mappers;
@@ -9,12 +11,13 @@ using Todo.Contracts.Auth;
 
 namespace Todo.Api.Endpoints.Auth.Post;
 
-public class Login : IEndpoint
+[UsedImplicitly]
+internal class Login : IEndpoint
 {
     public string Tag => EndpointTagNames.Auth;
     public RouteHandlerBuilder AddEndpoint(IEndpointRouteBuilder app)
     {
-        return app.MapPost($"{EndpointBasePathNames.Auth}/login", async Task<IResult>(
+        return app.MapPost($"{EndpointBasePathNames.Auth}/login", async Task<IResult> (
             HttpContext httpContext,
             [FromBody] LoginRequest loginRequest,
             [FromServices] IOperationFactory operationFactory,
@@ -32,7 +35,9 @@ public class Login : IEndpoint
                 }
 
                 var tokensModel = loginResult.Value;
-                authCookiesService.SetAccessTokenCookie(httpContext, tokensModel.AccessToken, 
+                authCookiesService.SetAccessTokenCookie(
+                    httpContext, 
+                    tokensModel.AccessToken, 
                     tokensModel.AccessTokenExpiration);
                 
                 return Results.Ok(tokensModel.MapToAuthResponse());

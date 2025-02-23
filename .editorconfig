@@ -1,18 +1,27 @@
 [*.cs]
-# Disable additional .NET Code Analysis warnings
+# Disable Microsoft .NET warnings
 dotnet_diagnostic.CA1000.severity = none    # Avoid declaring static members on generic types
+dotnet_diagnostic.CA1031.severity = none    # Do not catch general exception types
+dotnet_diagnostic.CA1034.severity = none    # Do not nest type Auth. Alternatively, change its accessibility so that it is not externally visible
 dotnet_diagnostic.CA1040.severity = none    # Avoid empty interfaces
 dotnet_diagnostic.CA1062.severity = none    # Validate method arguments for null before use
+dotnet_diagnostic.CA1724.severity = none    # Type names should not match namespaces
+dotnet_diagnostic.CA1812.severity = none    # Avoid uninstantiated internal classes
 dotnet_diagnostic.CA1848.severity = none    # Use LoggerMessage delegates for improved logging performance
+dotnet_diagnostic.CA1852.severity = none    # Seal internal types
 
 # Disable StyleCop warnings
 dotnet_diagnostic.SA0001.severity = none    # XML comment analysis disabled due to project configuration
 dotnet_diagnostic.SA1028.severity = none    # Code should not contain trailing whitespace
 dotnet_diagnostic.SA1101.severity = none    # Prefix local calls with 'this'
+dotnet_diagnostic.SA1124.severity = none    # Do not use regions
 dotnet_diagnostic.SA1118.severity = none    # Parameters should not span multiple lines
 dotnet_diagnostic.SA1200.severity = none    # Using directives should appear within a namespace declaration
 dotnet_diagnostic.SA1309.severity = none    # Field names should not begin with an underscore
 dotnet_diagnostic.SA1402.severity = none    # File may only contain a single type
 dotnet_diagnostic.SA1516.severity = none    # Elements should be separated by blank lines
 dotnet_diagnostic.SA1518.severity = none    # Code should not contain blank lines at the end of the file
+dotnet_diagnostic.SA1600.severity = none    # Element should be documented
+dotnet_diagnostic.SA1601.severity = none    # Partial elements should be documented
+dotnet_diagnostic.SA1602.severity = none    # Enumeration items should be documented
 dotnet_diagnostic.SA1633.severity = none    # File header is missing

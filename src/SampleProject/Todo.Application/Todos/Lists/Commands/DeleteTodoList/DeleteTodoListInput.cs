@@ -2,5 +2,4 @@
 
 public record DeleteTodoListInput(
     int ListId,
-    string UserId
-);
+    string UserId);

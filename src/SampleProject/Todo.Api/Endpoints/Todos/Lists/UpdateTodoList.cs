@@ -1,6 +1,8 @@
-﻿namespace Todo.Api.Endpoints.Todos.Lists;
+﻿using JetBrains.Annotations;
 
-public class UpdateTodoList
+namespace Todo.Api.Endpoints.Todos.Lists;
+
+[UsedImplicitly]
+internal class UpdateTodoList
 {
-    
 }

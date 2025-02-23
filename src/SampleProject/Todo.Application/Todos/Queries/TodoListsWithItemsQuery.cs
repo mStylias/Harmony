@@ -38,20 +38,21 @@ public class TodoListsWithItemsQuery : Query<string?, Result<TodoListsWithItemsR
         var userId = Input;
 
         var todoLists = (await _todosRepository
-            .GetTodoListsOfUserAsync(userId, cancellationToken))
+            .GetTodoListsOfUserAsync(userId, cancellationToken).ConfigureAwait(false))
             .ToArray();
 
         if (todoLists.Length == 0)
         {
-            return Errors.General.ValidationError(_logger, [
-                new ValidationInnerError(InnerErrorCodes.Validation.EntityDoesNotExist,
+            return DomainErrors.General.ValidationError(_logger, [
+                new ValidationInnerError(
+                    InnerErrorCodes.Validation.EntityDoesNotExist,
                     "No todo lists found for the given user id",
                     nameof(todoLists))
             ]);
         }
         
         var allTodoItems = await _todosRepository
-            .GetTodoItemsOfMultipleListsAsync(todoLists.Select(x => x.Id), cancellationToken);
+            .GetTodoItemsOfMultipleListsAsync(todoLists.Select(x => x.Id), cancellationToken).ConfigureAwait(false);
 
         var todoListsWithItems = new TodoListsWithItemsResponse(
             todoLists.Select(list => new TodoListWithItemsResponse(
@@ -64,13 +65,8 @@ public class TodoListsWithItemsQuery : Query<string?, Result<TodoListsWithItemsR
                         item.Id,
                         item.Name,
                         item.Description,
-                        item.Status)
-                    )
-                    .ToList()
-                )
-            )
-            .ToList()
-        );
+                        item.Status)).ToList()))
+            .ToList());
 
         return todoListsWithItems;
     }

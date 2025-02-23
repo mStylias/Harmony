@@ -20,15 +20,16 @@ public class UsersRepository : IUsersRepository
     {
         using var connection = _dapperContext.CreateConnection();
         var result = await connection.QueryFirstOrDefaultAsync<int>(new CommandDefinition(
-            "SELECT 1 FROM AspNetUsers WHERE Id = @UserId", new { UserId = userId },
-            cancellationToken: cancellationToken));
+            "SELECT 1 FROM AspNetUsers WHERE Id = @UserId", 
+            new { UserId = userId },
+            cancellationToken: cancellationToken)).ConfigureAwait(false);
 
         return result == 1;
     }
     
     public async Task<User?> GetUserByEmailAsync(string email)
     {
-        var user = await _userManager.FindByEmailAsync(email);
+        var user = await _userManager.FindByEmailAsync(email).ConfigureAwait(false);
         return user;
     }
 }
