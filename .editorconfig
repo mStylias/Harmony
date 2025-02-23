@@ -1,18 +1,18 @@
 [*.cs]
+# Disable additional .NET Code Analysis warnings
+dotnet_diagnostic.CA1000.severity = none    # Avoid declaring static members on generic types
+dotnet_diagnostic.CA1040.severity = none    # Avoid empty interfaces
+dotnet_diagnostic.CA1062.severity = none    # Validate method arguments for null before use
+dotnet_diagnostic.CA1848.severity = none    # Use LoggerMessage delegates for improved logging performance
+
 # Disable StyleCop warnings
-dotnet_diagnostic.SA1633.severity = none    # File header is missing
 dotnet_diagnostic.SA0001.severity = none    # XML comment analysis disabled due to project configuration
-dotnet_diagnostic.SA1516.severity = none    # Elements should be separated by blank lines
 dotnet_diagnostic.SA1028.severity = none    # Code should not contain trailing whitespace
-dotnet_diagnostic.SA1402.severity = none    # File may only contain a single type
-dotnet_diagnostic.SA1200.severity = none    # Using directives should appear within a namespace declaration
-dotnet_diagnostic.SA1518.severity = none    # Code should not contain blank lines at the end of the file
-dotnet_diagnostic.SA1309.severity = none    # Field names should not begin with an underscore
 dotnet_diagnostic.SA1101.severity = none    # Prefix local calls with 'this'
 dotnet_diagnostic.SA1118.severity = none    # Parameters should not span multiple lines
-
-# Disable additional .NET Code Analysis warnings
-dotnet_diagnostic.CA1062.severity = none    # Validate method arguments for null before use
-dotnet_diagnostic.CA1000.severity = none    # Avoid declaring static members on generic types
-dotnet_diagnostic.CA1848.severity = none    # Use LoggerMessage delegates for improved logging performance
-dotnet_diagnostic.CA1040.severity = none    # Avoid empty interfaces
+dotnet_diagnostic.SA1200.severity = none    # Using directives should appear within a namespace declaration
+dotnet_diagnostic.SA1309.severity = none    # Field names should not begin with an underscore
+dotnet_diagnostic.SA1402.severity = none    # File may only contain a single type
+dotnet_diagnostic.SA1516.severity = none    # Elements should be separated by blank lines
+dotnet_diagnostic.SA1518.severity = none    # Code should not contain blank lines at the end of the file
+dotnet_diagnostic.SA1633.severity = none    # File header is missing
