@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using Harmony.Cqrs.Abstractions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Harmony.Cqrs.Abstractions;
 
 namespace Harmony.Cqrs;
 
@@ -10,12 +8,13 @@ public class OperationFactory : IOperationFactory
     
     public OperationFactory(IServiceProvider serviceProvider)
     {
-        _serviceProvider = serviceProvider;
+        this._serviceProvider = serviceProvider;
     }
     
     /// <inheritdoc/>
-    public OperationBuilder<TOperation> CreateBuilder<TOperation>() where TOperation : class, IHarmonyOperation
+    public OperationBuilder<TOperation> CreateBuilder<TOperation>()
+        where TOperation : class, IHarmonyOperation
     {
-        return new OperationBuilder<TOperation>(_serviceProvider);
+        return new OperationBuilder<TOperation>(this._serviceProvider);
     }
 }

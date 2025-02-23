@@ -1,6 +1,5 @@
 ﻿using Harmony.Cqrs.Abstractions;
 using Harmony.MinimalApis.Mappers;
-using Harmony.MinimalApis.Structure;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Todo.Api.Common.Constants;

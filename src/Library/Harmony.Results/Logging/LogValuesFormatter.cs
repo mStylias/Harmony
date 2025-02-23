@@ -13,10 +13,11 @@ internal static class LogValuesFormatter
     /// It uses reflection to get a hold of <see cref="Microsoft.Extensions.Logging.FormattedLogValues"/> which is
     /// used internally by the logging system for this purpose. There is an issue to make this public in dotnet runtime,
     /// but hasn't yet been merged. https://github.com/dotnet/runtime/issues/67577
+    /// .
     /// </summary>
-    /// <param name="message">The message template of the log</param>
-    /// <param name="args">The arguments that need to be replaced in the message template</param>
-    /// <returns>A string identical to the final log message</returns>
+    /// <param name="message">The message template of the log.</param>
+    /// <param name="args">The arguments that need to be replaced in the message template.</param>
+    /// <returns>A string identical to the final log message.</returns>
     internal static string ConvertLogMessageToString(string message, object[] args)
     {
         if (_formattedLogValuesToStringMethod is null || _getFormattedLogValuesInstanceFunc is null)

@@ -2,6 +2,7 @@
 // ReSharper disable once CheckNamespace
 
 using Harmony.Cqrs.Abstractions;
+using Harmony.Cqrs.Operations;
 
 namespace Harmony.Cqrs;
 

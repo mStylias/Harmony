@@ -1,15 +1,13 @@
 ﻿using Harmony.Cqrs.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
-// Keeping this namespace to reduce breaking changes
-// ReSharper disable once CheckNamespace
-namespace Harmony.Cqrs;
+namespace Harmony.Cqrs.Operations;
 
 public abstract class HarmonyOperation<TInput, TOutput> : IHarmonyOperationWithIO<TInput, TOutput>
 {
     public abstract TInput? Input { get; set; }
     public IServiceScope? Scope { get; set; }
-    
+
     public virtual TOutput Execute(CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
@@ -29,7 +27,7 @@ public abstract class HarmonyOperation<TInput, TOutput> : IHarmonyOperationWithI
     {
         throw new NotImplementedException();
     }
-    
+
     public virtual TResult Undo<TResult>(CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
@@ -42,10 +40,16 @@ public abstract class HarmonyOperation<TInput, TOutput> : IHarmonyOperationWithI
 
     public void Dispose()
     {
-        if (Scope is null) return;
-        
-        Scope.Dispose();
+        Dispose(true);
         GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            Scope?.Dispose();
+        }
     }
 }
 
@@ -85,17 +89,23 @@ public abstract class HarmonyOperation<TOutput> : IHarmonyOperation
 
     public void Dispose()
     {
-        if (Scope is null) return;
-        
-        Scope.Dispose();
+        Dispose(true);
         GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            Scope?.Dispose();
+        }
     }
 }
 
 public abstract class HarmonyOperation : IHarmonyOperation
 {
     public IServiceScope? Scope { get; set; }
-    
+
     public virtual void Execute(CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
@@ -128,10 +138,16 @@ public abstract class HarmonyOperation : IHarmonyOperation
 
     public void Dispose()
     {
-        if (Scope is null) return;
-        
-        Scope.Dispose();
+        Dispose(true);
         GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            Scope?.Dispose();
+        }
     }
 }
 

@@ -1,8 +1,7 @@
-﻿#if (NET8_0_OR_GREATER)
+﻿#if NET8_0_OR_GREATER
 
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace Harmony.MinimalApis.Exceptions;
@@ -13,7 +12,7 @@ public class HarmonyGlobalExceptionHandler : IExceptionHandler
 
     public HarmonyGlobalExceptionHandler(ILogger<HarmonyGlobalExceptionHandler> logger)
     {
-        _logger = logger;
+        this._logger = logger;
     }
 
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
@@ -23,7 +22,7 @@ public class HarmonyGlobalExceptionHandler : IExceptionHandler
         switch (exception)
         {
             case OperationCanceledException canceledException:
-                _logger.LogWarning(canceledException, "Operation cancelled");
+                this._logger.LogWarning(canceledException, "Operation cancelled");
 
                 problem = Microsoft.AspNetCore.Http.Results.Problem(
                     title: "OperationCancelled",
@@ -34,7 +33,7 @@ public class HarmonyGlobalExceptionHandler : IExceptionHandler
                 break;
 
             default:
-                _logger.LogError(exception, "An unhandled exception occurred");
+                this._logger.LogError(exception, "An unhandled exception occurred");
 
                 problem = Microsoft.AspNetCore.Http.Results.Problem(
                     title: "UnhandledException",
@@ -45,7 +44,7 @@ public class HarmonyGlobalExceptionHandler : IExceptionHandler
                 break;
         }
 
-        await problem.ExecuteAsync(httpContext);
+        await problem.ExecuteAsync(httpContext).ConfigureAwait(false);
         
         return true;
     }

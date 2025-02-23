@@ -1,6 +1,6 @@
 ﻿namespace Harmony.Results.Abstractions;
 
-public interface IResult<out TValue, TError> : IResultBase<TError>
+public interface IResult<out TValue, out TError> : IResultBase<TError>
 {
     TValue? Value { get; }
 }

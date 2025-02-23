@@ -12,131 +12,133 @@ public class LogBuilder
     private readonly ILogger _logger;
     private readonly LogLevel _logLevel;
     private readonly EventId? _eventId;
-    
-    internal Exception? Exception;
+    private readonly List<object> _args = new();
 
     private bool _includeLogLevelInToString = true;
     private string _message = string.Empty;
-    private readonly List<object> _args = new();
-    
+
     public LogBuilder(ILogger logger, LogLevel logLevel)
     {
-        _logger = logger;
-        _logLevel = logLevel;
+        this._logger = logger;
+        this._logLevel = logLevel;
     }
     
     public LogBuilder(ILogger logger, LogLevel logLevel, [StructuredMessageTemplate] string message)
     {
-        _logger = logger;
-        _logLevel = logLevel;
-        _message = message;
+        this._logger = logger;
+        this._logLevel = logLevel;
+        this._message = message;
     }
     
-    public LogBuilder(ILogger logger, LogLevel logLevel, [StructuredMessageTemplate] string message, 
-        params object[] args)
+    public LogBuilder(ILogger logger, LogLevel logLevel, [StructuredMessageTemplate] string message, params object[] args)
     {
-        _logger = logger;
-        _logLevel = logLevel;
-        _message = message;
-        _args.AddRange(args);
+        this._logger = logger;
+        this._logLevel = logLevel;
+        this._message = message;
+        this._args.AddRange(args);
     }
     
     public LogBuilder(ILogger logger, LogLevel logLevel, EventId eventId)
     {
-        _logger = logger;
-        _logLevel = logLevel;
-        _eventId = eventId;
+        this._logger = logger;
+        this._logLevel = logLevel;
+        this._eventId = eventId;
     }
-
+    
+    internal Exception? Exception { get; set; }
+    
     public void IncludeLogLevelInToString(bool value)
     {
-        _includeLogLevelInToString = value;
+        this._includeLogLevelInToString = value;
     }
     
     public void SetException(Exception exception)
     {
-        Exception = exception;
+        this.Exception = exception;
     }
     
     public void AppendLogMessage([StructuredMessageTemplate] string message)
     {
-        if (_message.Length == 0)
+        if (this._message.Length == 0)
         {
-            _message = message;
+            this._message = message;
             return;
         }
         
-        _message = _message.Insert(_message.Length, message);
+        this._message = this._message.Insert(this._message.Length, message);
     }
     
     public void AppendLogMessage([StructuredMessageTemplate] string message, params object[] args)
     {
-        AppendLogMessage(message);
-        _args.AddRange(args);
+        this.AppendLogMessage(message);
+        this._args.AddRange(args);
     }
     
     public void PrependLogMessage([StructuredMessageTemplate] string message)
     {
-        if (_message.Length == 0)
+        if (this._message.Length == 0)
         {
-            _message = message;
+            this._message = message;
             return;
         }
         
-        _message = _message.Insert(0, message);
+        this._message = this._message.Insert(0, message);
     }
     
     public void PrependLogMessage([StructuredMessageTemplate] string message, params object[] args)
     {
-        PrependLogMessage(message);
+        this.PrependLogMessage(message);
         
         for (int i = args.Length - 1; i >= 0; i--)
         {
-            _args.Insert(0, args[i]);
+            this._args.Insert(0, args[i]);
         }
     }
-
+    
+#pragma warning disable CA2254
     public void Log()
     {
-        if (_message == string.Empty)
+        if (string.IsNullOrEmpty(this._message))
         {
             return;
         }
         
-        object?[] parameters = _args.ToArray();
+        object?[] parameters = this._args.ToArray();
 
-        if (_eventId is null)
+        if (this._eventId is null)
         {
             // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-            _logger.Log(_logLevel, Exception, _message, parameters);
+            this._logger.Log(this._logLevel, this.Exception, this._message, parameters);
+
             return;
         }
         
         // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
-        _logger.Log(_logLevel, _eventId.Value, Exception, _message, parameters);
+        this._logger.Log(this._logLevel, this._eventId.Value, this.Exception, this._message, parameters);
     }
-
+#pragma warning restore CA2254
+    
     public override string ToString()
     {
-        var startingMessage = _includeLogLevelInToString 
-            ? $"[{_logLevel}]: " 
+        var startingMessage = this._includeLogLevelInToString 
+            ? $"[{this._logLevel}]: " 
             : string.Empty;
 
         var exceptionContent = string.Empty;
-        if (Exception is not null)
+        if (this.Exception is not null)
         {
-            exceptionContent = $"{Environment.NewLine} Exception message: {Exception.Message} + Environment.NewLine" +
-                               $"Stack trace: {Exception.StackTrace}";
+            exceptionContent = $"{Environment.NewLine} Exception message: {this.Exception.Message} + Environment.NewLine" +
+                               $"Stack trace: {this.Exception.StackTrace}";
         }
         
         // If there are no arguments, simply return the message.
-        if (_args.Count == 0)
+        if (this._args.Count == 0)
         {
-            return startingMessage + _message + exceptionContent;
+            return startingMessage + this._message + exceptionContent;
         }
         
         // Format the message with the arguments.
-        var formattedLogValues = LogValuesFormatter.ConvertLogMessageToString(_message, _args.ToArray());
+        var formattedLogValues = LogValuesFormatter.ConvertLogMessageToString(this._message, this._args.ToArray());
 
         return startingMessage + formattedLogValues + exceptionContent;
     }

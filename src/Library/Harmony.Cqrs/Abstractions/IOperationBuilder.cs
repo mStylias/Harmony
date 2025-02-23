@@ -1,6 +1,7 @@
 ﻿namespace Harmony.Cqrs.Abstractions;
 
-public interface IOperationBuilder<TOperation> where TOperation : class, IHarmonyOperation
+public interface IOperationBuilder<TOperation> 
+    where TOperation : class, IHarmonyOperation
 {
     OperationBuilder<TOperation> WithInput<TInput>(TInput input);
 

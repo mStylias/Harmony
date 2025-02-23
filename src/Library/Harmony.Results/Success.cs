@@ -2,29 +2,32 @@
 
 public class Success
 {
-    public string? Message { get; init; }
     private readonly Action? _logAction;
     
     public Success(Action logAction)
     {
-        _logAction = logAction;
+        this._logAction = logAction;
     }
     
     public Success(string message)
     {
-        Message = message;
+        this.Message = message;
     }
     
     public Success(string message, Action logAction)
     {
-        Message = message;
-        _logAction = logAction;
+        this.Message = message;
+        this._logAction = logAction;
+    }
+
+    internal Success()
+    {
     }
     
-    internal Success() {}
+    public string? Message { get; init; }
     
     public void Log()
     {
-        _logAction?.Invoke();
+        this._logAction?.Invoke();
     }
 }

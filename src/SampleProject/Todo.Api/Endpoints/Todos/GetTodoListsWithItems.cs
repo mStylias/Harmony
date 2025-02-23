@@ -1,6 +1,5 @@
 ﻿using Harmony.Cqrs.Abstractions;
 using Harmony.MinimalApis.Mappers;
-using Harmony.MinimalApis.Structure;
 using Todo.Api.Common.Constants;
 using Todo.Api.Common.HttpContext;
 using Todo.Application.Todos.Queries;

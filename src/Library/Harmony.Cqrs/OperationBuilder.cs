@@ -15,18 +15,20 @@ public class OperationBuilder<TOperation>// : IOperationBuilder<TOperation>
     
     public OperationBuilder(IServiceProvider serviceProvider)
     {
-        _harmonyOperation = serviceProvider.GetRequiredService<TOperation>();
+        this._harmonyOperation = serviceProvider.GetRequiredService<TOperation>();
     }
 
     public OperationBuilder<TOperation> WithInput<TInput>(TInput input)
     {
-        var operationWithInput = _harmonyOperation as IHarmonyOperationWithInput<TInput>;
-        Debug.Assert(operationWithInput is not null, "To use the WithInput method, the operation must have " +
-            "the input type defined in this method. Use a Command or Query that supports the given Input type.");
+        var operationWithInput = this._harmonyOperation as IHarmonyOperationWithInput<TInput>;
+        const string assertionMessage = "To use the WithInput method, the operation must have " +
+            "the input type defined in this method. Use a Command or Query that supports the given Input type.";
+        
+        Debug.Assert(operationWithInput is not null, assertionMessage);
         
         operationWithInput.Input = input;
 #if DEBUG
-        _isInputSet = true;
+        this._isInputSet = true;
 #endif
         
         return this;
@@ -36,9 +38,10 @@ public class OperationBuilder<TOperation>// : IOperationBuilder<TOperation>
         where TConfiguration : class 
     {
         // ReSharper disable once SuspiciousTypeConversion.Global
-        var operationWithConfiguration = _harmonyOperation as IConfigurable<TConfiguration>;
-        Debug.Assert(operationWithConfiguration is not null, "To use the WithConfiguration method, " +
-            "the operation must implement the IConfigurable interface.");
+        var operationWithConfiguration = this._harmonyOperation as IConfigurable<TConfiguration>;
+        const string assertionMessage = "To use the WithConfiguration method, " +
+            "the operation must implement the IConfigurable interface.";
+        Debug.Assert(operationWithConfiguration is not null, assertionMessage);
 
         operationWithConfiguration.Configuration = config;
         
@@ -49,9 +52,11 @@ public class OperationBuilder<TOperation>// : IOperationBuilder<TOperation>
         where TConfiguration : class, new()
     {
         // ReSharper disable once SuspiciousTypeConversion.Global
-        var operationWithConfiguration = _harmonyOperation as IConfigurable<TConfiguration>;
-        Debug.Assert(operationWithConfiguration is not null, "To use the WithConfiguration method, the operation must " +
-            "implement the IConfigurable interface.");
+        var operationWithConfiguration = this._harmonyOperation as IConfigurable<TConfiguration>;
+        var assertionMessage = "To use the WithConfiguration method, the operation must " +
+                               "implement the IConfigurable interface.";
+        
+        Debug.Assert(operationWithConfiguration is not null, assertionMessage);
 
         var config = new TConfiguration();
         setupConfigAction(config);
@@ -68,7 +73,7 @@ public class OperationBuilder<TOperation>// : IOperationBuilder<TOperation>
 
         // Here we check if the input is set for operations that require it. However, we don't want to disallow
         // passing a null input explicitly. That's why the _isInputSet bool is used.
-        if (inputProperty is not null && _isInputSet == false)
+        if (inputProperty is not null && this._isInputSet == false)
         {
             var warningMessage = "------------------- Harmony Warning -------------------\n" +
                 $"You haven't set the input for {operationType.Name} using the WithInput method. " +
@@ -77,6 +82,6 @@ public class OperationBuilder<TOperation>// : IOperationBuilder<TOperation>
             Debug.WriteLine(warningMessage);  
         }
 #endif
-        return _harmonyOperation;
+        return this._harmonyOperation;
     }
 }

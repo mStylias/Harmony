@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using Harmony.MinimalApis.Structure;
+using Harmony.MinimalApis.Endpoints;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,13 +12,19 @@ public static class DependencyInjectionExtensions
     {
         foreach (var type in assembly.GetTypes())
         {
-            if (type.IsClass == false || type.IsAbstract) continue;
-            
+            if (type.IsClass == false || type.IsAbstract)
+            {
+                continue;
+            }
+
             var interfaces = type.GetInterfaces();
             foreach (var @interface in interfaces)
             {
-                if (@interface != typeof(IEndpoint)) continue;
-                
+                if (@interface != typeof(IEndpoint))
+                {
+                    continue;
+                }
+
                 services.AddTransient(@interface, type);
             }
         }

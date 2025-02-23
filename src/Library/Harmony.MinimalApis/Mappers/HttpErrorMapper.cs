@@ -8,8 +8,8 @@ public static class HttpErrorMapper
     /// <summary>
     /// Creates a <see cref="Microsoft.AspNetCore.Http.IResult"/> problem response from a harmony http error.
     /// </summary>
-    /// <param name="error">The harmony http error</param>
-    /// <returns>A Microsoft.AspNetCore.Http.IResult generated from the HttpError</returns>
+    /// <param name="error">The harmony http error.</param>
+    /// <returns>A Microsoft.AspNetCore.Http.IResult generated from the HttpError.</returns>
     public static IResult MapToHttpResult(this HttpError error)
     {
         IResult problem;
@@ -22,7 +22,7 @@ public static class HttpErrorMapper
                 statusCode: error.HttpCode,
                 extensions: new Dictionary<string, object?>
                 {
-                    {"validationErrors", error.ValidationErrors}
+                    { "validationErrors", error.ValidationErrors },
                 });
         }
         else

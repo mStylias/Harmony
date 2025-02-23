@@ -5,43 +5,45 @@ using Harmony.Results.Enums;
 namespace Harmony.Results;
 
 /// <summary>
-/// The main result class for error handling without the need for exceptions
+/// The main result class for error handling without the need for exceptions.
 /// </summary>
-public readonly record struct Result<TError> : IResultBase<TError> where TError : IHarmonyError
+/// <typeparam name="TError">The developer defined error type.</typeparam>
+[SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "Reviewed.")]
+public readonly record struct Result<TError> : IResultBase<TError> 
+    where TError : IHarmonyError
 {
+    internal Result(TError error)
+    {
+        this.Error = error;
+        this.Success = null;
+    }
+
+    private Result(Success? success)
+    {
+        this.Success = success;
+        this.Error = default;
+    }
+
     public TError? Error { get; }
+    
     public Success? Success { get; }
     
     [MemberNotNullWhen(true, nameof(Error))]
-    public bool IsError => Error is not null && Error.Severity == Severity.Error;
+    public bool IsError => this.Error is not null && this.Error.Severity == Severity.Error;
     
     [MemberNotNullWhen(true, nameof(Error))]
-    public bool IsWarning => Error is not null && Error.Severity == Severity.Warning;
+    public bool IsWarning => this.Error is not null && this.Error.Severity == Severity.Warning;
     
     [MemberNotNullWhen(false, nameof(Error))]
-    public bool IsSuccess => !IsError;
-    public void LogSuccess()
-    {
-        Success?.Log();
-    }
-
-    internal Result(TError error)
-    {
-        Error = error;
-        Success = null;
-    }
+    public bool IsSuccess => !this.IsError;
     
-    internal Result(Success? success)
-    {
-        Success = success;
-        Error = default;
-    }
-
     // Implicit operators
+#pragma warning disable CA2225
     public static implicit operator Result<TError>(TError error)
     {
-        return Result<TError>.Fail(error);
+        return Fail(error);
     }
+#pragma warning restore CA2225
     
     public static implicit operator Result<TError>(Success success)
     {
@@ -49,6 +51,7 @@ public readonly record struct Result<TError> : IResultBase<TError> where TError 
     }
     
     // Creator methods
+#pragma warning disable CA1000
     public static Result<TError> Fail(TError error)
     {
         return new Result<TError>(error);
@@ -78,5 +81,21 @@ public readonly record struct Result<TError> : IResultBase<TError> where TError 
     public static Result<TValue, TError> Ok<TValue>(TValue value)
     {
         return Result<TValue, TError>.Ok(value);
+    }
+#pragma warning restore CA1000
+    
+    public void LogSuccess()
+    {
+        this.Success?.Log();
+    }
+
+    public Result<TError> FromSuccess(Success success)
+    {
+        return new Result<TError>(success);
+    }
+
+    public Result<TError> FromError(TError error)
+    {
+        return Fail(error);
     }
 }

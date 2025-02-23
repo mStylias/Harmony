@@ -9,10 +9,8 @@ public static class DependencyInjectionExtensions
 {
     /// <summary>
     /// Adds all the required harmony services including all the commands, queries and validators
-    /// in the specified assembly. If you want to use scoped services for the operations, set the useScopeFactory to true
+    /// in the specified assembly. If you want to use scoped services for the operations, set the useScopeFactory to true.
     /// </summary>
-    /// <param name="services"></param>
-    /// <param name="assembly"></param>
     public static IServiceCollection AddHarmony(this IServiceCollection services, Assembly assembly)
     {
         var assemblyTypes = assembly.GetTypes();
@@ -52,7 +50,9 @@ public static class DependencyInjectionExtensions
         return commandTypes;
     }
     
-    private static IServiceCollection AddHarmonyOperations(this IServiceCollection services, Type[] queryTypes, 
+    private static IServiceCollection AddHarmonyOperations(
+        this IServiceCollection services, 
+        Type[] queryTypes, 
         Type[] commandTypes)
     {
         foreach (var type in queryTypes)
@@ -77,13 +77,14 @@ public static class DependencyInjectionExtensions
             {
                 return true;
             }
+            
             toCheck = toCheck.BaseType;
         }
+        
         return false;
     }
     
-    private static IServiceCollection AddHarmonyOperationValidators(this IServiceCollection services, 
-        Type[] assemblyTypes)
+    private static IServiceCollection AddHarmonyOperationValidators(this IServiceCollection services, Type[] assemblyTypes)
     {
         var validatorTypes = assemblyTypes
             .Where(t => 
@@ -103,7 +104,9 @@ public static class DependencyInjectionExtensions
     private static bool IsHarmonyOperationValidatorInterface(Type type)
     {
         if (!type.IsGenericType)
+        {
             return false;
+        }
 
         var typeDefinition = type.GetGenericTypeDefinition();
         return typeDefinition == typeof(IOperationValidator<,>);

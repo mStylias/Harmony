@@ -2,5 +2,5 @@
 
 public interface ILogAggregator
 {
-    List<Action> LogActions { get; }
+    ICollection<Action> LogActions { get; }
 }

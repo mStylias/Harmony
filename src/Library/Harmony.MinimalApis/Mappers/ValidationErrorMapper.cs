@@ -13,7 +13,7 @@ public static class ValidationErrorMapper
             statusCode: statusCode,
             extensions: new Dictionary<string, object?>
             {
-                {"validationErrors", error.InnerErrors}
+                { "validationErrors", error.InnerErrors },
             });
 
         return problem;
