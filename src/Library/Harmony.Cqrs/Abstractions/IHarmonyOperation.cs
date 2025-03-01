@@ -1,12 +1,13 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿namespace Harmony.Cqrs.Abstractions;
 
-namespace Harmony.Cqrs.Abstractions;
-
-public interface IHarmonyOperation : IDisposable
+public interface IHarmonyOperation : IOperationBase
 {
-    public IServiceScope? Scope { get; set; }
-    public void Undo(CancellationToken cancellationToken);
-    public Task UndoAsync(CancellationToken cancellationToken);
-    TResult Undo<TResult>(CancellationToken cancellationToken);
-    Task<TResult> UndoAsync<TResult>(CancellationToken cancellationToken);
+    void Execute(CancellationToken cancellationToken = default);
+    Task ExecuteAsync(CancellationToken cancellationToken = default);
+}
+
+public interface IHarmonyOperation<TOutput> : IOperationBase
+{
+    TOutput Execute(CancellationToken cancellationToken = default);
+    Task<TOutput> ExecuteAsync(CancellationToken cancellationToken = default);
 }

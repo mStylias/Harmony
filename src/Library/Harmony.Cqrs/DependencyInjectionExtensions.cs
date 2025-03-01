@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Harmony.Cqrs.Abstractions;
+using Harmony.Cqrs.Operations;
 using Harmony.Cqrs.Validators;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,7 +12,7 @@ public static class DependencyInjectionExtensions
     /// Adds all the required harmony services including all the commands, queries and validators
     /// in the specified assembly. If you want to use scoped services for the operations, set the useScopeFactory to true.
     /// </summary>
-    public static IServiceCollection AddHarmony(this IServiceCollection services, Assembly assembly)
+    public static IServiceCollection AddHarmonyCqrs(this IServiceCollection services, Assembly assembly)
     {
         var assemblyTypes = assembly.GetTypes();
         var queryTypes = GetQueryTypes(assemblyTypes);
@@ -21,7 +22,7 @@ public static class DependencyInjectionExtensions
             .AddHarmonyOperations(queryTypes, commandTypes)
             .AddHarmonyOperationValidators(assemblyTypes);
 
-        services.AddScoped<IOperationFactory, OperationFactory>();
+        services.AddScoped<IOperationsManager, OperationsManager>();
         
         return services;
     }
@@ -31,8 +32,7 @@ public static class DependencyInjectionExtensions
         var queryTypes = assemblyTypes
             .Where(t => 
                 IsSubclassOfRawGeneric(typeof(Query), t) ||
-                IsSubclassOfRawGeneric(typeof(Query<>), t) ||
-                IsSubclassOfRawGeneric(typeof(Query<,>), t))
+                IsSubclassOfRawGeneric(typeof(Query<>), t))
             .ToArray();
 
         return queryTypes;
@@ -43,8 +43,7 @@ public static class DependencyInjectionExtensions
         var commandTypes = assemblyTypes
             .Where(t => 
                 IsSubclassOfRawGeneric(typeof(Command), t) ||
-                IsSubclassOfRawGeneric(typeof(Command<>), t) ||
-                IsSubclassOfRawGeneric(typeof(Command<,>), t))
+                IsSubclassOfRawGeneric(typeof(Command<>), t))
             .ToArray();
 
         return commandTypes;

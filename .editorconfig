@@ -10,6 +10,8 @@ dotnet_diagnostic.CA1812.severity = none    # Avoid uninstantiated internal clas
 dotnet_diagnostic.CA1848.severity = none    # Use LoggerMessage delegates for improved logging performance
 dotnet_diagnostic.CA1852.severity = none    # Seal internal types
 
+dotnet_diagnostic.CS1998.severity = suggestion    # Async method lacks 'await' operators and will run synchronously
+
 # Disable StyleCop warnings
 dotnet_diagnostic.SA0001.severity = none    # XML comment analysis disabled due to project configuration
 dotnet_diagnostic.SA1028.severity = none    # Code should not contain trailing whitespace

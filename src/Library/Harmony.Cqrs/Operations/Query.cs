@@ -1,11 +1,4 @@
-﻿// Keeping this namespace to reduce breaking changes
-// ReSharper disable once CheckNamespace
+﻿namespace Harmony.Cqrs.Operations;
 
-using Harmony.Cqrs.Abstractions;
-using Harmony.Cqrs.Operations;
-
-namespace Harmony.Cqrs;
-
-public abstract class Query<TInput, TOutput> : HarmonyOperation<TInput, TOutput>, IHarmonyOperation;
-public abstract class Query<TOutput> : HarmonyOperation<TOutput>, IHarmonyOperation;
-public abstract class Query : HarmonyOperation, IHarmonyOperation;
+public abstract class Query : HarmonyOperation;
+public abstract class Query<TOutput> : HarmonyOperation<TOutput>;
