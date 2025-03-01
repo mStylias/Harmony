@@ -18,15 +18,16 @@ internal class Signup : IEndpoint
     public RouteHandlerBuilder AddEndpoint(IEndpointRouteBuilder app)
     {
         return app.MapPost($"{EndpointBasePathNames.Auth}/signup", async Task<IResult> (
-                HttpContext httpContext,
-                [FromBody] SignupRequest signupRequest, 
-                [FromServices] IOperationFactory operationFactory,
-                [FromServices] IAuthCookiesService authCookiesService) =>
+            HttpContext httpContext,
+            [FromBody] SignupRequest signupRequest, 
+            [FromServices] IOperationsManager operationFactory,
+            [FromServices] IAuthCookiesService authCookiesService) =>
         {
-            var signupCommand = operationFactory.CreateBuilder<SignupCommand>()
-                .WithInput(signupRequest)
-                .Build();
-            
+            var signupCommand = operationFactory.CreateOperation<SignupCommand>(c =>
+            {
+                c.SignupRequest = signupRequest;
+            });
+        
             var signupResult = await signupCommand.ExecuteAsync();
             if (signupResult.IsError)
             {

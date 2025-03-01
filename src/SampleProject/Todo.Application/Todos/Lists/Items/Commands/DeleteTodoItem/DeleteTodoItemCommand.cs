@@ -1,4 +1,4 @@
-﻿using Harmony.Cqrs;
+﻿using Harmony.Cqrs.Operations;
 using Harmony.Cqrs.Validators;
 using Harmony.MinimalApis.Errors;
 using Harmony.Results;
@@ -10,7 +10,7 @@ using Todo.Domain.Errors.Inner;
 
 namespace Todo.Application.Todos.Lists.Items.Commands.DeleteTodoItem;
 
-public class DeleteTodoItemCommand : Command<DeleteTodoItemInput, Result<HttpError>>
+public class DeleteTodoItemCommand : Command<Result<HttpError>>
 {
     private readonly ILogger<DeleteTodoItemCommand> _logger;
     private readonly IOperationValidator<DeleteTodoItemCommand, Result<HttpError>> _validator;
@@ -26,7 +26,7 @@ public class DeleteTodoItemCommand : Command<DeleteTodoItemInput, Result<HttpErr
         _todosRepository = todosRepository;
     }
 
-    public override DeleteTodoItemInput? Input { get; set; }
+    public DeleteTodoItemInput? Input { get; set; }
 
     public override async Task<Result<HttpError>> ExecuteAsync(CancellationToken cancellationToken = default)
     {

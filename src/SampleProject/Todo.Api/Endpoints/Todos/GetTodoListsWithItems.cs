@@ -16,15 +16,16 @@ internal class GetTodoListsWithItems : IEndpoint
     {
         return app.MapGet($"{EndpointBasePathNames.Todos}", async Task<IResult> (
                 HttpContext httpContext,
-                IOperationFactory operationFactory) =>
+                IOperationsManager operationsManager) =>
             {
                 var userId = httpContext.GetUserId();
 
-                var query = operationFactory.CreateBuilder<TodoListsWithItemsQuery>()
-                    .WithInput(userId)
-                    .Build();
+                var query = operationsManager.CreateOperation<TodoListsWithItemsQuery>(q =>
+                {
+                    q.Input = userId;
+                });
 
-                var result = await query.ExecuteAsync();
+                var result = await operationsManager.ExecuteOperationAsync(query);
                 if (result.IsError)
                 {
                     // Here we don't want to log the error, but in another place we might have wanted to.

@@ -1,4 +1,4 @@
-﻿using Harmony.Cqrs;
+﻿using Harmony.Cqrs.Operations;
 using Harmony.Cqrs.Validators;
 using Harmony.MinimalApis.Errors;
 using Harmony.Results;
@@ -8,7 +8,7 @@ using Todo.Domain.Entities.Todos;
 
 namespace Todo.Application.Todos.Lists.Commands.CreateTodoList;
 
-public class CreateTodoListCommand : Command<CreateTodoListInput, Result<TodoList, HttpError>>
+public class CreateTodoListCommand : Command<Result<TodoList, HttpError>>
 {
     private readonly ILogger<CreateTodoListCommand> _logger;
     private readonly IOperationValidator<CreateTodoListCommand, Result<HttpError>> _validator;
@@ -24,7 +24,7 @@ public class CreateTodoListCommand : Command<CreateTodoListInput, Result<TodoLis
         _todosRepository = todosRepository;
     }
 
-    public override CreateTodoListInput? Input { get; set; }
+    public CreateTodoListInput? Input { get; set; }
 
     public override async Task<Result<TodoList, HttpError>> ExecuteAsync(CancellationToken cancellationToken = default)
     {

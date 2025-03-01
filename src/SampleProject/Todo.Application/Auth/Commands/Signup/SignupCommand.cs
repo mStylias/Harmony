@@ -1,5 +1,5 @@
-﻿using Harmony.Cqrs;
-using Harmony.Cqrs.Abstractions;
+﻿using Harmony.Cqrs.Abstractions;
+using Harmony.Cqrs.Operations;
 using Harmony.Cqrs.Validators;
 using Harmony.MinimalApis.Errors;
 using Harmony.Results;
@@ -16,7 +16,7 @@ using Todo.Domain.Successes;
 
 namespace Todo.Application.Auth.Commands.Signup;
 
-public class SignupCommand : Command<SignupRequest, Result<AuthTokensModel, HttpError>>, IWithMetadata<bool>
+public class SignupCommand : Command<Result<AuthTokensModel, HttpError>>, IWithMetadata<bool>
 {
     private readonly ILogger<SignupCommand> _logger;
     private readonly IAuthRepository _authRepository;
@@ -36,7 +36,7 @@ public class SignupCommand : Command<SignupRequest, Result<AuthTokensModel, Http
     }
 
     public bool Metadata { get; set; } = true;
-    public override SignupRequest? Input { get; set; }
+    public SignupRequest? SignupRequest { get; set; }
     public override async Task<Result<AuthTokensModel, HttpError>> ExecuteAsync(
         CancellationToken cancellationToken = default)
     {
@@ -47,15 +47,13 @@ public class SignupCommand : Command<SignupRequest, Result<AuthTokensModel, Http
         }
         
         // At this point signup request is guaranteed to have a value, because it is checked in the validator
-        var signupRequest = Input!;
-        
         var user = new User
         {
-            UserName = signupRequest.Email,
-            Email = signupRequest.Email,
+            UserName = SignupRequest!.Email,
+            Email = SignupRequest.Email,
         };
         
-        IdentityResult userCreationResult = await _authRepository.CreateUserAsync(user, signupRequest.Password)
+        IdentityResult userCreationResult = await _authRepository.CreateUserAsync(user, SignupRequest.Password)
             .ConfigureAwait(false);
         if (userCreationResult.Succeeded == false)
         {

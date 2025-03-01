@@ -1,4 +1,4 @@
-﻿using Harmony.Cqrs;
+﻿using Harmony.Cqrs.Operations;
 using Harmony.MinimalApis.Errors;
 using Harmony.Results;
 using Microsoft.AspNetCore.Identity.Data;
@@ -11,7 +11,7 @@ using Todo.Domain.Successes;
 
 namespace Todo.Application.Auth.Commands.RefreshToken;
 
-public class RefreshTokenCommand : Command<RefreshRequest, Result<AuthTokensModel, HttpError>>
+public class RefreshTokenCommand : Command<Result<AuthTokensModel, HttpError>>
 {
     private readonly ILogger<RefreshTokenCommand> _logger;
     private readonly ITokenCreationService _tokenCreationService;
@@ -30,23 +30,22 @@ public class RefreshTokenCommand : Command<RefreshRequest, Result<AuthTokensMode
         _refreshTokenValidator = refreshTokenValidator;
     }
     
-    public override RefreshRequest? Input { get; set; }
+    public RefreshRequest? RefreshRequest { get; set; }
 
     public override async Task<Result<AuthTokensModel, HttpError>> ExecuteAsync(CancellationToken cancellationToken = default)
     {
-        var refreshRequest = Input;
-        if (refreshRequest is null)
+        if (RefreshRequest is null)
         {
-            return DomainErrors.General.NullReferenceError(_logger, nameof(refreshRequest));
+            return DomainErrors.General.NullReferenceError(_logger, nameof(RefreshRequest));
         }
         
-        var validationResult = _refreshTokenValidator.Validate(refreshRequest.RefreshToken);
+        var validationResult = _refreshTokenValidator.Validate(RefreshRequest.RefreshToken);
         if (validationResult.IsError)
         {
             return validationResult.Error;
         }
                 
-        var userIdResult = await _authRepository.GetUserIdByRefreshToken(refreshRequest.RefreshToken, cancellationToken)
+        var userIdResult = await _authRepository.GetUserIdByRefreshToken(RefreshRequest.RefreshToken, cancellationToken)
             .ConfigureAwait(false);
         if (userIdResult.IsError)
         {

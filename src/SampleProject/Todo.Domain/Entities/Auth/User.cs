@@ -5,7 +5,7 @@ namespace Todo.Domain.Entities.Auth;
 /// <summary>
 /// Represents a user of our application and also an IdentityUser for auth.
 /// For now this class doesn't add anything to the IdentityUser class, but in most cases there will be a business
-/// requirement to add more columns to users
+/// requirement to add more columns to users.
 /// </summary>
 public class User : IdentityUser
 {

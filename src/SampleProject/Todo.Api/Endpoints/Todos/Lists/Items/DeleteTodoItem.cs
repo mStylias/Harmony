@@ -22,7 +22,7 @@ internal class DeleteTodoItem : IEndpoint
                 int todoItemId,
                 ILogger<DeleteTodoList> logger,
                 HttpContext httpContext,
-                IOperationFactory operationFactory) =>
+                IOperationsManager operationsManager) =>
             {
                 var userId = httpContext.GetUserId();
                 if (userId is null)
@@ -30,11 +30,12 @@ internal class DeleteTodoItem : IEndpoint
                     return DomainErrors.Auth.AccessDenied(logger, null).MapToHttpResult();
                 }
 
-                var deleteOperation = operationFactory.CreateBuilder<DeleteTodoItemCommand>()
-                    .WithInput(new DeleteTodoItemInput(todoItemId, todoListId, userId))
-                    .Build();
+                var deleteOperation = operationsManager.CreateOperation<DeleteTodoItemCommand>(c =>
+                {
+                    c.Input = new DeleteTodoItemInput(todoItemId, todoListId, userId);
+                });
                 
-                var deleteResult = await deleteOperation.ExecuteAsync();
+                var deleteResult = await operationsManager.ExecuteOperationAsync(deleteOperation);
                 if (deleteResult.IsError)
                 {
                     return deleteResult.Error.MapToHttpResult();

@@ -3,7 +3,7 @@
 namespace Todo.Domain.Entities.Todos;
 
 /// <summary>
-/// This entity represents an individual todo that can be added to a <see cref="TodoList"/>>
+/// This entity represents an individual todo that can be added to a <see cref="TodoList"/>>.
 /// </summary>
 public class TodoItem
 {

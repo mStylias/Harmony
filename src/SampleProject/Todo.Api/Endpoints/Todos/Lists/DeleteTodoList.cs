@@ -19,17 +19,18 @@ internal class DeleteTodoList : IEndpoint
                 int todoListId,
                 ILogger<DeleteTodoList> logger,
                 HttpContext httpContext,
-                IOperationFactory operationFactory) =>
+                IOperationsManager operationsManager) =>
             {
                 var userId = httpContext.GetUserId();
                 if (userId is null)
                 {
                     return DomainErrors.Auth.AccessDenied(logger, null).MapToHttpResult();
                 }
-                
-                var deleteOperation = operationFactory.CreateBuilder<DeleteTodoListCommand>()
-                    .WithInput(new DeleteTodoListInput(todoListId, userId))
-                    .Build();
+
+                var deleteOperation = operationsManager.CreateOperation<DeleteTodoListCommand>(c =>
+                {
+                    c.Input = new DeleteTodoListInput(todoListId, userId);
+                });
                 
                 var deleteResult = await deleteOperation.ExecuteAsync();
                 if (deleteResult.IsError)

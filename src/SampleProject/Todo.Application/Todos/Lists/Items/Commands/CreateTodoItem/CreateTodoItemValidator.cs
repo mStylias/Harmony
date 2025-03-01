@@ -29,55 +29,51 @@ public class CreateTodoItemValidator : IOperationValidator<CreateTodoItemCommand
         CreateTodoItemCommand command, 
         CancellationToken cancellationToken = default)
     {
-        // This is a debug only check to ensure that the caller of the command provides an input
-        Debug.Assert(command.Input is not null, $"You must provide an input to '{nameof(CreateTodoItemCommand)}'");
-
-        var createTodoItemRequest = command.Input;
         var validationErrors = new List<ValidationInnerError>();
 
-        if (Enum.IsDefined(typeof(TodoStatus), (int)createTodoItemRequest.Status) == false)
+        if (Enum.IsDefined(typeof(TodoStatus), (int)command.TodoStatus) == false)
         {
             validationErrors.Add(new ValidationInnerError(
                 InnerErrorCodes.Validation.InvalidEnumValue,
-                $"The status '{createTodoItemRequest.Status}' is not a valid value",
-                nameof(createTodoItemRequest.Status)));
+                $"The status '{command.TodoStatus}' is not a valid value",
+                nameof(command.TodoStatus)));
         }
         
-        var nameLength = createTodoItemRequest.Name.Length;
+        var nameLength = command.TodoName.Length;
         if (nameLength > DomainRules.Todos.MaximumTodoItemNameCharacters)
         {
             validationErrors.Add(new ValidationInnerError(
                 InnerErrorCodes.Validation.MaximumCharactersExceeded,
                 $"The name of the todo item exceeds the maximum of '{DomainRules.Todos.MaximumTodoItemNameCharacters}' " +
                 "characters", 
-                nameof(createTodoItemRequest.Name)));
+                nameof(command.TodoName)));
         }
         
         var todoList = await _todosRepository.GetTodoListById(
-            createTodoItemRequest.TodoListId, 
+            command.TodoListId, 
             cancellationToken).ConfigureAwait(false);
         
         if (todoList is null)
         {
             validationErrors.Add(new ValidationInnerError(
                 InnerErrorCodes.Validation.EntityDoesNotExist,
-                $"The todo list with id '{createTodoItemRequest.TodoListId}' " +
+                $"The todo list with id '{command.TodoListId}' " +
                 $"does not exist", 
-                nameof(createTodoItemRequest.TodoListId)));
+                nameof(command.TodoListId)));
         }
 
-        if (todoList is not null && todoList.UserId != createTodoItemRequest.UserId)
+        if (todoList is not null && todoList.UserId != command.UserId)
         {
             validationErrors.Add(new ValidationInnerError(
                 InnerErrorCodes.Validation.NoPermission,
-                $"The todo list with id '{createTodoItemRequest.TodoListId}' " +
+                $"The todo list with id '{command.TodoListId}' " +
                 $"doesn't belong to this user", 
-                nameof(createTodoItemRequest.TodoListId)));
+                nameof(command.TodoListId)));
         }
         
         var nameAlreadyExists = await _todosRepository.TodoItemExistsAsync(
-            createTodoItemRequest.Name, 
-            createTodoItemRequest.TodoListId, 
+            command.TodoName, 
+            command.TodoListId, 
             cancellationToken).ConfigureAwait(false);
         
         if (nameAlreadyExists)
@@ -85,7 +81,7 @@ public class CreateTodoItemValidator : IOperationValidator<CreateTodoItemCommand
             validationErrors.Add(new ValidationInnerError(
                 InnerErrorCodes.Validation.EntityAlreadyExists,
                 "A todo item with the same name already exists in the todo list", 
-                nameof(createTodoItemRequest.Name)));
+                nameof(command.TodoName)));
         }
         
         if (validationErrors.Count > 0)

@@ -21,9 +21,8 @@ public class SignupValidator : IOperationValidator<SignupCommand, Result<HttpErr
     public async Task<Result<HttpError>> ValidateAsync(SignupCommand command, CancellationToken cancellationToken)
     {
         var validationErrors = new List<ValidationInnerError>();
-        var signupRequest = command.Input;
-        
-        if (signupRequest is null)
+
+        if (command.SignupRequest is null)
         {
             validationErrors.Add(new ValidationInnerError(
                 InnerErrorCodes.Validation.NullSignupRequest,
@@ -33,7 +32,7 @@ public class SignupValidator : IOperationValidator<SignupCommand, Result<HttpErr
             return DomainErrors.General.ValidationError(_logger, validationErrors);
         }
         
-        if (signupRequest.Password != signupRequest.ConfirmPassword)
+        if (command.SignupRequest.Password != command.SignupRequest.ConfirmPassword)
         {
             validationErrors.Add(new ValidationInnerError(
                 InnerErrorCodes.Validation.PasswordsDontMatch,

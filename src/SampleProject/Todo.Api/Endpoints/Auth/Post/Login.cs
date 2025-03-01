@@ -19,15 +19,18 @@ internal class Login : IEndpoint
     {
         return app.MapPost($"{EndpointBasePathNames.Auth}/login", async Task<IResult> (
             HttpContext httpContext,
+            CancellationToken cancellationToken,
             [FromBody] LoginRequest loginRequest,
-            [FromServices] IOperationFactory operationFactory,
+            [FromServices] IOperationsManager operationsManager,
             [FromServices] IAuthCookiesService authCookiesService) =>
             {
-                var loginQuery = operationFactory.CreateBuilder<LoginQuery>()
-                    .WithInput(loginRequest)
-                    .Build();
-            
-                var loginResult = await loginQuery.ExecuteAsync();
+                var loginQuery = operationsManager.CreateOperation<LoginQuery>(query =>
+                {
+                    query.LoginRequest = loginRequest;
+                });
+                
+                var loginResult = await operationsManager.ExecuteOperationAsync(loginQuery, cancellationToken);
+                    
                 if (loginResult.IsError)
                 {
                     loginResult.Error.Log();

@@ -21,7 +21,7 @@ internal class CreateTodoList : IEndpoint
         return app.MapPost($"{EndpointBasePathNames.Todos}/lists", async Task<IResult> (
             HttpContext httpContext,
             [FromServices] ILogger<CreateTodoList> logger,
-            [FromServices] IOperationFactory operationFactory,
+            [FromServices] IOperationsManager operationsManager,
             [FromBody] CreateTodoListRequest createTodoListRequest) =>
         {
             var userId = httpContext.GetUserId();
@@ -30,11 +30,15 @@ internal class CreateTodoList : IEndpoint
                 return DomainErrors.Auth.AccessDenied(logger, null).MapToHttpResult();
             }
 
-            var createCommand = operationFactory.CreateBuilder<CreateTodoListCommand>()
-                .WithInput(new CreateTodoListInput(userId, createTodoListRequest.Name, createTodoListRequest.Description))
-                .Build();
-            
-            var result = await createCommand.ExecuteAsync();
+            var createCommand = operationsManager.CreateOperation<CreateTodoListCommand>(c =>
+            {
+                c.Input = new CreateTodoListInput(
+                    userId,
+                    createTodoListRequest.Name,
+                    createTodoListRequest.Description);
+            });
+
+            var result = await operationsManager.ExecuteOperationAsync(createCommand);
             if (result.IsError)
             {
                 result.Error.Log();

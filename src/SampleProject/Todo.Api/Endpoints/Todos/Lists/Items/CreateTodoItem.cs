@@ -29,7 +29,7 @@ internal class CreateTodoItem : IEndpoint
             int listId,
             HttpContext httpContext,
             [FromServices] ILogger<CreateTodoList> logger,
-            [FromServices] IOperationFactory operationFactory,
+            [FromServices] IOperationsManager operationFactory,
             [FromBody] CreateTodoItemRequest createTodoItemRequest) =>
         {
             var userId = httpContext.GetUserId();
@@ -38,13 +38,16 @@ internal class CreateTodoItem : IEndpoint
                 return DomainErrors.Auth.AccessDenied(logger, null).MapToHttpResult();
             }
 
-            var (name, description, todoStatus) = createTodoItemRequest;
-
-            var createCommand = operationFactory.CreateBuilder<CreateTodoItemCommand>()
-                .WithInput(new CreateTodoItemInput(name, description, todoStatus, listId, userId))
-                .Build();
+            var createCommand = operationFactory.CreateOperation<CreateTodoItemCommand>(c =>
+            {
+                c.TodoName = createTodoItemRequest.Name;
+                c.TodoDescription = createTodoItemRequest.Description;
+                c.TodoStatus = createTodoItemRequest.Status;
+                c.TodoListId = listId;
+                c.UserId = userId;
+            });
             
-            var result = await createCommand.ExecuteAsync();
+            var result = await operationFactory.ExecuteOperationAsync(createCommand);
             if (result.IsError)
             {
                 result.Error.Log();

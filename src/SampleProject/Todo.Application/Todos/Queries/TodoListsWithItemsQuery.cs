@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using Harmony.Cqrs;
+using Harmony.Cqrs.Operations;
 using Harmony.MinimalApis.Errors;
 using Harmony.Results;
 using Harmony.Results.ErrorTypes.InnerErrorTypes;
@@ -15,7 +15,7 @@ namespace Todo.Application.Todos.Queries;
 /// <summary>
 /// Fetches all todo lists with their items for the user with the given id.
 /// </summary>
-public class TodoListsWithItemsQuery : Query<string?, Result<TodoListsWithItemsResponse, HttpError>>
+public class TodoListsWithItemsQuery : Query<Result<TodoListsWithItemsResponse, HttpError>>
 {
     private readonly ILogger<TodoListsWithItemsQuery> _logger;
     private readonly ITodosRepository _todosRepository;
@@ -28,7 +28,7 @@ public class TodoListsWithItemsQuery : Query<string?, Result<TodoListsWithItemsR
         _todosRepository = todosRepository;
     }
     
-    public override string? Input { get; set; }
+    public string? Input { get; set; }
 
     public override async Task<Result<TodoListsWithItemsResponse, HttpError>> ExecuteAsync(
         CancellationToken cancellationToken = default)
@@ -43,12 +43,7 @@ public class TodoListsWithItemsQuery : Query<string?, Result<TodoListsWithItemsR
 
         if (todoLists.Length == 0)
         {
-            return DomainErrors.General.ValidationError(_logger, [
-                new ValidationInnerError(
-                    InnerErrorCodes.Validation.EntityDoesNotExist,
-                    "No todo lists found for the given user id",
-                    nameof(todoLists))
-            ]);
+            return new TodoListsWithItemsResponse(new List<TodoListWithItemsResponse>());
         }
         
         var allTodoItems = await _todosRepository

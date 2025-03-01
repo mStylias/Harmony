@@ -7,7 +7,7 @@ public static class DependencyInjectionExtensions
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AddHarmony(typeof(DependencyInjectionExtensions).Assembly);
+        services.AddHarmonyCqrs(typeof(DependencyInjectionExtensions).Assembly);
         
         return services;
     }

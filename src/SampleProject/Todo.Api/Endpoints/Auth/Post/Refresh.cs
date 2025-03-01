@@ -21,13 +21,14 @@ internal class Refresh : IEndpoint
                 HttpContext httpContext,
                 [FromBody] RefreshRequest refreshRequest,
                 [FromServices] IAuthCookiesService authCookiesService,
-                [FromServices] IOperationFactory operationFactory) =>
+                [FromServices] IOperationsManager operationsManager) =>
             {
-                var refreshTokenCommand = operationFactory.CreateBuilder<RefreshTokenCommand>()
-                    .WithInput(refreshRequest)
-                    .Build();
+                var refreshTokenCommand = operationsManager.CreateOperation<RefreshTokenCommand>(c =>
+                {
+                    c.RefreshRequest = refreshRequest;
+                });
 
-                var refreshResult = await refreshTokenCommand.ExecuteAsync();
+                var refreshResult = await operationsManager.ExecuteOperationAsync(refreshTokenCommand);
                 if (refreshResult.IsError)
                 {
                     refreshResult.Error.Log();

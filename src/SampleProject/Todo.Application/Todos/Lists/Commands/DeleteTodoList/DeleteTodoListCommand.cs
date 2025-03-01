@@ -1,4 +1,4 @@
-﻿using Harmony.Cqrs;
+﻿using Harmony.Cqrs.Operations;
 using Harmony.Cqrs.Validators;
 using Harmony.MinimalApis.Errors;
 using Harmony.Results;
@@ -6,7 +6,7 @@ using Todo.Application.Common.Abstractions.Repositories;
 
 namespace Todo.Application.Todos.Lists.Commands.DeleteTodoList;
 
-public class DeleteTodoListCommand : Command<DeleteTodoListInput, Result<HttpError>>
+public class DeleteTodoListCommand : Command<Result<HttpError>>
 {
     private readonly IOperationValidator<DeleteTodoListCommand, Result<HttpError>> _validator;
     private readonly ITodosRepository _todosRepository;
@@ -19,7 +19,7 @@ public class DeleteTodoListCommand : Command<DeleteTodoListInput, Result<HttpErr
         _todosRepository = todosRepository;
     }
     
-    public override DeleteTodoListInput? Input { get; set; }
+    public DeleteTodoListInput? Input { get; set; }
 
     public override async Task<Result<HttpError>> ExecuteAsync(CancellationToken cancellationToken = default)
     {
