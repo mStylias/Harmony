@@ -1,9 +1,16 @@
 using DataAccessDemo;
+using DataAccessDemo.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 builder.Services.AddPresentation(builder.Configuration);
+
+builder.Services.AddDbContext<AppDbContext>(opts =>
+{
+    opts.UseNpgsql(builder.Configuration.GetConnectionString("Default"));
+});
 
 var app = builder.Build();
 
@@ -15,7 +22,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("test", () =>
+app.MapGet("test", (AppDbContext dbContext) =>
     {
         return "test";
     })

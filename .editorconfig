@@ -26,4 +26,5 @@ dotnet_diagnostic.SA1518.severity = none    # Code should not contain blank line
 dotnet_diagnostic.SA1600.severity = none    # Element should be documented
 dotnet_diagnostic.SA1601.severity = none    # Partial elements should be documented
 dotnet_diagnostic.SA1602.severity = none    # Enumeration items should be documented
+dotnet_diagnostic.SA1623.severity = none    # Documentation of get property must start with Gets
 dotnet_diagnostic.SA1633.severity = none    # File header is missing
