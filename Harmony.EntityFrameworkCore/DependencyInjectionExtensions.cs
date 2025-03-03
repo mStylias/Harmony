@@ -1,14 +1,16 @@
 ﻿using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Harmony.EntityFrameworkCore;
 
 public static class DependencyInjectionExtensions
 {
-    public static IServiceCollection AddHarmonyEfCore(
+    public static IServiceCollection AddHarmonyEfCore<TDbContext>(
         this IServiceCollection services, 
-        ServiceLifetime repositoriesLifetime, 
-        Assembly entitiesAssembly)
+        Assembly entitiesAssembly,
+        ServiceLifetime repositoriesLifetime = ServiceLifetime.Scoped)
+        where TDbContext : DbContext
     {
         var assemblyTypes = entitiesAssembly.GetTypes();
         var entityTypes = assemblyTypes
@@ -18,9 +20,33 @@ public static class DependencyInjectionExtensions
         {
             var repositoryInterfaceType = typeof(IRepository<>).MakeGenericType(entityType);
             var repositoryImplementationType = typeof(Repository<>).MakeGenericType(entityType);
-
-            // Register the interface and implementation with the given lifetime
-            services.Add(new ServiceDescriptor(repositoryInterfaceType, repositoryImplementationType, repositoriesLifetime));
+            
+            switch (repositoriesLifetime)
+            {
+                case ServiceLifetime.Singleton:
+                    services.AddSingleton(repositoryInterfaceType, serviceProvider =>
+                    {
+                        var dbContext = serviceProvider.GetRequiredService<TDbContext>();
+                        return Activator.CreateInstance(repositoryImplementationType, dbContext)!;
+                    });
+                    break;
+                case ServiceLifetime.Scoped:
+                    services.AddScoped(repositoryInterfaceType, serviceProvider =>
+                    {
+                        var dbContext = serviceProvider.GetRequiredService<TDbContext>();
+                        return Activator.CreateInstance(repositoryImplementationType, dbContext)!;
+                    });
+                    break;
+                case ServiceLifetime.Transient:
+                    services.AddTransient(repositoryInterfaceType, serviceProvider =>
+                    {
+                        var dbContext = serviceProvider.GetRequiredService<TDbContext>();
+                        return Activator.CreateInstance(repositoryImplementationType, dbContext)!;
+                    });
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(repositoriesLifetime), repositoriesLifetime, null);
+            }
         }
 
         return services;

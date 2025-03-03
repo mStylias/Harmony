@@ -1,5 +1,7 @@
 using DataAccessDemo;
+using DataAccessDemo.Entities;
 using DataAccessDemo.Persistence;
+using Harmony.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +12,8 @@ builder.Services.AddPresentation(builder.Configuration);
 builder.Services.AddDbContext<AppDbContext>(opts =>
 {
     opts.UseNpgsql(builder.Configuration.GetConnectionString("Default"));
-});
+})
+.AddHarmonyEfCore<AppDbContext>(typeof(Program).Assembly);
 
 var app = builder.Build();
 
@@ -22,9 +25,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("test", (AppDbContext dbContext) =>
+app.MapGet("test", async (IRepository<Product> productRepo, IRepository<ProductLocalization> localRepo) =>
     {
-        return "test";
+        var test = await productRepo
+            .Join(
+                localRepo.DbSet,
+                p => p.NameLocaleId,
+                l => l.LocalizationEntryId,
+                (p, l) => new { p, l });
     })
     .WithName("Test");
 
