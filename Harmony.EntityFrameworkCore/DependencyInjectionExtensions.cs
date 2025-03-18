@@ -8,12 +8,28 @@ namespace Harmony.EntityFrameworkCore;
 public static class DependencyInjectionExtensions
 {
     public static IServiceCollection AddHarmonyEfCore<TDbContext>(
-        this IServiceCollection services, 
+        this IServiceCollection services,
         Assembly entitiesAssembly,
-        ServiceLifetime repositoriesLifetime = ServiceLifetime.Scoped)
+        ServiceLifetime repositoriesLifetime = ServiceLifetime.Scoped,
+        ServiceLifetime databaseManagerLifetime = ServiceLifetime.Scoped,
+        ServiceLifetime transactionManagerLifetime = ServiceLifetime.Scoped)
         where TDbContext : DbContext
     {
         var assemblyTypes = entitiesAssembly.GetTypes();
+
+        AddRepositories<TDbContext>(services, repositoriesLifetime, assemblyTypes);
+        AddDatabaseManager(services, databaseManagerLifetime);
+        AddTransactionManager(services, transactionManagerLifetime);
+
+        return services;
+    }
+
+    private static void AddRepositories<TDbContext>(
+        IServiceCollection services,
+        ServiceLifetime repositoriesLifetime,
+        Type[] assemblyTypes)
+        where TDbContext : DbContext
+    {
         var entityTypes = assemblyTypes
             .Where(t => t.IsClass && !t.IsAbstract && typeof(IEntity).IsAssignableFrom(t));
 
@@ -21,7 +37,7 @@ public static class DependencyInjectionExtensions
         {
             var repositoryInterfaceType = typeof(IRepository<>).MakeGenericType(entityType);
             var repositoryImplementationType = typeof(Repository<>).MakeGenericType(entityType);
-            
+
             switch (repositoriesLifetime)
             {
                 case ServiceLifetime.Singleton:
@@ -49,7 +65,41 @@ public static class DependencyInjectionExtensions
                     throw new ArgumentOutOfRangeException(nameof(repositoriesLifetime), repositoriesLifetime, null);
             }
         }
+    }
 
-        return services;
+    private static void AddDatabaseManager(IServiceCollection services, ServiceLifetime serviceLifetime)
+    {
+        switch (serviceLifetime)
+        {
+            case ServiceLifetime.Singleton:
+                services.AddSingleton<IDatabaseManager, DatabaseManager>();
+                break;
+            case ServiceLifetime.Scoped:
+                services.AddScoped<IDatabaseManager, DatabaseManager>();
+                break;
+            case ServiceLifetime.Transient:
+                services.AddTransient<IDatabaseManager, DatabaseManager>();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(serviceLifetime), serviceLifetime, null);
+        }
+    }
+    
+    private static void AddTransactionManager(IServiceCollection services, ServiceLifetime serviceLifetime)
+    {
+        switch (serviceLifetime)
+        {
+            case ServiceLifetime.Singleton:
+                services.AddSingleton<ITransactionManager, TransactionManager>();
+                break;
+            case ServiceLifetime.Scoped:
+                services.AddScoped<ITransactionManager, TransactionManager>();
+                break;
+            case ServiceLifetime.Transient:
+                services.AddTransient<ITransactionManager, TransactionManager>();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(serviceLifetime), serviceLifetime, null);
+        }
     }
 }

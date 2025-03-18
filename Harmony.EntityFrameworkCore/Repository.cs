@@ -16,12 +16,10 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
 {
     // TODO: Replace all comments with inheritdoc
     private readonly DbSet<TEntity> _dbSet;
-    private readonly DbContext _dbContext;
 
     public Repository(DbContext dbContext)
     {
         _dbSet = dbContext.Set<TEntity>();
-        _dbContext = dbContext;
     }
 
     public DbSet<TEntity> DbSet => _dbSet;
