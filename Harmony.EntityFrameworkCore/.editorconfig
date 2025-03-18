@@ -1,0 +1,3 @@
+[*.cs]
+# Disable Microsoft .NET warnings
+dotnet_diagnostic.CA1200.severity = none    # Avoid using cref tags with a prefix

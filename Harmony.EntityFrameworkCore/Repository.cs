@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
+using Harmony.EntityFrameworkCore.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -24,10 +25,6 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
     }
 
     public DbSet<TEntity> DbSet => _dbSet;
-    public DatabaseFacade Database => _dbContext.Database;
-    public ChangeTracker ChangeTracker => _dbContext.ChangeTracker;
-    public IModel Model => _dbContext.Model;
-    public DbContextId ContextId => _dbContext.ContextId;
 
     /// <summary>
     /// The <see cref="IEntityType" /> metadata associated with this set.

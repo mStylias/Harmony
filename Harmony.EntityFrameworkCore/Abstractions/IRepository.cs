@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace Harmony.EntityFrameworkCore;
+namespace Harmony.EntityFrameworkCore.Abstractions;
 
 public interface IRepository<TEntity> : IQueryable<TEntity>, IInfrastructure<IServiceProvider>, IListSource
     where TEntity : class, IEntity
@@ -13,58 +13,6 @@ public interface IRepository<TEntity> : IQueryable<TEntity>, IInfrastructure<ISe
     /// Gets the underlying DbSet for the entity of the repository.
     /// </summary>
     DbSet<TEntity> DbSet { get; }
-    
-    /// <summary>
-    ///     Provides access to database related information and operations for a context.
-    ///     Instances of this class are typically obtained from <see cref="DbContext.Database" /> and it is not designed
-    ///     to be directly constructed in your application code.
-    /// </summary>
-    DatabaseFacade Database { get; }
-    
-    /// <summary>
-    ///     Provides access to change tracking information and operations for entity instances the context is tracking.
-    ///     Instances of this class are typically obtained from <see cref="DbContext.ChangeTracker" /> and it is not designed
-    ///     to be directly constructed in your application code.
-    /// </summary>
-    /// <remarks>
-    ///     See <see href="https://aka.ms/efcore-docs-change-tracking">EF Core change tracking</see> for more information and examples.
-    /// </remarks>
-    ChangeTracker ChangeTracker { get; }
-    
-    /// <summary>
-    ///     Metadata about the shape of entities, the relationships between them, and how they map to
-    ///     the database. A model is typically created by overriding the
-    ///     <see cref="DbContext.OnModelCreating(ModelBuilder)" /> method on a derived
-    ///     <see cref="DbContext" />.
-    /// </summary>
-    /// <remarks>
-    ///     <para>
-    ///         The service lifetime is <see cref="ServiceLifetime.Scoped" />. This means that each
-    ///         <see cref="DbContext" /> instance will use its own instance of this service.
-    ///         The implementation may depend on other services registered with any lifetime.
-    ///         The implementation does not need to be thread-safe.
-    ///     </para>
-    ///     <para>
-    ///         See <see href="https://aka.ms/efcore-docs-modeling">Modeling entity types and relationships</see> for more information and
-    ///         examples.
-    ///     </para>
-    /// </remarks>
-    IModel Model { get; }
-    
-    /// <summary>
-    ///     A unique identifier for the context instance and pool lease, if any.
-    /// </summary>
-    /// <remarks>
-    ///     <para>
-    ///         This identifier is primarily intended as a correlation ID for logging and debugging such
-    ///         that it is easy to identify that multiple events are using the same or different context instances.
-    ///     </para>
-    ///     <para>
-    ///         See <see href="https://aka.ms/efcore-docs-dbcontext">DbContext lifetime, configuration, and initialization</see>
-    ///         for more information and examples.
-    ///     </para>
-    /// </remarks>
-    DbContextId ContextId { get; }
     
     /// <summary>
     /// The <see cref="IEntityType" /> metadata associated with this set.
