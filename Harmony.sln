@@ -35,8 +35,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Harmony.EntityFrameworkCore.SourceGenerators", "Harmony.EntityFrameworkCore.SourceGenerators\Harmony.EntityFrameworkCore.SourceGenerators.csproj", "{66C66629-32B4-4B9B-83ED-FEAD3D5184DF}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,10 +81,6 @@ Global
 		{FFE6B895-C375-4F11-AC95-97E4400518DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFE6B895-C375-4F11-AC95-97E4400518DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFE6B895-C375-4F11-AC95-97E4400518DB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{66C66629-32B4-4B9B-83ED-FEAD3D5184DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{66C66629-32B4-4B9B-83ED-FEAD3D5184DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{66C66629-32B4-4B9B-83ED-FEAD3D5184DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{66C66629-32B4-4B9B-83ED-FEAD3D5184DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -104,7 +98,6 @@ Global
 		{55B93A3B-B196-4770-92A0-41CEA871EE10} = {FD89C8B6-3AF6-46F8-9D91-AE1D6F4230D1}
 		{E3B2EE40-92AC-4ABC-93B1-78CA81EC0292} = {76CCE101-FEDE-47D4-80C1-21289394D093}
 		{FFE6B895-C375-4F11-AC95-97E4400518DB} = {FD89C8B6-3AF6-46F8-9D91-AE1D6F4230D1}
-		{66C66629-32B4-4B9B-83ED-FEAD3D5184DF} = {76CCE101-FEDE-47D4-80C1-21289394D093}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {91B5392B-66C5-4193-8E72-2790B9F6B2B7}

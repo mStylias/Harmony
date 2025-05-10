@@ -31,5 +31,9 @@
     <ItemGroup>
       <ProjectReference Include="..\Harmony.EntityFrameworkCore\Harmony.EntityFrameworkCore.csproj" />
     </ItemGroup>
+    
+    <ItemGroup>
+      <Folder Include="EntitiesConfigurations\" />
+    </ItemGroup>
 
 </Project>

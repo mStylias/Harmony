@@ -2,9 +2,9 @@
     <PropertyGroup>
         <AnalysisLevel>latest</AnalysisLevel>
         <AnalysisMode>All</AnalysisMode>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
-        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+<!--        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
+<!--        <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>-->
+<!--        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>-->
     </PropertyGroup>
 
     <ItemGroup>

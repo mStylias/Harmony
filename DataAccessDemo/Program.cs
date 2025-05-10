@@ -2,6 +2,7 @@ using DataAccessDemo;
 using DataAccessDemo.Entities;
 using DataAccessDemo.Persistence;
 using Harmony.EntityFrameworkCore;
+using Harmony.EntityFrameworkCore.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,14 +26,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("test", async (IRepository<Product> productRepo, IRepository<ProductLocalization> localRepo) =>
+app.MapGet("test", async (IRepository<Product> productRepo) =>
     {
-        var test = await productRepo
-            .Join(
-                localRepo.DbSet,
-                p => p.NameLocaleId,
-                l => l.LocalizationEntryId,
-                (p, l) => new { p, l });
+        return string.Empty;
     })
     .WithName("Test");
 

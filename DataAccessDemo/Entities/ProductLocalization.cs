@@ -1,11 +1,11 @@
 ﻿using Harmony.EntityFrameworkCore.Localization;
+using Harmony.EntityFrameworkCore.Localization.Abstractions;
 
 namespace DataAccessDemo.Entities;
 
-public class ProductLocalization : ILocalizationEntity
+public class ProductLocalization : ITranslationEntity
 {
-    public int LocalizationEntryId { get; set; }
+    public required int ProductId { get; set; }
     public required string Language { get; set; }
-    public required string PropertyName { get; set; }
-    public required string Value { get; set; }
+    public required string Name { get; set; }
 }
