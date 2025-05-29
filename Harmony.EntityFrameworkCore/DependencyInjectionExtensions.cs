@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Harmony.EntityFrameworkCore.Abstractions;
+using Harmony.EntityFrameworkCore.Mapping.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,10 +19,27 @@ public static class DependencyInjectionExtensions
         var assemblyTypes = entitiesAssembly.GetTypes();
 
         AddRepositories<TDbContext>(services, repositoriesLifetime, assemblyTypes);
+        AddMappers(services, assemblyTypes);
         AddDatabaseManager<TDbContext>(services, databaseManagerLifetime);
         AddTransactionManager<TDbContext>(services, transactionManagerLifetime);
 
         return services;
+    }
+
+    private static void AddMappers(this IServiceCollection services, Type[] assemblyTypes)
+    {
+        var mapperInterfaceType = typeof(IEntityMapper<,>);
+        
+        foreach (var implementationType in assemblyTypes.Where(t => t.IsClass && !t.IsAbstract))
+        {
+            var implementedInterfaces = implementationType.GetInterfaces()
+                .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == mapperInterfaceType);
+
+            foreach (var interfaceType in implementedInterfaces)
+            {
+                services.AddSingleton(interfaceType, implementationType);
+            }
+        }
     }
 
     private static void AddRepositories<TDbContext>(
@@ -44,21 +62,21 @@ public static class DependencyInjectionExtensions
                     services.AddSingleton(repositoryInterfaceType, serviceProvider =>
                     {
                         var dbContext = serviceProvider.GetRequiredService<TDbContext>();
-                        return Activator.CreateInstance(repositoryImplementationType, dbContext)!;
+                        return Activator.CreateInstance(repositoryImplementationType, dbContext, serviceProvider)!;
                     });
                     break;
                 case ServiceLifetime.Scoped:
                     services.AddScoped(repositoryInterfaceType, serviceProvider =>
                     {
                         var dbContext = serviceProvider.GetRequiredService<TDbContext>();
-                        return Activator.CreateInstance(repositoryImplementationType, dbContext)!;
+                        return Activator.CreateInstance(repositoryImplementationType, dbContext, serviceProvider)!;
                     });
                     break;
                 case ServiceLifetime.Transient:
                     services.AddTransient(repositoryInterfaceType, serviceProvider =>
                     {
                         var dbContext = serviceProvider.GetRequiredService<TDbContext>();
-                        return Activator.CreateInstance(repositoryImplementationType, dbContext)!;
+                        return Activator.CreateInstance(repositoryImplementationType, dbContext, serviceProvider)!;
                     });
                     break;
                 default:

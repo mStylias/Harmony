@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Harmony.EntityFrameworkCore.Mapping.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -564,4 +565,7 @@ public interface IRepository<TEntity> : IQueryable<TEntity>, IInfrastructure<ISe
     /// </param>
     /// <returns>The query results.</returns>
     IAsyncEnumerator<TEntity> GetAsyncEnumerator(CancellationToken cancellationToken = default);
+
+    // TODO: summary
+    IEntityMapper<TEntity, TDto> GetMapperFor<TDto>();
 }

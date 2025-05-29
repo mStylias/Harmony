@@ -3,10 +3,12 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using Harmony.EntityFrameworkCore.Abstractions;
+using Harmony.EntityFrameworkCore.Mapping.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Harmony.EntityFrameworkCore;
 
@@ -14,11 +16,14 @@ namespace Harmony.EntityFrameworkCore;
 public sealed class Repository<TEntity> : IRepository<TEntity>
     where TEntity : class, IEntity
 {
+    private readonly IServiceProvider _serviceProvider;
+
     // TODO: Replace all comments with inheritdoc
     private readonly DbSet<TEntity> _dbSet;
 
-    public Repository(DbContext dbContext)
+    public Repository(DbContext dbContext, IServiceProvider serviceProvider)
     {
+        _serviceProvider = serviceProvider;
         _dbSet = dbContext.Set<TEntity>();
     }
 
@@ -616,7 +621,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
     /// <returns>The query results.</returns>
     public IAsyncEnumerator<TEntity> GetAsyncEnumerator(CancellationToken cancellationToken = default)
         => ((IAsyncEnumerable<TEntity>)_dbSet).GetAsyncEnumerator(cancellationToken);
-
+    
     /// <summary>
     ///     Gets the IQueryable element type.
     /// </summary>
@@ -694,4 +699,10 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
     /// </remarks>
     bool IListSource.ContainsListCollection
         => ((IListSource)_dbSet).ContainsListCollection;
+    
+    public IEntityMapper<TEntity, TDto> GetMapperFor<TDto>()
+    {
+        var mapper = _serviceProvider.GetRequiredService<IEntityMapper<TEntity, TDto>>();
+        return mapper;
+    }
 }
