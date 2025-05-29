@@ -18,8 +18,8 @@ public static class DependencyInjectionExtensions
         var assemblyTypes = entitiesAssembly.GetTypes();
 
         AddRepositories<TDbContext>(services, repositoriesLifetime, assemblyTypes);
-        AddDatabaseManager(services, databaseManagerLifetime);
-        AddTransactionManager(services, transactionManagerLifetime);
+        AddDatabaseManager<TDbContext>(services, databaseManagerLifetime);
+        AddTransactionManager<TDbContext>(services, transactionManagerLifetime);
 
         return services;
     }
@@ -67,39 +67,51 @@ public static class DependencyInjectionExtensions
         }
     }
 
-    private static void AddDatabaseManager(IServiceCollection services, ServiceLifetime serviceLifetime)
+    private static void AddDatabaseManager<TDbContext>(
+        IServiceCollection services,
+        ServiceLifetime lifetime)
+        where TDbContext : DbContext
     {
-        switch (serviceLifetime)
+        switch (lifetime)
         {
             case ServiceLifetime.Singleton:
-                services.AddSingleton<IDatabaseManager, DatabaseManager>();
+                services.AddSingleton<IDatabaseManager>(sp =>
+                    new DatabaseManager(sp.GetRequiredService<TDbContext>()));
                 break;
             case ServiceLifetime.Scoped:
-                services.AddScoped<IDatabaseManager, DatabaseManager>();
+                services.AddScoped<IDatabaseManager>(sp =>
+                    new DatabaseManager(sp.GetRequiredService<TDbContext>()));
                 break;
             case ServiceLifetime.Transient:
-                services.AddTransient<IDatabaseManager, DatabaseManager>();
+                services.AddTransient<IDatabaseManager>(sp =>
+                    new DatabaseManager(sp.GetRequiredService<TDbContext>()));
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(serviceLifetime), serviceLifetime, null);
+                throw new ArgumentOutOfRangeException(nameof(lifetime), lifetime, null);
         }
     }
-    
-    private static void AddTransactionManager(IServiceCollection services, ServiceLifetime serviceLifetime)
+
+    private static void AddTransactionManager<TDbContext>(
+        IServiceCollection services,
+        ServiceLifetime lifetime)
+        where TDbContext : DbContext
     {
-        switch (serviceLifetime)
+        switch (lifetime)
         {
             case ServiceLifetime.Singleton:
-                services.AddSingleton<ITransactionManager, TransactionManager>();
+                services.AddSingleton<ITransactionManager>(sp =>
+                    new TransactionManager(sp.GetRequiredService<TDbContext>()));
                 break;
             case ServiceLifetime.Scoped:
-                services.AddScoped<ITransactionManager, TransactionManager>();
+                services.AddScoped<ITransactionManager>(sp =>
+                    new TransactionManager(sp.GetRequiredService<TDbContext>()));
                 break;
             case ServiceLifetime.Transient:
-                services.AddTransient<ITransactionManager, TransactionManager>();
+                services.AddTransient<ITransactionManager>(sp =>
+                    new TransactionManager(sp.GetRequiredService<TDbContext>()));
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(serviceLifetime), serviceLifetime, null);
+                throw new ArgumentOutOfRangeException(nameof(lifetime), lifetime, null);
         }
     }
 }

@@ -2,13 +2,10 @@
 using Harmony.Cqrs.Operations;
 using Harmony.MinimalApis.Errors;
 using Harmony.Results;
-using Harmony.Results.ErrorTypes.InnerErrorTypes;
 using Microsoft.Extensions.Logging;
 using Todo.Application.Common.Abstractions.Repositories;
 using Todo.Contracts.Todos;
 using Todo.Contracts.Todos.Lists.Items;
-using Todo.Domain.Errors;
-using Todo.Domain.Errors.Inner;
 
 namespace Todo.Application.Todos.Queries;
 

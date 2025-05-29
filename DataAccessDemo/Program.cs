@@ -3,6 +3,8 @@ using DataAccessDemo.Entities;
 using DataAccessDemo.Persistence;
 using Harmony.EntityFrameworkCore;
 using Harmony.EntityFrameworkCore.Abstractions;
+using Harmony.EntityFrameworkCore.Localization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,9 +28,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("test", async (IRepository<Product> productRepo) =>
+app.MapGet("test", async (IRepository<Product> productRepo, [FromQuery] string locale) =>
     {
-        return string.Empty;
+        var description = productRepo
+            .FirstOrDefault();
+        
+        return Results.Ok(description);
     })
     .WithName("Test");
 

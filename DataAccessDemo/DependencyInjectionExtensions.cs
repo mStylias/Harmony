@@ -27,8 +27,8 @@ internal static class DependencyInjectionExtensions
     {
         services.AddSwaggerGen(opts =>
         {
-            const string title = "Todo API";
-            const string description = "This is an api for a todo app.";
+            const string title = "Harmony Ef core API";
+            const string description = "A set of example endpoints utilizing harmony ef core";
 
             opts.SwaggerDoc("v1", new OpenApiInfo
             {

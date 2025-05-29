@@ -60,7 +60,7 @@ public class HarmonyError : LoggableHarmonyErrorCore<HarmonyError>
     public string Description { get; }
     
     /// <summary>
-    /// Gets the type of the error that can be used to categorize the error.
+    /// Gets the type of the error that can be used to categorize it.
     /// </summary>
     public string? ErrorType { get; }
     

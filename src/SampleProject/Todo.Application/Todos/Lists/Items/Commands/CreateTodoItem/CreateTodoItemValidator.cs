@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Harmony.Cqrs.Validators;
+﻿using Harmony.Cqrs.Validators;
 using Harmony.MinimalApis.Errors;
 using Harmony.Results;
 using Harmony.Results.ErrorTypes.InnerErrorTypes;
