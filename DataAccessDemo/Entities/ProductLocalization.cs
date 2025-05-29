@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Harmony.EntityFrameworkCore.Localization.Abstractions;
+using Harmony.EntityFrameworkCore.Abstractions;
 
 namespace DataAccessDemo.Entities;
 
 [Table("products_localization")]
-public class ProductLocalization : ILocalizableEntityTranslation<int>
+public class ProductLocalization : IEntity<int>
 {
     [Column("id")]
     public int Id { get; set; }
@@ -20,7 +20,6 @@ public class ProductLocalization : ILocalizableEntityTranslation<int>
     
     [Column("product_id")]
     [ForeignKey("Product")]
-    public int LocalizableEntityId { get; set; }
-
+    public int ProductId { get; set; }
     public Product Product { get; set; } = null!;
 }

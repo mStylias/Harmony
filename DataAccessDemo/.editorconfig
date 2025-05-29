@@ -9,3 +9,5 @@ dotnet_diagnostic.CA1515.severity = none    # Because an application's API isn't
 dotnet_diagnostic.CA2007.severity = none    # Consider calling ConfigureAwait on the awaited task
 
 # Disable StyleCop warnings
+dotnet_diagnostic.RMG012.severity = none
+dotnet_diagnostic.RMG020.severity = none

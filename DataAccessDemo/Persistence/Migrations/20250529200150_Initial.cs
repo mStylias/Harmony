@@ -15,13 +15,27 @@ namespace DataAccessDemo.Persistence.Migrations
                 name: "products",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "integer", nullable: false)
+                    product_id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     price = table.Column<decimal>(type: "numeric", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_products", x => x.id);
+                    table.PrimaryKey("PK_products", x => x.product_id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "stores",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    location = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_stores", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -42,7 +56,7 @@ namespace DataAccessDemo.Persistence.Migrations
                         name: "FK_products_localization_products_product_id",
                         column: x => x.product_id,
                         principalTable: "products",
-                        principalColumn: "id",
+                        principalColumn: "product_id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -57,6 +71,9 @@ namespace DataAccessDemo.Persistence.Migrations
         {
             migrationBuilder.DropTable(
                 name: "products_localization");
+
+            migrationBuilder.DropTable(
+                name: "stores");
 
             migrationBuilder.DropTable(
                 name: "products");

@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccessDemo.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250515194400_Initial")]
+    [Migration("20250529200150_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -29,7 +29,7 @@ namespace DataAccessDemo.Persistence.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("id");
+                        .HasColumnName("product_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
@@ -61,9 +61,35 @@ namespace DataAccessDemo.Persistence.Migrations
                         .HasColumnType("text")
                         .HasColumnName("locale");
 
-                    b.Property<int>("LocalizableEntityId")
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<int>("ProductId")
                         .HasColumnType("integer")
                         .HasColumnName("product_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("products_localization");
+                });
+
+            modelBuilder.Entity("DataAccessDemo.Entities.Store", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("location");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -72,16 +98,14 @@ namespace DataAccessDemo.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LocalizableEntityId");
-
-                    b.ToTable("products_localization");
+                    b.ToTable("stores");
                 });
 
             modelBuilder.Entity("DataAccessDemo.Entities.ProductLocalization", b =>
                 {
                     b.HasOne("DataAccessDemo.Entities.Product", "Product")
                         .WithMany("Localizations")
-                        .HasForeignKey("LocalizableEntityId")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

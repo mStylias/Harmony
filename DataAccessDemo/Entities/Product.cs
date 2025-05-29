@@ -1,17 +1,21 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Harmony.EntityFrameworkCore.Localization.Abstractions;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Harmony.EntityFrameworkCore.Abstractions;
 
 namespace DataAccessDemo.Entities;
 
 [Table("products")]
-public class Product : LocalizableEntity<int, ProductLocalization>
+public class Product : IEntity<int>
 {
-    [Column("id")]
-    public override int Id { get; set; }
+    [Column("product_id")]
+    public int Id { get; set; }
 
     [Column("price")]
     public decimal Price { get; set; }
 
-    public override ICollection<ProductLocalization> Localizations { get; set; } = null!;
+    public ICollection<ProductLocalization> Localizations { get; set; } = new List<ProductLocalization>();
+    
+    [Column("store_id")]
+    [ForeignKey("Store")]
+    public int StoreId { get; set; }
+    public Store? Store { get; set; }
 }

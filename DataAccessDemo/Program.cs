@@ -1,9 +1,11 @@
 using DataAccessDemo;
+using DataAccessDemo.Dtos;
 using DataAccessDemo.Entities;
+using DataAccessDemo.Mappers;
 using DataAccessDemo.Persistence;
 using Harmony.EntityFrameworkCore;
 using Harmony.EntityFrameworkCore.Abstractions;
-using Harmony.EntityFrameworkCore.Localization;
+using Harmony.EntityFrameworkCore.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,12 +30,51 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("test", async (IRepository<Product> productRepo, [FromQuery] string locale) =>
+app.MapGet("test", async (IRepository<Store> storeRepo, [FromQuery] string locale) =>
     {
-        var description = productRepo
+        var store = new Store
+        {
+            Id = 1,
+            Name = "Test Store",
+            Location = "A location",
+            Products = new List<Product>()
+            {
+                new Product()
+                {
+                    Id = 1,
+                    Localizations = new List<ProductLocalization>()
+                    {
+                        new ProductLocalization()
+                        {
+                            Id = 1,
+                            Locale = "en-US",
+                            Name = "Apples",
+                            Description = "Some apples",
+                        },
+                    },
+                    Price = 20,
+                },
+            },
+        };
+
+        var storeDto = new StoreDto
+        {
+            Id = 2,
+            Name = "Test Store DTO",
+        };
+
+        var mapper = new StoreDtoMapper();
+        
+        var convertedDto = mapper.ToDto(store);
+        var convertedStore = mapper.ToEntity(storeDto);
+        var projectedStore = storeRepo
+            .Where(r => r.Id == 2)
+            .Include(r => r.Products)
+            .ThenInclude(p => p.Localizations.Where(l => l.Locale == locale))
+            .ProjectTo(storeRepo.GetMapperFor<StoreDto>())
             .FirstOrDefault();
         
-        return Results.Ok(description);
+        return Results.Ok(new { convertedDto, convertedStore, projectedStore });
     })
     .WithName("Test");
 

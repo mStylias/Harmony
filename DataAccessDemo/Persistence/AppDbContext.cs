@@ -12,4 +12,5 @@ public class AppDbContext : DbContext
 
     public DbSet<Product> Products { get; set; }
     public DbSet<ProductLocalization> ProductLocalizations { get; set; }
+    public DbSet<Store> StoreCategories { get; set; }
 }
