@@ -62,21 +62,21 @@ public static class DependencyInjectionExtensions
                     services.AddSingleton(repositoryInterfaceType, serviceProvider =>
                     {
                         var dbContext = serviceProvider.GetRequiredService<TDbContext>();
-                        return Activator.CreateInstance(repositoryImplementationType, dbContext, serviceProvider)!;
+                        return Activator.CreateInstance(repositoryImplementationType, dbContext)!;
                     });
                     break;
                 case ServiceLifetime.Scoped:
                     services.AddScoped(repositoryInterfaceType, serviceProvider =>
                     {
                         var dbContext = serviceProvider.GetRequiredService<TDbContext>();
-                        return Activator.CreateInstance(repositoryImplementationType, dbContext, serviceProvider)!;
+                        return Activator.CreateInstance(repositoryImplementationType, dbContext)!;
                     });
                     break;
                 case ServiceLifetime.Transient:
                     services.AddTransient(repositoryInterfaceType, serviceProvider =>
                     {
                         var dbContext = serviceProvider.GetRequiredService<TDbContext>();
-                        return Activator.CreateInstance(repositoryImplementationType, dbContext, serviceProvider)!;
+                        return Activator.CreateInstance(repositoryImplementationType, dbContext)!;
                     });
                     break;
                 default:

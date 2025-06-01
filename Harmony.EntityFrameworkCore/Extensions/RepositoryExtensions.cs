@@ -5,7 +5,7 @@ namespace Harmony.EntityFrameworkCore.Extensions;
 
 public static class RepositoryExtensions
 {
-    public static IQueryable<TDto> ProjectTo<TDto, TEntity>(
+    public static IQueryable<TDto> ProjectTo<TEntity, TDto>(
         this IQueryable<TEntity> queryable, 
         IEntityMapper<TEntity, TDto> mapper) 
         where TEntity : class, IEntity

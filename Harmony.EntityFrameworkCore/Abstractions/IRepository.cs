@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Linq.Expressions;
 using Harmony.EntityFrameworkCore.Mapping.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -566,6 +567,91 @@ public interface IRepository<TEntity> : IQueryable<TEntity>, IInfrastructure<ISe
     /// <returns>The query results.</returns>
     IAsyncEnumerator<TEntity> GetAsyncEnumerator(CancellationToken cancellationToken = default);
 
-    // TODO: summary
+    /// <summary>
+    /// Resolves the <see cref="IEntityMapper{TEntity, TDto}" /> for the specified DTO type from the service provider.
+    /// </summary>
+    /// <typeparam name="TDto">The dto to get the mapper for</typeparam>
     IEntityMapper<TEntity, TDto> GetMapperFor<TDto>();
+
+    /// <summary>
+    /// Projects the given queryable to a DTO type using the configured <see cref="IEntityMapper{TEntity, TDto}" />.
+    /// </summary>
+    /// <param name="queryable">The queryable to project to the dto.</param>
+    /// <typeparam name="TDto">The dto that will be projected.</typeparam>
+    public IQueryable<TDto> ProjectTo<TDto>(IQueryable<TEntity> queryable);
+
+    /// <summary>
+    /// Maps the given DTO to an entity and adds it to the database.
+    /// </summary>
+    /// <param name="dto">The dto to map to the entity.</param>
+    /// <typeparam name="TDto">The type of dto.</typeparam>
+    public EntityEntry<TEntity> Add<TDto>(TDto dto);
+    
+    /// <summary>
+    /// Maps the given DTO to an entity and adds it to the database asynchronously.
+    /// </summary>
+    /// <param name="dto">The dto to map to the entity.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <typeparam name="TDto">The type of dto.</typeparam>
+    public ValueTask<EntityEntry<TEntity>> AddAsync<TDto>(TDto dto, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Maps the given DTOs to entities and adds them in the database.
+    /// </summary>
+    /// <param name="dtos">The dtos to map to entities.</param>
+    /// <typeparam name="TDto">The type of the dtos.</typeparam>
+    public void AddRange<TDto>(params TDto[] dtos);
+    
+    /// <summary>
+    /// Maps the given DTOs to entities and adds them in the database.
+    /// </summary>
+    /// <param name="dtos">The dtos to map to entities.</param>
+    /// <typeparam name="TDto">The type of the dtos.</typeparam>
+    public void AddRange<TDto>(IEnumerable<TDto> dtos);
+
+    /// <summary>
+    /// Maps the given DTOs to entities and adds them in the database asynchronously.
+    /// </summary>
+    /// <param name="dtos">The dtos to map to entities.</param>
+    /// <typeparam name="TDto">The type of the dtos.</typeparam>
+    public Task AddRangeAsync<TDto>(params TDto[] dtos);
+
+    /// <summary>
+    /// Maps the given DTOs to entities and adds them in the database asynchronously.
+    /// </summary>
+    /// <param name="dtos">The dtos to map to entities.</param>
+    /// <param name="cancellationToken">The cancellation token</param>
+    /// <typeparam name="TDto">The type of the dtos.</typeparam>
+    public Task AddRangeAsync<TDto>(IEnumerable<TDto> dtos, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Maps the given DTO to an entity and removes it from the database using its id.
+    /// </summary>
+    /// <param name="dto">The dto to map to the entity.</param>
+    /// <typeparam name="TDto">The type of dto.</typeparam>
+    public EntityEntry<TEntity> Remove<TDto>(TDto dto);
+
+    /// <summary>
+    /// Removes all entities that match the given predicate from the database.
+    /// </summary>
+    /// <param name="predicate">The predicate that matches the entities that will be deleted.</param>
+    public int RemoveWhere(Expression<Func<TEntity, bool>> predicate);
+
+    /// <summary>
+    /// Removes all entities that match the given predicate from the database asynchronously.
+    /// </summary>
+    /// <param name="predicate">The predicate that matches the entities that will be deleted.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    public Task RemoveWhereAsync(
+        Expression<Func<TEntity, bool>> predicate,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// <para>Updates the entity in the database using the given DTO.</para>
+    /// <para>WARNING: Use this with caution, as it will overwrite
+    /// all the properties of the entity with the values from the DTO and for any that don't exist they will be null. </para>
+    /// </summary>
+    /// <param name="dto">The dto to update with.</param>
+    /// <typeparam name="TDto">The type of dto.</typeparam>
+    public EntityEntry<TEntity> Update<TDto>(TDto dto);
 }
