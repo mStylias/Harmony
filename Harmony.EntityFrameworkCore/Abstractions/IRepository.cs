@@ -654,4 +654,14 @@ public interface IRepository<TEntity> : IQueryable<TEntity>, IInfrastructure<ISe
     /// <param name="dto">The dto to update with.</param>
     /// <typeparam name="TDto">The type of dto.</typeparam>
     public EntityEntry<TEntity> Update<TDto>(TDto dto);
+
+    /// <summary>
+    /// Persists all pending changes to the database.
+    /// </summary>
+    public int SaveChanges();
+    
+    /// <summary>
+    /// Persists all pending changes to the database asynchronously.
+    /// </summary>
+    public Task<int> SaveChangesAsync();
 }

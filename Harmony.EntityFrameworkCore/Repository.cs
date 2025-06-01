@@ -252,4 +252,16 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
         var entity = mapper.ToEntity(dto);
         return Update(entity);
     }
+
+    /// <inheritdoc/>
+    public int SaveChanges()
+    {
+        return _dbContext.SaveChanges();
+    }
+
+    /// <inheritdoc/>
+    public Task<int> SaveChangesAsync()
+    {
+        return _dbContext.SaveChangesAsync();   
+    }
 }
