@@ -572,6 +572,12 @@ public interface IRepository<TEntity> : IQueryable<TEntity>, IInfrastructure<ISe
     /// </summary>
     /// <typeparam name="TDto">The dto to get the mapper for</typeparam>
     IEntityMapper<TEntity, TDto> GetMapperFor<TDto>();
+    
+    /// <summary>
+    /// Creates a queryable after projecting the entity to the specified DTO type.
+    /// </summary>
+    /// <typeparam name="TDto">The type of the DTO to project to.</typeparam>
+    IQueryable<TDto> GetQueryable<TDto>();
 
     /// <summary>
     /// Projects the given queryable to a DTO type using the configured <see cref="IEntityMapper{TEntity, TDto}" />.

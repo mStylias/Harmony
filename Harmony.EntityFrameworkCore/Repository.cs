@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using Harmony.EntityFrameworkCore.Abstractions;
+using Harmony.EntityFrameworkCore.Extensions;
 using Harmony.EntityFrameworkCore.Mapping.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -20,11 +21,11 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
     private readonly DbSet<TEntity> _dbSet;
     private readonly IServiceProvider _serviceProvider;
 
-    public Repository(DbContext dbContext)
+    public Repository(DbContext dbContext, IServiceProvider serviceProvider)
     {
         _dbContext = dbContext;
         _dbSet = dbContext.Set<TEntity>();
-        _serviceProvider = ((IInfrastructure<IServiceProvider>)_dbSet).Instance;
+        _serviceProvider = serviceProvider;
     }
 
     public DbSet<TEntity> DbSet => _dbSet;
@@ -162,6 +163,13 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
     {
         var mapper = _serviceProvider.GetRequiredService<IEntityMapper<TEntity, TDto>>();
         return mapper;
+    }
+
+    /// <inheritdoc/>
+    public IQueryable<TDto> GetQueryable<TDto>()
+    {
+        var mapper = GetMapperFor<TDto>();
+        return _dbSet.ProjectTo(mapper);
     }
 
     /// <inheritdoc/>

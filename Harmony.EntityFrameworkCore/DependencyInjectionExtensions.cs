@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
 using Harmony.EntityFrameworkCore.Abstractions;
 using Harmony.EntityFrameworkCore.Mapping.Abstractions;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +38,7 @@ public static class DependencyInjectionExtensions
 
             foreach (var interfaceType in implementedInterfaces)
             {
+                Debug.WriteLine("Adding mapper: " + interfaceType.FullName + " -> " + implementationType.FullName);
                 services.AddSingleton(interfaceType, implementationType);
             }
         }
@@ -62,21 +64,21 @@ public static class DependencyInjectionExtensions
                     services.AddSingleton(repositoryInterfaceType, serviceProvider =>
                     {
                         var dbContext = serviceProvider.GetRequiredService<TDbContext>();
-                        return Activator.CreateInstance(repositoryImplementationType, dbContext)!;
+                        return Activator.CreateInstance(repositoryImplementationType, dbContext, serviceProvider)!;
                     });
                     break;
                 case ServiceLifetime.Scoped:
                     services.AddScoped(repositoryInterfaceType, serviceProvider =>
                     {
                         var dbContext = serviceProvider.GetRequiredService<TDbContext>();
-                        return Activator.CreateInstance(repositoryImplementationType, dbContext)!;
+                        return Activator.CreateInstance(repositoryImplementationType, dbContext, serviceProvider)!;
                     });
                     break;
                 case ServiceLifetime.Transient:
                     services.AddTransient(repositoryInterfaceType, serviceProvider =>
                     {
                         var dbContext = serviceProvider.GetRequiredService<TDbContext>();
-                        return Activator.CreateInstance(repositoryImplementationType, dbContext)!;
+                        return Activator.CreateInstance(repositoryImplementationType, dbContext, serviceProvider)!;
                     });
                     break;
                 default:
