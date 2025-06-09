@@ -230,6 +230,14 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
     }
 
     /// <inheritdoc/>
+    public EntityEntry<TEntity> Update<TDto>(TDto dto)
+    {
+        var mapper = GetMapperFor<TDto>();
+        var entity = mapper.ToEntity(dto);
+        return Update(entity);
+    }
+    
+    /// <inheritdoc/>
     public EntityEntry<TEntity> Remove<TDto>(TDto dto)
     {
         var mapper = GetMapperFor<TDto>();
@@ -254,22 +262,14 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
     }
 
     /// <inheritdoc/>
-    public EntityEntry<TEntity> Update<TDto>(TDto dto)
-    {
-        var mapper = GetMapperFor<TDto>();
-        var entity = mapper.ToEntity(dto);
-        return Update(entity);
-    }
-
-    /// <inheritdoc/>
     public int SaveChanges()
     {
         return _dbContext.SaveChanges();
     }
 
     /// <inheritdoc/>
-    public Task<int> SaveChangesAsync()
+    public Task<int> SaveChangesAsync(CancellationToken cancellationToken)
     {
-        return _dbContext.SaveChangesAsync();   
+        return _dbContext.SaveChangesAsync(cancellationToken);   
     }
 }

@@ -584,14 +584,14 @@ public interface IRepository<TEntity> : IQueryable<TEntity>, IInfrastructure<ISe
     /// </summary>
     /// <param name="queryable">The queryable to project to the dto.</param>
     /// <typeparam name="TDto">The dto that will be projected.</typeparam>
-    public IQueryable<TDto> ProjectTo<TDto>(IQueryable<TEntity> queryable);
+    IQueryable<TDto> ProjectTo<TDto>(IQueryable<TEntity> queryable);
 
     /// <summary>
     /// Maps the given DTO to an entity and adds it to the database.
     /// </summary>
     /// <param name="dto">The dto to map to the entity.</param>
     /// <typeparam name="TDto">The type of dto.</typeparam>
-    public EntityEntry<TEntity> Add<TDto>(TDto dto);
+    EntityEntry<TEntity> Add<TDto>(TDto dto);
     
     /// <summary>
     /// Maps the given DTO to an entity and adds it to the database asynchronously.
@@ -599,28 +599,28 @@ public interface IRepository<TEntity> : IQueryable<TEntity>, IInfrastructure<ISe
     /// <param name="dto">The dto to map to the entity.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <typeparam name="TDto">The type of dto.</typeparam>
-    public ValueTask<EntityEntry<TEntity>> AddAsync<TDto>(TDto dto, CancellationToken cancellationToken = default);
+    ValueTask<EntityEntry<TEntity>> AddAsync<TDto>(TDto dto, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Maps the given DTOs to entities and adds them in the database.
     /// </summary>
     /// <param name="dtos">The dtos to map to entities.</param>
     /// <typeparam name="TDto">The type of the dtos.</typeparam>
-    public void AddRange<TDto>(params TDto[] dtos);
+    void AddRange<TDto>(params TDto[] dtos);
     
     /// <summary>
     /// Maps the given DTOs to entities and adds them in the database.
     /// </summary>
     /// <param name="dtos">The dtos to map to entities.</param>
     /// <typeparam name="TDto">The type of the dtos.</typeparam>
-    public void AddRange<TDto>(IEnumerable<TDto> dtos);
+    void AddRange<TDto>(IEnumerable<TDto> dtos);
 
     /// <summary>
     /// Maps the given DTOs to entities and adds them in the database asynchronously.
     /// </summary>
     /// <param name="dtos">The dtos to map to entities.</param>
     /// <typeparam name="TDto">The type of the dtos.</typeparam>
-    public Task AddRangeAsync<TDto>(params TDto[] dtos);
+    Task AddRangeAsync<TDto>(params TDto[] dtos);
 
     /// <summary>
     /// Maps the given DTOs to entities and adds them in the database asynchronously.
@@ -628,29 +628,7 @@ public interface IRepository<TEntity> : IQueryable<TEntity>, IInfrastructure<ISe
     /// <param name="dtos">The dtos to map to entities.</param>
     /// <param name="cancellationToken">The cancellation token</param>
     /// <typeparam name="TDto">The type of the dtos.</typeparam>
-    public Task AddRangeAsync<TDto>(IEnumerable<TDto> dtos, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Maps the given DTO to an entity and removes it from the database using its id.
-    /// </summary>
-    /// <param name="dto">The dto to map to the entity.</param>
-    /// <typeparam name="TDto">The type of dto.</typeparam>
-    public EntityEntry<TEntity> Remove<TDto>(TDto dto);
-
-    /// <summary>
-    /// Removes all entities that match the given predicate from the database.
-    /// </summary>
-    /// <param name="predicate">The predicate that matches the entities that will be deleted.</param>
-    public int RemoveWhere(Expression<Func<TEntity, bool>> predicate);
-
-    /// <summary>
-    /// Removes all entities that match the given predicate from the database asynchronously.
-    /// </summary>
-    /// <param name="predicate">The predicate that matches the entities that will be deleted.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    public Task RemoveWhereAsync(
-        Expression<Func<TEntity, bool>> predicate,
-        CancellationToken cancellationToken = default);
+    Task AddRangeAsync<TDto>(IEnumerable<TDto> dtos, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// <para>Updates the entity in the database using the given DTO.</para>
@@ -659,15 +637,96 @@ public interface IRepository<TEntity> : IQueryable<TEntity>, IInfrastructure<ISe
     /// </summary>
     /// <param name="dto">The dto to update with.</param>
     /// <typeparam name="TDto">The type of dto.</typeparam>
-    public EntityEntry<TEntity> Update<TDto>(TDto dto);
-
-    /// <summary>
-    /// Persists all pending changes to the database.
-    /// </summary>
-    public int SaveChanges();
+    EntityEntry<TEntity> Update<TDto>(TDto dto);
     
     /// <summary>
-    /// Persists all pending changes to the database asynchronously.
+    /// Maps the given DTO to an entity and removes it from the database using its id.
     /// </summary>
-    public Task<int> SaveChangesAsync();
+    /// <param name="dto">The dto to map to the entity.</param>
+    /// <typeparam name="TDto">The type of dto.</typeparam>
+    EntityEntry<TEntity> Remove<TDto>(TDto dto);
+
+    /// <summary>
+    /// Removes all entities that match the given predicate from the database.
+    /// </summary>
+    /// <param name="predicate">The predicate that matches the entities that will be deleted.</param>
+    int RemoveWhere(Expression<Func<TEntity, bool>> predicate);
+
+    /// <summary>
+    /// Removes all entities that match the given predicate from the database asynchronously.
+    /// </summary>
+    /// <param name="predicate">The predicate that matches the entities that will be deleted.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task RemoveWhereAsync(
+        Expression<Func<TEntity, bool>> predicate,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    ///     Saves all changes made in this context to the database.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         This method will automatically call <see cref="Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker.DetectChanges" />
+    ///         to discover any changes to entity instances before saving to the underlying database. This can be disabled via
+    ///         <see cref="Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker.AutoDetectChangesEnabled" />.
+    ///     </para>
+    ///     <para>
+    ///         Entity Framework Core does not support multiple parallel operations being run on the same DbContext instance. This
+    ///         includes both parallel execution of async queries and any explicit concurrent use from multiple threads.
+    ///         Therefore, always await async calls immediately, or use separate DbContext instances for operations that execute
+    ///         in parallel. See <see href="https://aka.ms/efcore-docs-threading">Avoiding DbContext threading issues</see> for more information
+    ///         and examples.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-saving-data">Saving data in EF Core</see> for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <returns>
+    ///     The number of state entries written to the database.
+    /// </returns>
+    /// <exception cref="DbUpdateException">
+    ///     An error is encountered while saving to the database.
+    /// </exception>
+    /// <exception cref="DbUpdateConcurrencyException">
+    ///     A concurrency violation is encountered while saving to the database.
+    ///     A concurrency violation occurs when an unexpected number of rows are affected during save.
+    ///     This is usually because the data in the database has been modified since it was loaded into memory.
+    /// </exception>
+    int SaveChanges();
+    
+    /// <summary>
+    ///     Saves all changes made in this context to the database.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         This method will automatically call <see cref="Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker.DetectChanges" />
+    ///         to discover any changes to entity instances before saving to the underlying database. This can be disabled via
+    ///         <see cref="Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker.AutoDetectChangesEnabled" />.
+    ///     </para>
+    ///     <para>
+    ///         Entity Framework Core does not support multiple parallel operations being run on the same DbContext instance. This
+    ///         includes both parallel execution of async queries and any explicit concurrent use from multiple threads.
+    ///         Therefore, always await async calls immediately, or use separate DbContext instances for operations that execute
+    ///         in parallel. See <see href="https://aka.ms/efcore-docs-threading">Avoiding DbContext threading issues</see> for more
+    ///         information and examples.
+    ///     </para>
+    ///     <para>
+    ///         See <see href="https://aka.ms/efcore-docs-saving-data">Saving data in EF Core</see> for more information and examples.
+    ///     </para>
+    /// </remarks>
+    /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+    /// <returns>
+    ///     A task that represents the asynchronous save operation. The task result contains the
+    ///     number of state entries written to the database.
+    /// </returns>
+    /// <exception cref="DbUpdateException">
+    ///     An error is encountered while saving to the database.
+    /// </exception>
+    /// <exception cref="DbUpdateConcurrencyException">
+    ///     A concurrency violation is encountered while saving to the database.
+    ///     A concurrency violation occurs when an unexpected number of rows are affected during save.
+    ///     This is usually because the data in the database has been modified since it was loaded into memory.
+    /// </exception>
+    /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
