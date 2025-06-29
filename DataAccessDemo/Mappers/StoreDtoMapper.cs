@@ -10,7 +10,6 @@ public partial class StoreDtoMapper : IEntityMapper<Store, StoreDto>
 {
     public partial Store ToEntity(StoreDto dto);
     
-    [MapProperty(nameof(ProductLocalization.Name), nameof(ProductDto.Name))]
     public partial StoreDto ToDto(Store entity);
     
     public partial IQueryable<StoreDto> ProjectToDto(IQueryable<Store> entityQueryable);

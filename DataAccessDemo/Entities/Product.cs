@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Harmony.EntityFrameworkCore.Abstractions;
+using Harmony.EntityFrameworkCore.Abstractions.Localization;
 
 namespace DataAccessDemo.Entities;
 
 [Table("products")]
-public class Product : IEntity<int>
+public class Product : ILocalizableEntity<int, ProductLocalization> // IEntity<int>
 {
     [Column("product_id")]
     public int Id { get; set; }

@@ -30,7 +30,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("test", async (IRepository<Store> storeRepo, [FromQuery] string locale) =>
+app.MapGet("test", async (IRepository<Store> storeRepo, IRepository<Product> productRepo, [FromQuery] string locale) =>
     {
         var store = new Store
         {
@@ -73,8 +73,32 @@ app.MapGet("test", async (IRepository<Store> storeRepo, [FromQuery] string local
             .ThenInclude(p => p.Localizations.Where(l => l.Locale == locale))
             .ProjectTo(storeRepo.GetMapperFor<StoreDto>())
             .FirstOrDefault();
+
+        // await storeRepo.AddAsync(convertedDto);
+        var addProductDto = new AddProductDto
+        {
+            LocalizedValues = new List<AddProductDtoLocalization>
+            {
+                new AddProductDtoLocalization
+                {
+                    Name = "Test Product",
+                    Description = "This is a test product",
+                },
+            },
+            Price = 10,
+            StoreId = 1,
+        };
+
+        var productDtoMapper = productRepo.GetMapperFor<AddProductDto>();
+        var product = productDtoMapper.ToEntity(addProductDto);
         
-        return Results.Ok(new { convertedDto, convertedStore, projectedStore });
+        await productRepo.AddAsync(product);
+        
+        // await productRepo.AddAsync(addProductDto);
+        
+        return Results.Ok(product);
+        
+        // return Results.Ok(new { convertedDto, convertedStore, projectedStore });
     })
     .WithName("Test");
 
