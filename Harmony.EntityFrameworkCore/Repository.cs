@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using Harmony.EntityFrameworkCore.Abstractions;
+using Harmony.EntityFrameworkCore.Abstractions.Localization;
 using Harmony.EntityFrameworkCore.Extensions;
 using Harmony.EntityFrameworkCore.Mapping.Abstractions;
 using Microsoft.EntityFrameworkCore;
@@ -197,6 +198,37 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
         return AddAsync(entity, cancellationToken);
     }
 
+    // private EntityEntry<TEntity> AddLocalized<TEntityId, TLocalizableEntity, TLocalizationEntity, TLocalizableDto, TLocalizationDto>(
+    //     TLocalizableDto dto,
+    //     IEntityMapper<TLocalizableEntity, TLocalizableDto> localizableDtoMapper,
+    //     IEntityMapper<TLocalizationEntity, TLocalizationDto> localizationDtoMapper)
+    //     where TLocalizableEntity : class, ILocalizableEntity<TEntityId, TLocalizationEntity>
+    //     where TLocalizationEntity : class, ILocalizationEntity<TEntityId>
+    //     where TLocalizableDto : class, IDtoWithLocalization<TEntityId, TLocalizationDto>
+    //     where TLocalizationDto : class
+    // {
+    //     var localizableEntity = localizableDtoMapper.ToEntity(dto);
+    //     var entry = Add(localizableEntity);
+    //     
+    //     SaveChanges();
+    //     
+    //     foreach (var localizationDto in dto.LocalizedValues)
+    //     {
+    //         var localizationEntity = localizationDtoMapper.ToEntity(localizationDto);
+    //         localizationEntity.TargetEntityId = localizableEntity.Id;
+    //         _dbContext.Add(localizationEntity);
+    //     }
+    //     
+    //     return entry;
+    // }
+    //
+    // public EntityEntry<TEntity> AddLocalized<TEntityId, TLocalizationDto>(
+    //     IDtoWithLocalization<TEntityId, TLocalizationDto> dto)
+    //     where TLocalizationDto : class
+    // {
+    //     
+    // }
+
     /// <inheritdoc/>
     public void AddRange<TDto>(params TDto[] dtos)
     {
@@ -209,7 +241,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
     public void AddRange<TDto>(IEnumerable<TDto> dtos)
     {
         var mapper = GetMapperFor<TDto>();
-        var entities = dtos.Select(dto => mapper.ToEntity(dto)).ToArray();
+        var entities = dtos.Select(dto => mapper.ToEntity(dto));
         AddRange(entities);
     }
 
@@ -225,7 +257,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
     public Task AddRangeAsync<TDto>(IEnumerable<TDto> dtos, CancellationToken cancellationToken = default)
     {
         var mapper = GetMapperFor<TDto>();
-        var entities = dtos.Select(dto => mapper.ToEntity(dto)).ToArray();
+        var entities = dtos.Select(dto => mapper.ToEntity(dto));
         return AddRangeAsync(entities, cancellationToken);
     }
 

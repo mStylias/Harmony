@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Linq.Expressions;
+using Harmony.EntityFrameworkCore.Abstractions.Localization;
 using Harmony.EntityFrameworkCore.Mapping.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -600,7 +601,7 @@ public interface IRepository<TEntity> : IQueryable<TEntity>, IInfrastructure<ISe
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <typeparam name="TDto">The type of dto.</typeparam>
     ValueTask<EntityEntry<TEntity>> AddAsync<TDto>(TDto dto, CancellationToken cancellationToken = default);
-
+    
     /// <summary>
     /// Maps the given DTOs to entities and adds them in the database.
     /// </summary>
