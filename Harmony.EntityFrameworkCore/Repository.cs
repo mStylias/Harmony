@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using Harmony.EntityFrameworkCore.Abstractions;
-using Harmony.EntityFrameworkCore.Abstractions.Localization;
 using Harmony.EntityFrameworkCore.Extensions;
 using Harmony.EntityFrameworkCore.Mapping.Abstractions;
 using Microsoft.EntityFrameworkCore;

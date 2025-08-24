@@ -7,7 +7,7 @@ public class ValidationInnerError : LoggableHarmonyErrorCore<ValidationInnerErro
 {
     public ValidationInnerError(
         string code, 
-        string description, 
+        string? description, 
         string? propertyName, 
         Severity severity = Severity.Error) 
         : base(severity)
@@ -24,9 +24,16 @@ public class ValidationInnerError : LoggableHarmonyErrorCore<ValidationInnerErro
         this.Description = description;
     }
     
+    public ValidationInnerError(string code, Severity severity = Severity.Error) 
+        : base(severity)
+    {
+        this.Code = code;
+        this.Description = null;
+    }
+    
     public string Code { get; set; }
     
-    public string Description { get; set; }
+    public string? Description { get; set; }
     
     public string? PropertyName { get; set; }
 }
