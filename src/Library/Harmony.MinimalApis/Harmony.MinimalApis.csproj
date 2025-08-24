@@ -41,6 +41,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Harmony.Cqrs\Harmony.Cqrs.csproj" />
       <ProjectReference Include="..\Harmony.Results\Harmony.Results.csproj" />
     </ItemGroup>
 

@@ -1,5 +1,6 @@
 ﻿using Harmony.MinimalApis.Errors;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Harmony.MinimalApis.Mappers;
 
@@ -34,5 +35,29 @@ public static class HttpErrorMapper
         }
 
         return problem;
+    }
+    
+    /// <summary>
+    /// Creates a <see cref="Microsoft.AspNetCore.Http.HttpResults.ProblemHttpResult"/> problem response from a harmony http error.
+    /// </summary>
+    /// <param name="error">The harmony http error.</param>
+    public static ProblemHttpResult ToProblemHttpResult(this HttpError error)
+    {
+        if (error.ValidationErrors?.Count > 0)
+        {
+            return TypedResults.Problem(
+                title: error.ErrorCode,
+                detail: error.Description,
+                statusCode: error.HttpCode,
+                extensions: new Dictionary<string, object?>
+                {
+                    ["validationErrors"] = error.ValidationErrors,
+                });
+        }
+
+        return TypedResults.Problem(
+            title: error.ErrorCode,
+            detail: error.Description,
+            statusCode: error.HttpCode);
     }
 }

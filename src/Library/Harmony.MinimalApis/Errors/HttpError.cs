@@ -71,6 +71,19 @@ public class HttpError : LoggableHarmonyErrorCore<HttpError>
     public int HttpCode { get; }
 
     public ICollection<ValidationInnerError>? ValidationErrors { get; }
+
+    public override void Log()
+    {
+        base.Log();
+        
+        if (this.ValidationErrors is not null && this.ValidationErrors.Count > 0)
+        {
+            foreach (var validationError in this.ValidationErrors)
+            {
+                validationError.Log();
+            }
+        }
+    }
     
     public HttpError PrependErrorCodeToLog()
     {
