@@ -12,15 +12,19 @@ public static class DependencyInjectionExtensions
     public static IServiceCollection AddHarmonyEfCore<TDbContext>(
         this IServiceCollection services,
         Assembly entitiesAssembly,
+        Assembly? mappersAssembly = null,
         ServiceLifetime repositoriesLifetime = ServiceLifetime.Scoped,
         ServiceLifetime databaseManagerLifetime = ServiceLifetime.Scoped,
         ServiceLifetime transactionManagerLifetime = ServiceLifetime.Scoped)
         where TDbContext : DbContext
     {
-        var assemblyTypes = entitiesAssembly.GetTypes();
+        mappersAssembly ??= entitiesAssembly;
+        
+        var entitiesAssemblyTypes = entitiesAssembly.GetTypes();
+        var mappersAssemblyTypes = mappersAssembly.GetTypes();
 
-        AddRepositories<TDbContext>(services, repositoriesLifetime, assemblyTypes);
-        AddMappers(services, assemblyTypes);
+        AddRepositories<TDbContext>(services, repositoriesLifetime, entitiesAssemblyTypes);
+        AddMappers(services, mappersAssemblyTypes);
         AddDatabaseManager<TDbContext>(services, databaseManagerLifetime);
         AddTransactionManager<TDbContext>(services, transactionManagerLifetime);
 
