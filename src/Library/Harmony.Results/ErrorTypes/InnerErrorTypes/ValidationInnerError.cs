@@ -7,28 +7,14 @@ public class ValidationInnerError : LoggableHarmonyErrorCore<ValidationInnerErro
 {
     public ValidationInnerError(
         string code, 
-        string? description, 
-        string? propertyName, 
+        string? propertyName = null,
+        string? description = null,
         Severity severity = Severity.Error) 
         : base(severity)
     {
         this.Code = code;
         this.Description = description;
         this.PropertyName = propertyName;
-    }
-    
-    public ValidationInnerError(string code, string description, Severity severity = Severity.Error) 
-        : base(severity)
-    {
-        this.Code = code;
-        this.Description = description;
-    }
-    
-    public ValidationInnerError(string code, Severity severity = Severity.Error) 
-        : base(severity)
-    {
-        this.Code = code;
-        this.Description = null;
     }
     
     public string Code { get; set; }

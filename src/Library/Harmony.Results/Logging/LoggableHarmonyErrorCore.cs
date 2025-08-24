@@ -124,10 +124,18 @@ public class LoggableHarmonyErrorCore<TError> : ILoggableHarmonyError<TError>
     /// <summary>
     /// Logs the message of the log action and the log builder if they are not null.
     /// </summary>
-    public void Log()
+    public virtual void Log()
     {
         this.LogAction?.Invoke();
         this.LogBuilder?.Log();
+    }
+    
+    /// <summary>
+    /// Returns true if any log message has been initialized.
+    /// </summary>
+    public bool HasLogMessage()
+    {
+        return this.LogBuilder is not null || this.LogAction is not null;
     }
     
     public override string ToString()
