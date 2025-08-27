@@ -10,6 +10,15 @@ namespace Harmony.MinimalApis.Errors;
 /// </summary>
 public class HttpError : LoggableHarmonyErrorCore<HttpError>
 {
+    public HttpError(string errorCode, int httpCode, Severity severity = Severity.Error) 
+        : base(severity)
+    {
+        this.ErrorCode = errorCode;
+        this.Description = string.Empty;
+        this.HttpCode = httpCode;
+        this.ValidationErrors = null;
+    }
+    
     public HttpError(string errorCode, string description, int httpCode, Severity severity = Severity.Error) 
         : base(severity)
     {
